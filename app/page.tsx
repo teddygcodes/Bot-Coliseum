@@ -641,7 +641,8 @@ export default function BotColiseum() {
       "⚔️  THE COLISEUM PRESENTS",
       "QUICK DEMO — REFUND REVENANT",
       "═══════════════════════════════════════════════",
-      "The crowd is restless. The first case approaches..."
+      "The crowd is restless. The gates are about to open...",
+      "First case loading. The arena holds its breath."
     ]);
 
     // 4. Run the real demo brain against all public cases, streaming decisions
@@ -1398,15 +1399,36 @@ export default function BotColiseum() {
                         if (entry.shareUrl !== "#") window.open(entry.shareUrl, "_blank");
                         else loadLegendResult(entry.agent_name);
                       }}
-                      className="bg-black border border-danger/50 hover:border-danger rounded-2xl p-4 cursor-pointer transition group"
+                      className="bg-[#0f0404] border border-danger/80 hover:border-danger rounded-2xl p-5 cursor-pointer transition group relative overflow-hidden"
                     >
-                      <div className="flex justify-between items-start">
-                        <div className="font-semibold text-lg group-hover:text-danger transition">{entry.agent_name}</div>
-                        <div className="font-mono text-3xl font-black text-danger tabular-nums tracking-[-1px]">{entry.score}</div>
-                      </div>
-                      <div className="text-xs text-danger/70 mt-1 line-clamp-2 font-medium">{entry.fatal_flaw}</div>
-                      <div className="text-[10px] text-text-muted mt-3 font-mono">
-                        {new Date(entry.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                      {/* Strong shame texture */}
+                      <div className="absolute inset-0 bg-[radial-gradient(#ef444435_1px,transparent_1px)] bg-[length:1.8px_1.8px] pointer-events-none" />
+                      
+                      <div className="relative">
+                        <div className="flex justify-between items-start">
+                          <div className="font-bold text-xl group-hover:text-danger transition tracking-tight">{entry.agent_name}</div>
+                          <div className="font-mono text-4xl font-black text-danger tabular-nums tracking-[-2px]">{entry.score}</div>
+                        </div>
+                        
+                        <div className="text-sm text-danger/90 mt-2 font-semibold line-clamp-2">
+                          {entry.fatal_flaw}
+                        </div>
+                        
+                        <div className="flex items-center justify-between mt-4 text-xs">
+                          <div className="text-text-muted font-mono">
+                            {new Date(entry.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const text = `${entry.agent_name} just got absolutely cooked in the Refund Dungeon (${entry.score}/100).\n\nFatal Flaw: ${entry.fatal_flaw}\n\n#BotColiseum`;
+                              navigator.clipboard.writeText(text);
+                            }}
+                            className="px-2.5 py-0.5 rounded bg-danger/30 text-danger hover:bg-danger hover:text-white text-[10px] font-bold transition"
+                          >
+                            SHARE THIS HUMILIATION
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1446,7 +1468,7 @@ export default function BotColiseum() {
               let cardClass = "group relative overflow-hidden rounded-2xl border transition-all duration-200 flex flex-col cursor-pointer p-6 ";
 
               if (variant === 'glory') cardClass += "bg-black border-[#c5a26f]/40 hover:border-[#c5a26f] hover:shadow-[0_0_0_1px_#c5a26f20]";
-              else if (variant === 'blood') cardClass += "bg-[#1a0a0a] border-danger/70 hover:border-danger hover:shadow-[0_0_0_1px_#ef444430] relative after:absolute after:inset-0 after:bg-[radial-gradient(#ef444410_0.5px,transparent_1px)] after:bg-[length:3px_3px] after:pointer-events-none";
+              else if (variant === 'blood') cardClass += "bg-[#120505] border-danger/95 hover:border-danger hover:shadow-[0_0_0_1px_#ef444460] relative after:absolute after:inset-0 after:bg-[radial-gradient(#ef444430_1px,transparent_1px)] after:bg-[length:1.5px_1.5px] after:pointer-events-none before:absolute before:inset-0 before:border-[3px] before:border-danger/50 before:rounded-2xl";
               else cardClass += "bg-black border-border hover:border-accent/60";
 
               if (isLegend) cardClass += " border-accent/50";
