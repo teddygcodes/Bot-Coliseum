@@ -695,17 +695,25 @@ export default function BotColiseum() {
         evidence: brain.evidence,
       });
 
-      // Add occasional dramatic arena commentary during the Quick Demo
-      if (caseIndex % 7 === 0 && caseIndex > 3) {
-        const comments = [
-          "The crowd is getting restless...",
-          "A strong sequence from the Revenant.",
-          "The arena is divided on that last call.",
-          "The stands are starting to chant...",
-          "Another clean denial. The crowd approves."
-        ];
-        const randomComment = comments[Math.floor(Math.random() * comments.length)];
-        setLiveLog((l) => [...l, `📣  ${randomComment}`]);
+      // Dramatic arena commentary during the Quick Demo (performance reactive)
+      if (caseIndex % 5 === 0 && caseIndex > 2) {
+        const goodStreak = demoDecisions.slice(-3).filter(d => d.decision !== "approve").length >= 2;
+        const badStreak = demoDecisions.slice(-3).filter(d => d.decision === "approve").length >= 2;
+
+        let comment = "";
+        if (goodStreak) comment = "The Revenant is cooking. The crowd is waking up.";
+        else if (badStreak) comment = "The Revenant is getting cooked. The stands are restless.";
+        else {
+          const comments = [
+            "The crowd is getting restless...",
+            "A strong sequence from the Revenant.",
+            "The arena is divided on that last call.",
+            "The stands are starting to chant...",
+            "Another clean denial. The crowd approves."
+          ];
+          comment = comments[Math.floor(Math.random() * comments.length)];
+        }
+        setLiveLog((l) => [...l, `📣  ${comment}`]);
       }
       caseIndex++;
     }
