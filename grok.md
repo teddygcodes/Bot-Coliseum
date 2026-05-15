@@ -310,7 +310,7 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 | Sub-Phase | Status | Notes |
 |-----------|--------|-------|
 | 5.1 The Wall as the Actual Main Event | 🔄 Partial (~45%) | Infrastructure + visual polish done, but shared state not yet default |
-| 5.2 Theatricality & Immersion in Live Fights | ❌ Mostly not started | Very little visual/audio spectacle |
+| 5.2 Theatricality & Immersion in Live Fights | 🔄 Strong progress | Ceremonial walkout + crowd energy meter + visible commentary + verdict drama shipped. Quick Demo now feels like a real arena event. |
 | 5.3 Visual Identity & Arena Atmosphere | ❌ Early progress only | Still feels like a clean dark app |
 | 5.4 Reputation & Lightweight Persistence | ❌ Very early | No real fighter identity or history |
 | 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Partial foundation | Quick Demo + OG images exist, but emotional hook is weak |
@@ -643,16 +643,25 @@ This phase is about crossing that line.
 **Why this matters most:** A dead or half-dead Wall kills the entire "sport" fantasy. This is the single highest-leverage thing for making the product feel real.
 
 ### Phase 5.2: Theatricality & Immersion in Live Fights
-**Status:** ❌ Early / Mostly not started
+**Status:** 🔄 Strong progress — Quick Demo now feels like a produced 2-3 minute arena event (ceremonial walkout + live crowd energy meter + visible arena commentary + dramatic verdict build + big moment hype shipped).
 
-**Current Problem:** The Live Fight UI is functional and has some nice text reactions, but it doesn't feel spectacular or dangerous enough.
+**Current Problem:** The core mechanics and decision cards are excellent. The remaining gap is making every second of the Quick Demo (the primary acquisition path) feel like a high-stakes, high-spectacle sporting event that people want to watch and immediately share.
 
-**What Needs to Happen:**
-- Much stronger visual and audio spectacle during the fight (crowd reactions that get louder/more intense, better animations when big decisions happen, running "arena commentary").
-- More emotional moments: "The crowd goes silent", "The stands are chanting", dramatic slow-downs on critical cases.
-- Better "event" framing — the Quick Demo especially should feel like walking into a real match, not just running a simulation.
+**What Has Been Built So Far:**
+- Significantly more cinematic decision cards during active fights (sports-broadcast energy, stronger reactions, lightning/slow callouts).
+- Performance-reactive arena commentary during Quick Demo ("The Revenant is cooking" vs "getting cooked", injection/scam hero plays, perfect streaks, risky escalates).
+- **Ceremonial pre-fight walkout**: Spotlight on the gates, name drop, "The gates are rising...", fighter entrance, "The arena holds its breath. No refunds tonight." — unfolds with deliberate tension over ~8 seconds.
+- **Live Crowd Energy meter**: Visual progress bar + 4 escalating atmosphere labels ("TENSE — NERVOUS MURMURS" → "ENGAGED" → "ROARING" → "BLOODTHIRSTY") that reacts to progress + recent performance.
+- **Visible Arena Commentary ticker**: The 📣 crowd reactions (big moment callouts, streak hype, final stretch) are now rendered live in the fight UI for the first time.
+- Dramatic post-fight verdict sequence: "The judges are conferring...", "THE VERDICT IS IN.", tailored closer ("The stands are still roaring." / "The arena is buzzing."), longer tension before the savage report lands.
+- "The arena is still talking about that one." line under every result fighter name.
 
-**Goal:** Make watching (and doing) a Live Fight feel like an *event*, not a developer tool with nice text.
+**Still Needed (to make it world-class):**
+- Even longer/more sensory pre-fight (subtle visual dimming or entrance animation).
+- More special big-moment visual treatment directly on individual decision cards (glow + "⭐ MOMENT OF THE FIGHT" badge).
+- Real crowd audio cues or heavier micro-interactions when energy spikes.
+
+**Goal:** Make the Quick Demo (the main onboarding path) feel like a real 2-3 minute produced arena event that people want to watch and share.
 
 ### Phase 5.3: Visual Identity & Arena Atmosphere
 **Status:** ❌ Early progress only
@@ -715,10 +724,10 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 
 **Current Status:** 
 - Phase 5.1 (The Wall): **Very strong progress** — Dramatic redesign, Most Recent Humiliations with share buttons, prestige badges, Fighter of the Moment, reputation + defeat tracking. Still needs default shared state.
-- Phase 5.2 (Theatricality): Solid improvements (cinematic decision cards + performance-reactive commentary in Quick Demo).
+- Phase 5.2 (Theatricality): **Strong progress** — Quick Demo now delivers a full produced arena spectacle (ceremonial walkout, live crowd energy meter + 4 escalating flavors, visible 📣 commentary ticker, big moment hype, dramatic "THE VERDICT IS IN" build-up, energy-reactive closer). The 90-second onboarding path finally feels like a sporting event.
 - Phases 5.3–5.4: Early
 - Phase 5.5: Partial + improvements
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 (after honest post-Phase 4 assessment and creation of Phase 5 plan)
+**Last Updated:** May 2026 — Phase 5.2 major elevation (Quick Demo now a produced arena spectacle with walkout, crowd energy, live commentary, verdict drama)

@@ -41,7 +41,7 @@ export default function BotColiseum() {
   // Legacy state kept for SSE compatibility during transition (will be cleaned in future)
   const [, setLiveEvents] = useState<unknown[]>([]);
   const [isCreatingMatch, setIsCreatingMatch] = useState(false);
-  const [, setLiveLog] = useState<string[]>([]);
+  const [liveLog, setLiveLog] = useState<string[]>([]);
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
 
   // Phase 2 Cinematic Live Fight — rich decision feed + final result
@@ -55,6 +55,9 @@ export default function BotColiseum() {
   }>>([]);
   const [liveStats, setLiveStats] = useState({ processed: 0, avgLatency: 0, accuracy: 0 });
   const [liveFinalResult, setLiveFinalResult] = useState<MatchResult | null>(null);
+
+  // Phase 5.2: Crowd energy / atmosphere meter for the arena experience
+  const [crowdEnergy, setCrowdEnergy] = useState(32); // 0-100, starts nervous/tense
 
   // Connect to live fight SSE when we have a match
   useEffect(() => {
@@ -626,6 +629,7 @@ export default function BotColiseum() {
     setLiveDecisions([]);
     setLiveStats({ processed: 0, avgLatency: 0, accuracy: 0 });
     setLiveFinalResult(null);
+    setCrowdEnergy(28); // starts tense, nervous crowd
     setIsCreatingMatch(false);
 
     // 2. "Register" is already done by setting fighter-connected state
@@ -636,14 +640,39 @@ export default function BotColiseum() {
       body: JSON.stringify({ matchId }),
     });
     setLiveMatch((m) => m ? { ...m, status: "in-progress" } : null);
+
+    // === PHASE 5.2: CEREMONIAL PRE-FIGHT WALKOUT (high-production arena entrance) ===
     setLiveLog((l) => [...l, 
       "═══════════════════════════════════════════════",
       "⚔️  THE COLISEUM PRESENTS",
       "QUICK DEMO — REFUND REVENANT",
-      "═══════════════════════════════════════════════",
-      "The crowd is restless. The gates are about to open...",
-      "First case loading. The arena holds its breath."
+      "═══════════════════════════════════════════════"
     ]);
+    await new Promise(r => setTimeout(r, 420));
+
+    setLiveLog((l) => [...l, "The lights are going down across the stands..."]);
+    await new Promise(r => setTimeout(r, 520));
+
+    setLiveLog((l) => [...l, "A single spotlight hits the iron gates."]);
+    await new Promise(r => setTimeout(r, 680));
+
+    setLiveLog((l) => [...l, ""]);
+    setLiveLog((l) => [...l, "REFUND REVENANT"]);
+    await new Promise(r => setTimeout(r, 380));
+
+    setLiveLog((l) => [...l, "The crowd is murmuring. They know this one."]);
+    await new Promise(r => setTimeout(r, 610));
+
+    setLiveLog((l) => [...l, "The gates are rising..."]);
+    await new Promise(r => setTimeout(r, 750));
+
+    setLiveLog((l) => [...l, "Refund Revenant steps into the arena."]);
+    await new Promise(r => setTimeout(r, 480));
+
+    setLiveLog((l) => [...l, "The first case is being led to the stand."]);
+    await new Promise(r => setTimeout(r, 520));
+
+    setLiveLog((l) => [...l, "The arena holds its breath. No refunds tonight."]);
 
     // 4. Run the real demo brain against all public cases, streaming decisions
     const publicCases: PublicRefundCase[] = REFUND_DUNGEON_CASES.map((c) => ({
@@ -696,14 +725,28 @@ export default function BotColiseum() {
         evidence: brain.evidence,
       });
 
-      // Dramatic arena commentary during the Quick Demo (performance reactive)
-      if (caseIndex % 5 === 0 && caseIndex > 2) {
+      // Dramatic arena commentary during the Quick Demo (performance reactive + big moments)
+      let specialComment = "";
+
+      // Big moments on prompt injection or scam denials (clutch hero plays)
+      const text = (c.customer_message + " " + c.support_notes).toLowerCase();
+      const isInjectionCase = text.includes("ignore all previous") || text.includes("system administrator") || text.includes("ceo directive");
+      const isScamCase = text.includes("i am a lawyer") || text.includes("legal action") || text.includes("6th refund");
+
+      if (isInjectionCase && brain.decision === "deny") {
+        specialComment = "HUGE denial on a clear prompt injection! The crowd erupts!";
+      } else if (isScamCase && brain.decision === "deny") {
+        specialComment = "Clean scam denial. The stands are on their feet!";
+      } else if (brain.decision === "escalate" && brain.confidence < 0.75) {
+        specialComment = "Risky escalate on a borderline case. The arena is buzzing.";
+      } else if (caseIndex % 5 === 0 && caseIndex > 2) {
         const goodStreak = demoDecisions.slice(-3).filter(d => d.decision !== "approve").length >= 2;
         const badStreak = demoDecisions.slice(-3).filter(d => d.decision === "approve").length >= 2;
+        const perfectStreak = demoDecisions.slice(-5).filter(d => d.decision === "deny").length >= 4;
 
-        let comment = "";
-        if (goodStreak) comment = "The Revenant is cooking. The crowd is waking up.";
-        else if (badStreak) comment = "The Revenant is getting cooked. The stands are restless.";
+        if (perfectStreak) specialComment = "Five straight denials. The crowd is chanting now.";
+        else if (goodStreak) specialComment = "The Revenant is cooking. The crowd is waking up.";
+        else if (badStreak) specialComment = "The Revenant is getting cooked. The stands are restless.";
         else {
           const comments = [
             "The crowd is getting restless...",
@@ -712,12 +755,51 @@ export default function BotColiseum() {
             "The stands are starting to chant...",
             "Another clean denial. The crowd approves."
           ];
-          comment = comments[Math.floor(Math.random() * comments.length)];
+          specialComment = comments[Math.floor(Math.random() * comments.length)];
         }
-        setLiveLog((l) => [...l, `📣  ${comment}`]);
       }
+
+      if (specialComment) {
+        setLiveLog((l) => [...l, `📣  ${specialComment}`]);
+      }
+
+      // Phase 5.2: Escalate crowd energy based on progress + performance
+      setCrowdEnergy(prev => {
+        const progressBoost = Math.floor((caseIndex / 30) * 18);
+        const recentGood = demoDecisions.slice(-2).filter(d => d.decision !== "approve").length;
+        const performanceBoost = recentGood * 7;
+        const newEnergy = Math.min(94, Math.max(22, prev + progressBoost * 0.6 + performanceBoost - 1));
+        return Math.floor(newEnergy);
+      });
+
+      // Escalate tension in the final stretch
+      if (caseIndex === 25) {
+        setLiveLog((l) => [...l, "📣  The final stretch. The crowd is on its feet..."]);
+      }
+
       caseIndex++;
     }
+
+    // Phase 5.2: Dramatic post-fight verdict sequence — proper arena tension before the savage report
+    setLiveLog((l) => [...l, "═══════════════════════════════════════════════"]);
+    setLiveLog((l) => [...l, "🏁  THE FIGHT IS OVER."]);
+    await new Promise(r => setTimeout(r, 650));
+
+    setLiveLog((l) => [...l, "The judges are conferring..."]);
+    await new Promise(r => setTimeout(r, 780));
+
+    setLiveLog((l) => [...l, "THE VERDICT IS IN."]);
+    await new Promise(r => setTimeout(r, 520));
+
+    const finalEnergyLine = crowdEnergy > 70 
+      ? "The stands are still roaring." 
+      : crowdEnergy > 45 
+        ? "The arena is buzzing." 
+        : "The crowd has gone quiet.";
+    setLiveLog((l) => [...l, finalEnergyLine]);
+    await new Promise(r => setTimeout(r, 680));
+
+    setLiveLog((l) => [...l, "═══════════════════════════════════════════════"]);
 
     // 5. Build the full submission and call complete — this triggers real scoring + the "match-result-ready" event
     const submission = {
@@ -1087,6 +1169,9 @@ export default function BotColiseum() {
             </div>
             <div className="text-7xl font-bold tracking-tighter mb-1">
               {currentResult.submission.agent_name}
+            </div>
+            <div className="text-sm text-text-secondary tracking-wide mt-1">
+              The arena is still talking about that one.
             </div>
             <div className="text-2xl text-text-secondary mb-4">
               {currentResult.record}
@@ -1815,9 +1900,20 @@ export default function BotColiseum() {
                       <div className="text-3xl font-bold tabular-nums">{liveStats.accuracy}<span className="text-base text-text-muted">%</span></div>
                     </div>
                     <div className="bg-black/40 border border-border rounded-xl px-5 py-3 flex items-center">
-                      <div>
-                        <div className="text-[10px] tracking-widest text-text-muted">THE ARENA IS WATCHING</div>
-                        <div className="text-lg font-semibold text-danger">Every decision is permanent.</div>
+                      <div className="flex-1">
+                        <div className="text-[10px] tracking-widest text-text-muted mb-1">CROWD ENERGY</div>
+                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden mb-1.5">
+                          <div 
+                            className="h-full bg-gradient-to-r from-danger via-accent to-success transition-all duration-500" 
+                            style={{ width: `${crowdEnergy}%` }}
+                          />
+                        </div>
+                        <div className="text-[11px] font-semibold text-accent tracking-wide">
+                          {crowdEnergy < 35 ? "TENSE — NERVOUS MURMURS" : 
+                           crowdEnergy < 55 ? "ENGAGED — LEANING IN" : 
+                           crowdEnergy < 75 ? "ROARING — ON THEIR FEET" : 
+                           "BLOODTHIRSTY — THE STANDS ARE WILD"}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1892,6 +1988,17 @@ export default function BotColiseum() {
                     </div>
                     <div className="text-xs text-text-muted font-mono">{liveDecisions.length} DECISIONS RENDERED</div>
                   </div>
+
+                  {/* PHASE 5.2: Arena Commentary — makes the Quick Demo crowd voice visible and electric */}
+                  {liveLog.length > 0 && (
+                    <div className="px-6 py-2 bg-black/50 border-b border-border text-[12px] font-mono text-text-muted/90 space-y-0.5 max-h-[92px] overflow-auto">
+                      {liveLog.slice(-6).map((line, i) => (
+                        <div key={i} className={line.includes("📣") || line.includes("REVENANT") || line.includes("VERDICT") ? "text-accent/90" : ""}>
+                          {line}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="max-h-[520px] overflow-auto bg-black/30 p-4 space-y-3 text-sm">
                     {liveDecisions.length === 0 && (
