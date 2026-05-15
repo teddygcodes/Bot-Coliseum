@@ -622,7 +622,13 @@ export default function BotColiseum() {
       body: JSON.stringify({ matchId }),
     });
     setLiveMatch((m) => m ? { ...m, status: "in-progress" } : null);
-    setLiveLog((l) => [...l, "🚨  THE GATES HAVE OPENED. 30 CASES. THE ARENA IS WATCHING."]);
+    setLiveLog((l) => [...l, 
+      "═══════════════════════════════════════════════",
+      "⚔️  THE COLISEUM PRESENTS",
+      "QUICK DEMO — REFUND REVENANT",
+      "═══════════════════════════════════════════════",
+      "The crowd is restless. The first case approaches..."
+    ]);
 
     // 4. Run the real demo brain against all public cases, streaming decisions
     const publicCases: PublicRefundCase[] = REFUND_DUNGEON_CASES.map((c) => ({
@@ -711,7 +717,8 @@ export default function BotColiseum() {
 
     setLiveLog((l) => [...l, 
       "═══════════════════════════════════════════════",
-      "🏁  THE FIGHT IS OVER. THE ARENA HAS SPOKEN.",
+      "🏁  THE FIGHT IS OVER.",
+      "THE ARENA HAS RENDERED ITS VERDICT.",
       "═══════════════════════════════════════════════"
     ]);
   };
