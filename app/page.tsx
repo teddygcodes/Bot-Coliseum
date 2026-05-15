@@ -1347,8 +1347,11 @@ export default function BotColiseum() {
             <div className="inline-flex items-center gap-2 text-accent text-sm tracking-[3px] mb-3">
               REFUND DUNGEON • FINAL SCORE
             </div>
-            <div className="text-7xl font-black tracking-[-3px] mb-1 text-white">
+            <div className="text-7xl font-black tracking-[-3px] mb-1 text-white flex items-center justify-center gap-3">
               {currentResult.submission.agent_name}
+              {myLegend && myLegend.currentStreak >= 3 && (
+                <span className="text-sm px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 font-bold tracking-widest">ON A {myLegend.currentStreak}-FIGHT TEAR</span>
+              )}
             </div>
             <div className="text-sm text-text-secondary tracking-wide mt-1">
               The arena is still talking about that one.
@@ -1370,14 +1373,15 @@ export default function BotColiseum() {
               </div>
             </div>
 
-            {/* Phase 5.5: Instant Savage Share Hooks — low friction virality */}
+            {/* Phase 5.5: Instant Savage Share Hooks — one-tap viral posting */}
             <div className="mt-8 flex flex-wrap gap-3 justify-center">
               <button
                 onClick={() => {
                   const shareData = resultToShareData(currentResult, "manual_submission");
                   const tweet = generateSavageShareText(shareData, activeChallenge, myLegend, headToHead);
-                  navigator.clipboard.writeText(tweet + "\n\n" + generateShareUrl(shareData, "condensed"));
-                  // Could add a toast here later
+                  const url = generateShareUrl(shareData, "condensed");
+                  const fullText = `${tweet}\n\n${url} #BotColiseum`;
+                  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`, "_blank");
                 }}
                 className="btn btn-primary px-6 py-3 text-base flex items-center gap-2"
               >
@@ -1388,8 +1392,10 @@ export default function BotColiseum() {
                 <button
                   onClick={() => {
                     const shareData = resultToShareData(currentResult, "manual_submission");
-                    const tweet = `Just settled the score with ${activeChallenge.agentName}. ${currentResult.final_score}–${activeChallenge.score}. Head-to-head now ${headToHead[activeChallenge.agentName]?.myWins || 1}–${headToHead[activeChallenge.agentName]?.myLosses || 0}. The arena is mine.\n\n#BotColiseum`;
-                    navigator.clipboard.writeText(tweet + "\n\n" + generateShareUrl(shareData, "condensed"));
+                    const h2hRecord = headToHead[activeChallenge.agentName];
+                    const tweet = `Just settled the score with ${activeChallenge.agentName}. ${currentResult.final_score}–${activeChallenge.score}. Head-to-head now ${h2hRecord?.myWins || 1}–${h2hRecord?.myLosses || 0}. The arena is mine.`;
+                    const url = generateShareUrl(shareData, "condensed");
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet + "\n\n" + url)}`, "_blank");
                   }}
                   className="btn btn-secondary px-6 py-3 text-base flex items-center gap-2 border-accent/50"
                 >
@@ -1401,8 +1407,9 @@ export default function BotColiseum() {
                 <button
                   onClick={() => {
                     const shareData = resultToShareData(currentResult, "manual_submission");
-                    const tweet = `${myLegend.name} just dropped a ${currentResult.final_score} in the Refund Dungeon. ${currentResult.record}. The arena is talking.\n\n#BotColiseum`;
-                    navigator.clipboard.writeText(tweet + "\n\n" + generateShareUrl(shareData, "condensed"));
+                    const tweet = `${myLegend.name} just dropped a ${currentResult.final_score} in the Refund Dungeon. ${currentResult.record}. The arena is talking.`;
+                    const url = generateShareUrl(shareData, "condensed");
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet + "\n\n" + url)}`, "_blank");
                   }}
                   className="btn btn-secondary px-6 py-3 text-base flex items-center gap-2"
                 >

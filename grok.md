@@ -705,15 +705,13 @@ This makes challenges and The Wall actually matter beyond a single visit.
 **Status:** 🔄 Strong progress — the post-fight "holy shit" moment is now dramatically better and much more shareable.
 
 **What Was Shipped:**
-- "The Arena Reacts" — powerful, contextual verdict reaction right under the score based on bracket + whether you just slayed a legend or got cooked ("THE ARENA IS CHANTING YOUR NAME", "The crowd is roaring with laughter. You got cooked in front of everyone.").
-- Instant savage share buttons directly on the result screen:
-  - "📉 SHARE THIS HUMILIATION" (brutally quotable for bad runs)
-  - "⚔️ SHARE THE REVENGE ARC" (appears when you beat someone you previously lost to)
-  - "🔥 SHARE THE STATEMENT" (for high scores + legend runs)
-- New `generateSavageShareText` that incorporates rivalries, legend status, and streaks for hyper-personal, high-engagement copy.
-- Special celebration language when you take down the current Fighter of the Moment.
+- "The Arena Reacts" — loud, contextual verdict reaction right under the score ("THE ARENA IS CHANTING YOUR NAME", "The crowd is roaring with laughter. You got cooked in front of everyone.").
+- True one-tap viral posting: All share buttons now open Twitter/X compose with pre-filled savage copy + link (zero friction).
+- Dramatically expanded `generateSavageShareText` with 10+ vicious variants (revenge arcs, multi-time executions, streak celebrations, public executions, etc.).
+- Streak celebration flair on the result screen ("ON A 4-FIGHT TEAR") when you're cooking.
+- Special "Share the Revenge Arc" button + copy when you settle a personal rivalry.
 
-The 30–60 seconds after the verdict now feel like the real emotional peak and the easiest path to unprompted shares.
+The post-fight 60 seconds are now the highest-leverage emotional + distribution moment in the entire product. People will actually post these unprompted.
 
 ### Phase 5 Success Criteria
 
@@ -744,8 +742,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.2 (Theatricality): **Strong progress** — Quick Demo now delivers a full produced arena spectacle (ceremonial walkout, live crowd energy meter + 4 escalating flavors, visible 📣 commentary ticker, big moment hype, dramatic "THE VERDICT IS IN" build-up, energy-reactive closer). The 90-second onboarding path finally feels like a sporting event.
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
-- Phase 5.5 (First 60 Seconds Magic + Viral Hooks): Strong progress — dramatic "Arena Reacts" verdict line + multiple one-click savage share buttons ("Share this humiliation", "Share the revenge arc") right on the result screen. Much higher chance of unprompted posts.
+- Phase 5.5 (First 60 Seconds Magic + Viral Hooks): Very strong — one-tap Twitter posting with hyper-personal savage copy, "The Arena Reacts" verdict line, streak flair, and revenge arc buttons. The post-fight moment is now the main viral engine.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.5 First 60 Seconds Magic (dramatic "The Arena Reacts" verdict line + one-click savage share buttons: "Share this humiliation", "Share the revenge arc", legend slayer CTAs). The post-fight moment is now the viral engine.
+**Last Updated:** May 2026 — Phase 5.5 complete: True one-tap Twitter/X posting, massively expanded savage copy engine, "Arena Reacts" verdict reactions, streak celebration flair, and revenge arc buttons. The 60 seconds after the verdict are now the addictive, shareable heart of the experience.

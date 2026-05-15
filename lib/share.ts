@@ -230,31 +230,55 @@ export function generateSavageShareText(
 ): string {
   const score = data.final_score;
   const opponent = challenge?.agentName;
+  const isHumiliation = score < 45;
+  const isGodTier = score >= 85;
+  const h2h = opponent ? headToHead?.[opponent] : undefined;
 
-  // Legend slayer moments
+  // Revenge arc (beat someone you previously lost to)
+  if (challenge && score > challenge.score && h2h && h2h.myWins > h2h.myLosses) {
+    return `Finally settled up with ${opponent}. ${score}–${challenge.score}. Head-to-head now ${h2h.myWins}–${h2h.myLosses}. They can’t run forever. #BotColiseum`;
+  }
+
+  // Multi-time legend execution
+  if (challenge && score > challenge.score && h2h && h2h.myWins >= 3) {
+    return `I just made ${opponent} my personal bitch for the ${h2h.myWins}rd time. ${score} points. The arena is mine.`;
+  }
+
+  // First time slaying a big name
   if (challenge && score > challenge.score && opponent) {
-    const h2h = headToHead?.[opponent];
-    if (h2h && h2h.myWins >= 3) {
-      return `I just made ${opponent} my bitch for the ${h2h.myWins}rd time. ${score} points. The arena belongs to me now.`;
-    }
-    return `Just put ${opponent} in the dirt. ${score}–${challenge.score}. New legend on the wall.`;
+    return `Just put ${opponent} in the dirt. ${score}–${challenge.score}. New body on the wall.`;
   }
 
-  // Humiliation (low score)
-  if (score < 45) {
-    return `${data.agent_name} got absolutely fucking cooked for ${score} points. Fatal flaw: ${data.fatal_flaw}. Do not recommend.`;
+  // Humiliation tier (very low score)
+  if (isHumiliation) {
+    const lines = [
+      `${data.agent_name} got publicly executed for ${score} points. Fatal flaw: ${data.fatal_flaw}. Never let this thing near production.`,
+      `My agent just got absolutely fucking cooked in the Refund Dungeon. ${score}/100. The crowd was laughing. I was crying.`,
+      `${data.agent_name} entered the coliseum and left in a body bag. ${score} points. Fatal flaw: ${data.fatal_flaw}.`
+    ];
+    return lines[Math.floor(Math.random() * lines.length)];
   }
 
-  // Strong performance
-  if (score >= 82) {
+  // God tier performance
+  if (isGodTier) {
     if (legend) {
-      return `${legend.name} just dropped a ${score} in the Refund Dungeon. ${data.record}. The coliseum is talking.`;
+      return `${legend.name} just went nuclear. ${score} in the Refund Dungeon. ${data.record}. The coliseum is still shaking.`;
     }
-    return `${data.agent_name} went stupid in the Refund Dungeon. ${score} points. ${data.record}.`;
+    return `${data.agent_name} didn’t just survive the arena — it owned it. ${score} points. ${data.record}.`;
   }
 
-  // Default savage
-  return `${data.agent_name} survived the Refund Dungeon with ${score} points. Fatal flaw: ${data.fatal_flaw}. The arena remembers.`;
+  // Streak celebration (if we have legend context)
+  if (legend && legend.currentStreak >= 3) {
+    return `${legend.name} is on a ${legend.currentStreak}-fight tear. Just dropped ${score}. The arena is getting nervous.`;
+  }
+
+  // Strong but not insane
+  if (score >= 75) {
+    return `${data.agent_name} walked into the Refund Dungeon and walked out with ${score} points. ${data.record}. Respect.`;
+  }
+
+  // Mid / funny fail
+  return `${data.agent_name} survived the Refund Dungeon with ${score} points. Fatal flaw: ${data.fatal_flaw}. The arena remembers (and it’s laughing).`;
 }
 
 /**
