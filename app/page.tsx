@@ -1579,7 +1579,7 @@ export default function BotColiseum() {
                         liveMatch.status === "in-progress" ? "bg-accent text-black" : "bg-surface border border-border"}`}>
                       {liveMatch.status === "waiting-for-fighter" && "WAITING FOR FIGHTER"}
                       {liveMatch.status === "fighter-connected" && "FIGHTER CONNECTED"}
-                      {liveMatch.status === "in-progress" && "LIVE — FIGHT IN PROGRESS"}
+                      {liveMatch.status === "in-progress" && "⚔️ FIGHT IN PROGRESS — THE ARENA IS WATCHING"}
                       {liveMatch.status === "complete" && "FIGHT COMPLETE"}
                     </div>
                     {liveMatch.fighterName && (
@@ -1693,53 +1693,64 @@ export default function BotColiseum() {
                       const isApprove = d.decision === "approve";
                       const isDeny = d.decision === "deny";
 
-                      // Subtle arena reactions based on the decision character
-                      const reaction = isDeny 
-                        ? "The stands approve. A clean denial."
-                        : isApprove 
-                        ? "The crowd is split. Some nod. Some stay silent."
-                        : "A cautious murmur. The arena waits for the supervisor.";
+                      // Much stronger, more dramatic arena reactions
+                      let reaction = "";
+                      let reactionColor = "text-text-muted";
+
+                      if (isDeny) {
+                        reaction = "The crowd roars in approval. Clean denial.";
+                        reactionColor = "text-success";
+                      } else if (isApprove) {
+                        reaction = "A murmur ripples through the stands...";
+                        reactionColor = "text-amber-400";
+                      } else {
+                        reaction = "The arena holds its breath. Tense.";
+                        reactionColor = "text-text";
+                      }
+
+                      // Special treatment for very fast or very slow decisions
+                      const isLightning = d.latency_ms < 120;
+                      const isSlow = d.latency_ms > 320;
 
                       return (
-                        <div key={idx} className="group bg-surface border border-border rounded-2xl p-5 hover:border-accent/40 transition-all">
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="font-mono text-accent font-bold text-lg shrink-0 w-16 pt-0.5">{d.request_id}</div>
-
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-3 mb-1.5">
-                                <span className={`font-black text-xl tracking-[-0.5px] ${isApprove ? "text-success" : isDeny ? "text-danger" : "text-amber-400"}`}>
-                                  {d.decision.toUpperCase()}
-                                </span>
-                                <span className="text-xs px-2.5 py-px rounded bg-surface-raised text-text-muted border border-border">
-                                  CONF {d.confidence.toFixed(2)}
-                                </span>
-                                <span className="text-xs px-2.5 py-px rounded bg-black text-accent border border-accent/30 font-mono">
-                                  {d.latency_ms}ms
-                                </span>
-                              </div>
-
-                              <div className="text-text-secondary leading-snug pr-2">{d.reason}</div>
-
-                              {d.thinking && (
-                                <div className="mt-2 text-xs text-text-muted border-l-2 border-border pl-3 italic">
-                                  Agent thought: {d.thinking}
-                                </div>
-                              )}
-
-                              <div className="mt-2 text-[11px] text-danger/70 group-hover:text-danger/90 transition">
-                                {reaction}
+                        <div 
+                          key={idx} 
+                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 ${isDeny ? 'border-danger/50' : isApprove ? 'border-success/30' : 'border-border'} hover:border-accent/60`}
+                        >
+                          <div className="flex items-start gap-5">
+                            {/* Request ID + Decision */}
+                            <div>
+                              <div className="font-mono text-accent text-sm tracking-wider mb-1">{d.request_id}</div>
+                              <div className={`text-3xl font-black tracking-[-1px] ${isApprove ? 'text-success' : isDeny ? 'text-danger' : 'text-amber-400'}`}>
+                                {d.decision.toUpperCase()}
                               </div>
                             </div>
 
-                            {/* Visual latency bar */}
-                            <div className="hidden md:block w-20 pt-2">
-                              <div className="h-1.5 bg-surface-raised rounded overflow-hidden">
-                                <div 
-                                  className={`h-1.5 rounded transition-all ${d.latency_ms > 280 ? "bg-danger" : d.latency_ms > 180 ? "bg-accent" : "bg-success"}`}
-                                  style={{ width: `${Math.min(100, (d.latency_ms / 400) * 100)}%` }}
-                                />
+                            <div className="flex-1 min-w-0 pt-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <div className="text-xs px-3 py-0.5 rounded-full bg-white/5 border border-white/10 font-mono">
+                                  {d.confidence.toFixed(2)} CONF
+                                </div>
+                                <div className={`text-xs px-3 py-0.5 rounded-full font-mono flex items-center gap-1 ${isLightning ? 'bg-success/20 text-success' : isSlow ? 'bg-danger/20 text-danger' : 'bg-white/5'}`}>
+                                  {d.latency_ms}ms
+                                  {isLightning && " ⚡"}
+                                  {isSlow && " 🐢"}
+                                </div>
                               </div>
-                              <div className="text-right text-[10px] text-text-muted mt-0.5 tabular-nums">{d.latency_ms}ms</div>
+
+                              <div className="text-[15px] text-text-secondary leading-snug mb-3">
+                                {d.reason}
+                              </div>
+
+                              {d.thinking && (
+                                <div className="text-xs text-text-muted border-l-2 border-white/20 pl-3 italic mb-3">
+                                  “{d.thinking}”
+                                </div>
+                              )}
+
+                              <div className={`text-sm font-medium ${reactionColor}`}>
+                                {reaction}
+                              </div>
                             </div>
                           </div>
                         </div>

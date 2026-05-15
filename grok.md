@@ -623,15 +623,20 @@ This phase is about crossing that line.
 - "This is the future of how agents should be evaluated."
 
 ### Phase 5.1: The Wall as the Actual Main Event
-**Status:** 🔄 Partial progress (Infrastructure + visual polish done, but not yet the star of the show)
+**Status:** 🔄 Strong progress — Major visual redesign completed (much more dramatic and screenshot-worthy)
 
 **Current Problem:** The Wall is conceptually the best part of the product, but it doesn't deliver on the promise yet. Without real shared state being active by default, it feels like a local feature with some seeded data.
 
-**What Needs to Happen:**
-- Make shared Wall the default experience (even if it's a lightweight hosted solution at first).
-- Significantly better presentation: sections (Hall of Glory vs Bloodbath), better sorting/filtering, "Most Recent Humiliations", "This Week's Bloodbath" highlights.
-- Visual weight: The Wall should feel like the most important page on the site, not just another tab.
-- Reputation signals: Show how many times a fighter has been challenged, win rate against challengers, etc.
+**What Was Built (First Major Push):**
+- Dramatic visual redesign of the entire Wall page with strong atmosphere.
+- Clear, powerful sections: **Hall of Glory** (heroic treatment) and **The Bloodbath** (brutal, highly shareable).
+- Significantly upgraded cards designed to look excellent when screenshotted.
+- Stronger emotional contrast and visual weight — The Wall now feels like the heart of the coliseum.
+
+**Still Needed:**
+- Make shared state the default (currently requires manual Upstash setup).
+- Add more reputation signals (challenge counts, win rates, etc.).
+- "Most Recent Humiliations" / "This Week's Bloodbath" dynamic highlights.
 
 **Why this matters most:** A dead or half-dead Wall kills the entire "sport" fantasy. This is the single highest-leverage thing for making the product feel real.
 
@@ -707,7 +712,7 @@ We already have the rules, the scoring, the humiliation, and the public memory l
 This is the phase where Bot Coliseum either becomes something people talk about, or stays a very impressive local tool with great copy.
 
 **Current Status:** 
-- Phase 5.1 (The Wall): ~40-50% done (good infrastructure + polish, but shared state not default)
+- Phase 5.1 (The Wall): Strong visual progress — major redesign shipped. Still needs default shared state + more reputation signals.
 - Phases 5.2 – 5.4: Mostly not started
 - Phase 5.5: Partial foundation exists
 
