@@ -154,23 +154,29 @@ export default function BotColiseum() {
             `${data.request_id}  ${data.decision.toUpperCase().padEnd(8)}  ${data.latency_ms}ms  ${data.reason.slice(0, 80)}`,
           ]);
 
-          // Phase 5.7: Escalating live commentary for real fights with legends
+          // Phase 5.7: Much more escalating, flavorful commentary for real legendary fighters
           if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
             const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
             const fl = fighterEntry?.legendName;
 
-            // Special big moment shoutout
+            // Big moment
             const isBigMomentLog = data.decision === "deny" && (data.latency_ms < 120 || data.confidence > 0.92);
             if (fl && isBigMomentLog) {
               setLiveLog((l) => [...l, `📣  THE ARENA ERUPTS FOR ${fl.toUpperCase()}!`]);
             }
 
-            if (fl && liveDecisions.length % 5 === 0 && liveDecisions.length > 0) {
-              const recentDenies = liveDecisions.slice(-5).filter(x => x.decision === "deny").length;
+            // Frequent escalating commentary every 3-4 decisions
+            if (fl && liveDecisions.length % 3 === 0 && liveDecisions.length > 2) {
+              const recent = liveDecisions.slice(-4);
+              const recentDenies = recent.filter(x => x.decision === "deny").length;
+              const recentApproves = recent.filter(x => x.decision === "approve").length;
+
               if (recentDenies >= 3) {
-                setLiveLog((l) => [...l, `📣  ${fl}'s fighter is heating up. The crowd is leaning in.`]);
-              } else if (recentDenies <= 1) {
-                setLiveLog((l) => [...l, `📣  The stands are murmuring about ${fl}...`]);
+                setLiveLog((l) => [...l, `📣  ${fl} is cooking. The crowd is getting loud.`]);
+              } else if (recentApproves >= 3) {
+                setLiveLog((l) => [...l, `📣  The arena is growing restless with ${fl}...`]);
+              } else if (recentDenies === 2) {
+                setLiveLog((l) => [...l, `📣  ${fl}'s fighter is finding rhythm. The stands are leaning in.`]);
               }
             }
           }
@@ -2608,7 +2614,17 @@ export default function BotColiseum() {
                         {(() => {
                           const fe = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
                           if (fe?.legendName) {
-                            return <div className="text-sm text-accent/90 -mt-1 font-medium">brought by {fe.legendName}</div>;
+                            return (
+                              <div>
+                                <div className="text-sm text-accent/90 -mt-1 font-medium">brought by {fe.legendName}</div>
+                                {/* Phase 5.7: Live Legend Vibe */}
+                                <div className="text-xs text-[#c5a26f] font-medium tracking-wider mt-0.5">
+                                  {crowdEnergy >= 75 ? `${fe.legendName.toUpperCase()} IS COOKING` : 
+                                   crowdEnergy >= 55 ? `${fe.legendName} is finding rhythm` : 
+                                   `${fe.legendName} is under pressure...`}
+                                </div>
+                              </div>
+                            );
                           }
                           return null;
                         })()}
