@@ -23,6 +23,9 @@ export default function BotColiseum() {
   // === Phase 3/4.2: The Wall — hybrid local + shared coliseum memory ===
   const [wallEntries, setWallEntries] = useState<WallEntry[]>([]);
   const [isLoadingWall, setIsLoadingWall] = useState(false);
+
+  // Phase 5.1 — In-session reputation (challenge counts) for The Wall
+  const [reputation, setReputation] = useState<Record<string, { challenges: number; defeats: number }>>({});
   const [jsonInput, setJsonInput] = useState("");
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [isScoring, setIsScoring] = useState(false);
@@ -1353,6 +1356,26 @@ export default function BotColiseum() {
                           <span className="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold tracking-wider">LEGEND</span>
                         )}
                       </div>
+
+                      {/* Reputation signals — Phase 5.1 (live + persisted) */}
+                      {(() => {
+                        const rep = reputation[entry.agent_name];
+                        const totalChallenges = (entry.challengeCount || 0) + (rep?.challenges || 0);
+                        const totalDefeats = (entry.defeatedChallengers || 0) + (rep?.defeats || 0);
+
+                        if (totalChallenges === 0 && totalDefeats === 0) return null;
+
+                        return (
+                          <div className="flex items-center gap-2 text-[11px] mt-1">
+                            {totalChallenges > 0 && (
+                              <span className="text-text-muted">Challenged {totalChallenges}×</span>
+                            )}
+                            {totalDefeats > 0 && (
+                              <span className="text-success font-medium">Defeated {totalDefeats}</span>
+                            )}
+                          </div>
+                        );
+                      })()}
                       <div className="text-sm text-text-muted">@{entry.coach}</div>
                     </div>
 
@@ -1400,6 +1423,19 @@ export default function BotColiseum() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
+
+                          // Increment local reputation for this fighter
+                          setReputation(prev => {
+                            const current = prev[entry.agent_name] || { challenges: 0, defeats: 0 };
+                            return {
+                              ...prev,
+                              [entry.agent_name]: {
+                                ...current,
+                                challenges: current.challenges + 1
+                              }
+                            };
+                          });
+
                           const challengeUrl = `/?challenge=true&vs=${encodeURIComponent(entry.agent_name)}&vsScore=${entry.score}&vsFlaw=${encodeURIComponent(entry.fatal_flaw)}`;
                           window.location.href = challengeUrl;
                         }}
@@ -1435,10 +1471,10 @@ export default function BotColiseum() {
                 {bloodbath.length > 0 && (
                   <div className="mb-12">
                     <div className="flex items-center gap-3 mb-5">
-                      <div className="text-danger text-2xl">💀</div>
+                      <div className="text-danger text-3xl">☠︎</div>
                       <div>
-                        <div className="text-danger uppercase tracking-[2.5px] text-sm font-semibold">THE BLOODBATH</div>
-                        <div className="text-xl text-white">Those who left their dignity at the door</div>
+                        <div className="text-danger uppercase tracking-[3px] text-sm font-bold">THE BLOODBATH</div>
+                        <div className="text-xl text-white">Those who were publicly destroyed</div>
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
