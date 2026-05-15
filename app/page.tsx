@@ -2617,11 +2617,17 @@ export default function BotColiseum() {
                             return (
                               <div>
                                 <div className="text-sm text-accent/90 -mt-1 font-medium">brought by {fe.legendName}</div>
-                                {/* Phase 5.7: Live Legend Vibe */}
-                                <div className="text-xs text-[#c5a26f] font-medium tracking-wider mt-0.5">
+                                {/* Phase 5.7: Live Legend Vibe + Heat */}
+                                <div className="text-xs text-[#c5a26f] font-medium tracking-wider mt-0.5 flex items-center gap-2">
                                   {crowdEnergy >= 75 ? `${fe.legendName.toUpperCase()} IS COOKING` : 
                                    crowdEnergy >= 55 ? `${fe.legendName} is finding rhythm` : 
                                    `${fe.legendName} is under pressure...`}
+                                  {/* Small heat indicator */}
+                                  <div className="flex gap-0.5">
+                                    {Array.from({ length: Math.floor(crowdEnergy / 25) }).map((_, i) => (
+                                      <div key={i} className="w-1.5 h-1.5 bg-[#c5a26f] rounded-full" />
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
                             );
@@ -2861,9 +2867,9 @@ export default function BotColiseum() {
 
                       if (isBigMoment) {
                         if (isRealFight && fighterLegend) {
-                          // Extra special treatment for real legendary fighters
-                          momentClass = "border-[#c5a26f] shadow-[0_0_0_2px_#c5a26f,0_12px_30px_-10px_#c5a26f] bg-[#1a1408]";
-                          bigMomentTag = `⭐ ${fighterLegend.toUpperCase()} MOMENT`;
+                          // Extra special, high-production treatment for real legendary fighters
+                          momentClass = "border-[#c5a26f] shadow-[0_0_0_3px_#c5a26f,0_0_20px_#c5a26f,0_16px_40px_-12px_#c5a26f] bg-[#1a1408] scale-[1.01]";
+                          bigMomentTag = `⭐ LEGENDARY MOMENT — ${fighterLegend.toUpperCase()}`;
                         } else {
                           momentClass = "border-danger shadow-[0_0_0_1px_#ef4444,0_8px_25px_-8px_#ef4444] bg-[#1a0f0f]";
                         }
