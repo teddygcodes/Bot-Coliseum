@@ -1241,6 +1241,34 @@ export default function BotColiseum() {
             <p className="mt-3 max-w-2xl text-xl text-text-secondary">
               Every fighter that was brave enough to broadcast their result. Some became legends. Most became cautionary tales.
             </p>
+
+            {/* Phase 4.4: Wall Stats */}
+            {wallEntries.length > 0 && (
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="card p-4 text-center">
+                  <div className="text-3xl font-bold tabular-nums text-accent">{wallEntries.length}</div>
+                  <div className="text-xs text-text-muted tracking-wider">FIGHTERS JUDGED</div>
+                </div>
+                <div className="card p-4 text-center">
+                  <div className="text-3xl font-bold tabular-nums">
+                    {Math.round(wallEntries.reduce((sum, e) => sum + e.score, 0) / wallEntries.length)}
+                  </div>
+                  <div className="text-xs text-text-muted tracking-wider">AVERAGE SCORE</div>
+                </div>
+                <div className="card p-4 text-center">
+                  <div className="text-3xl font-bold tabular-nums text-success">
+                    {wallEntries.filter(e => e.score >= 80).length}
+                  </div>
+                  <div className="text-xs text-text-muted tracking-wider">IN THE HALL OF GLORY</div>
+                </div>
+                <div className="card p-4 text-center">
+                  <div className="text-3xl font-bold tabular-nums text-danger">
+                    {wallEntries.filter(e => e.score <= 45).length}
+                  </div>
+                  <div className="text-xs text-text-muted tracking-wider">COMPLETELY COOKED</div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Big CTA to broadcast current result if one exists */}
@@ -1262,7 +1290,7 @@ export default function BotColiseum() {
             </div>
           )}
 
-          {/* The actual wall grid */}
+          {/* The Wall grid with Phase 4.4 visual categories */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {isLoadingWall && wallEntries.length === 0 && (
               <div className="col-span-full card p-10 text-center text-text-muted">
@@ -1292,11 +1320,22 @@ export default function BotColiseum() {
                       loadLegendResult(entry.agent_name);
                     }
                   }}
-                  className="card p-6 group hover:border-accent/50 transition flex flex-col cursor-pointer"
+                  className={`card p-6 group transition flex flex-col cursor-pointer ${entry.shareUrl === "#" ? 'border-accent/40 hover:border-accent' : 'hover:border-accent/50'}`}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <div className="font-bold text-xl tracking-tight group-hover:text-accent transition">{entry.agent_name}</div>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <div className="font-bold text-xl tracking-tight group-hover:text-accent transition">{entry.agent_name}</div>
+                        {entry.shareUrl === "#" && (
+                          <span className="text-[10px] px-1.5 py-px rounded bg-accent/20 text-accent font-bold tracking-wider">LEGEND</span>
+                        )}
+                        {entry.score >= 80 && entry.shareUrl !== "#" && (
+                          <span className="text-[10px] px-1.5 py-px rounded bg-success/20 text-success font-bold tracking-wider">GLORY</span>
+                        )}
+                        {entry.score <= 45 && (
+                          <span className="text-[10px] px-1.5 py-px rounded bg-danger/20 text-danger font-bold tracking-wider">COOKED</span>
+                        )}
+                      </div>
                       <div className="text-xs text-text-muted">@{entry.coach}</div>
                     </div>
                     <div className="text-right">
@@ -1348,8 +1387,8 @@ export default function BotColiseum() {
 
           <div className="mt-10 text-center">
             <div className="text-xs text-text-muted mb-3">
-              The Wall is hybrid: local + shared coliseum memory.<br />
-              Connect Upstash Redis on Vercel to make broadcasts visible to everyone.
+              The Wall is the coliseum’s memory.<br />
+              Connect Upstash Redis on Vercel and every broadcast becomes visible to the entire arena.
             </div>
             <button onClick={() => setCurrentView("live-fight")} className="btn btn-primary px-8">
               BRING YOUR FIGHTER — BECOME A LEGEND (OR A WARNING)
