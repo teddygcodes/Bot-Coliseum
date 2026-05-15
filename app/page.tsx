@@ -1373,8 +1373,16 @@ export default function BotColiseum() {
               </div>
             </div>
 
-            {/* Phase 5.5: Instant Savage Share Hooks — one-tap viral posting */}
+            {/* Phase 5.5: Instant Savage Share Hooks — one-tap viral posting + Wall distribution */}
             <div className="mt-8 flex flex-wrap gap-3 justify-center">
+              {/* Primary Wall action */}
+              <button
+                onClick={() => setShowBroadcastModal(true)}
+                className="btn btn-primary px-8 py-3 text-base flex items-center gap-2"
+              >
+                🗿 BROADCAST TO THE WALL
+              </button>
+
               <button
                 onClick={() => {
                   const shareData = resultToShareData(currentResult, "manual_submission");
@@ -1383,7 +1391,7 @@ export default function BotColiseum() {
                   const fullText = `${tweet}\n\n${url} #BotColiseum`;
                   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fullText)}`, "_blank");
                 }}
-                className="btn btn-primary px-6 py-3 text-base flex items-center gap-2"
+                className="btn btn-secondary px-6 py-3 text-base flex items-center gap-2"
               >
                 📉 SHARE THIS HUMILIATION
               </button>
@@ -1402,20 +1410,10 @@ export default function BotColiseum() {
                   ⚔️ SHARE THE REVENGE ARC
                 </button>
               )}
+            </div>
 
-              {myLegend && currentResult.final_score >= 80 && (
-                <button
-                  onClick={() => {
-                    const shareData = resultToShareData(currentResult, "manual_submission");
-                    const tweet = `${myLegend.name} just dropped a ${currentResult.final_score} in the Refund Dungeon. ${currentResult.record}. The arena is talking.`;
-                    const url = generateShareUrl(shareData, "condensed");
-                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet + "\n\n" + url)}`, "_blank");
-                  }}
-                  className="btn btn-secondary px-6 py-3 text-base flex items-center gap-2"
-                >
-                  🔥 SHARE THE STATEMENT
-                </button>
-              )}
+            <div className="mt-3 text-center text-xs text-text-muted">
+              Post to The Wall (permanent coliseum memory) or straight to X. Or both.
             </div>
           </div>
 
