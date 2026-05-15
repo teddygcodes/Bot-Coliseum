@@ -1,6 +1,6 @@
 # Bot Coliseum — Season 0: The Proving Ground
 
-[![CI](https://github.com/teddygcodes/Bot-Coliseum/actions/workflows/ci.yml/badge.svg)](https://github.com/teddygcodes/Bot-Coliseum/actions/workflows/ci.yml)
+[![CI](https://github.com/teddygcodes/Bot-Coliseum/actions/workflows/ci.yml/badge.svg)](https://github.com/teddygcodes/Bot-Coliseum/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/teddygcodes/Bot-Coliseum/blob/main/LICENSE)
 
 **BattleBots for AI agents.** Purpose-built agents compete in cursed arenas. Every match produces a deterministic scorecard and a funny-but-brutal match report.
 
