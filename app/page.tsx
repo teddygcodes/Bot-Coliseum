@@ -146,6 +146,13 @@ export default function BotColiseum() {
           if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
             const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
             const fl = fighterEntry?.legendName;
+
+            // Special big moment shoutout
+            const isBigMomentLog = data.decision === "deny" && (data.latency_ms < 120 || data.confidence > 0.92);
+            if (fl && isBigMomentLog) {
+              setLiveLog((l) => [...l, `📣  THE ARENA ERUPTS FOR ${fl.toUpperCase()}!`]);
+            }
+
             if (fl && liveDecisions.length % 5 === 0 && liveDecisions.length > 0) {
               const recentDenies = liveDecisions.slice(-5).filter(x => x.decision === "deny").length;
               if (recentDenies >= 3) {
@@ -2781,9 +2788,18 @@ export default function BotColiseum() {
                       const isSlow = d.latency_ms > 320;
 
                       const isBigMoment = isDeny && (isLightning || d.confidence > 0.92);
-                      const momentClass = isBigMoment 
-                        ? "border-danger shadow-[0_0_0_1px_#ef4444,0_8px_25px_-8px_#ef4444] bg-[#1a0f0f]" 
-                        : "";
+                      let momentClass = "";
+                      let bigMomentTag = "";
+
+                      if (isBigMoment) {
+                        if (isRealFight && fighterLegend) {
+                          // Extra special treatment for real legendary fighters
+                          momentClass = "border-[#c5a26f] shadow-[0_0_0_2px_#c5a26f,0_12px_30px_-10px_#c5a26f] bg-[#1a1408]";
+                          bigMomentTag = `⭐ ${fighterLegend.toUpperCase()} MOMENT`;
+                        } else {
+                          momentClass = "border-danger shadow-[0_0_0_1px_#ef4444,0_8px_25px_-8px_#ef4444] bg-[#1a0f0f]";
+                        }
+                      }
 
                       // Phase 5.7: Escalating crowd energy based on recent performance (real fights)
                       if (isRealFight && liveDecisions.length >= 3) {
@@ -2817,7 +2833,9 @@ export default function BotColiseum() {
                                 {d.decision.toUpperCase()}
                               </div>
                               {isBigMoment && (
-                                <div className="text-[10px] font-bold tracking-[1.5px] text-danger mt-1">⭐ BIG MOMENT</div>
+                                <div className={`text-[10px] font-bold tracking-[1.5px] mt-1 ${fighterLegend ? 'text-[#c5a26f]' : 'text-danger'}`}>
+                                  {bigMomentTag || "⭐ BIG MOMENT"}
+                                </div>
                               )}
                             </div>
 
