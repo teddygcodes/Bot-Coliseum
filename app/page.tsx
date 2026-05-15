@@ -2931,7 +2931,7 @@ export default function BotColiseum() {
                         cardBorder = 'border-[#c5a26f]/80';
                         // Extra premium treatment when crowd energy is high or on big moment
                         if (crowdEnergy >= 70 || isBigMoment) {
-                          cardExtra = "shadow-[0_0_0_4px_#c5a26f30,0_0_25px_#c5a26f] scale-[1.015]";
+                          cardExtra = "shadow-[0_0_0_4px_#c5a26f30,0_0_25px_#c5a26f] scale-[1.015] animate-pulse";
                         }
                       }
 
