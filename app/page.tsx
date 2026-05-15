@@ -26,6 +26,17 @@ export default function BotColiseum() {
 
   // Phase 5.1 — In-session reputation (challenge counts) for The Wall
   const [reputation, setReputation] = useState<Record<string, { challenges: number; defeats: number }>>({});
+
+  // Phase 5.4 — Your persistent legend (lightweight identity + record across sessions)
+  type MyLegend = {
+    name: string;
+    wins: number;
+    losses: number;
+    bestScore: number;
+    legendsSlain: string[];
+    currentStreak: number; // positive = win streak, negative = losses
+  };
+  const [myLegend, setMyLegend] = useState<MyLegend | null>(null);
   const [jsonInput, setJsonInput] = useState("");
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [isScoring, setIsScoring] = useState(false);
@@ -174,6 +185,18 @@ export default function BotColiseum() {
         setWallEntries(JSON.parse(savedWall));
       } catch {
         // will be seeded on first Wall visit
+      }
+    }
+  }, []);
+
+  // Phase 5.4: Load your persistent legend
+  useEffect(() => {
+    const savedLegend = localStorage.getItem("bot-coliseum-my-legend");
+    if (savedLegend) {
+      try {
+        setMyLegend(JSON.parse(savedLegend));
+      } catch {
+        // corrupted localStorage entry — ignore
       }
     }
   }, []);
@@ -403,6 +426,12 @@ export default function BotColiseum() {
     localStorage.setItem("bot-coliseum-wall", JSON.stringify(entries));
   };
 
+  // Phase 5.4: Persist your legend
+  const saveMyLegend = (legend: MyLegend) => {
+    setMyLegend(legend);
+    localStorage.setItem("bot-coliseum-my-legend", JSON.stringify(legend));
+  };
+
   /**
    * Phase 4.2 — Broadcasts to BOTH localStorage (your personal history)
    * and the shared coliseum memory (when Redis is configured).
@@ -460,6 +489,45 @@ export default function BotColiseum() {
     } catch {
       // Silent fail — shared wall is best-effort (Redis may not be configured)
       console.log("[Wall] Shared broadcast failed (Redis not configured or offline)");
+    }
+
+    // Phase 5.4: Update your personal legend record when you broadcast
+    if (myLegend) {
+      const isStrongPerformance = result.final_score >= 78;
+      const isChallengeWin = activeChallenge && result.final_score > activeChallenge.score;
+      const isHumiliatingLoss = result.final_score < 55 && activeChallenge;
+
+      let updated: MyLegend = { ...myLegend };
+
+      if (isChallengeWin || isStrongPerformance) {
+        updated = {
+          ...updated,
+          wins: updated.wins + 1,
+          bestScore: Math.max(updated.bestScore, result.final_score),
+          currentStreak: Math.max(1, updated.currentStreak + 1),
+        };
+        if (isChallengeWin && activeChallenge) {
+          const alreadySlain = updated.legendsSlain.includes(activeChallenge.agentName);
+          if (!alreadySlain) {
+            updated.legendsSlain = [...updated.legendsSlain, activeChallenge.agentName].slice(0, 6);
+          }
+        }
+      } else if (isHumiliatingLoss) {
+        updated = {
+          ...updated,
+          losses: updated.losses + 1,
+          currentStreak: Math.min(-1, updated.currentStreak - 1),
+        };
+      } else if (result.final_score > 65) {
+        // Solid but not legendary — still counts as a win for momentum
+        updated = {
+          ...updated,
+          wins: updated.wins + 1,
+          currentStreak: Math.max(1, updated.currentStreak + 1),
+        };
+      }
+
+      saveMyLegend(updated);
     }
 
     // Copy link as side effect
@@ -1142,7 +1210,7 @@ export default function BotColiseum() {
       {/* ========== RESULT VIEW ========== */}
       {currentView === "result" && currentResult && (
         <div className="max-w-5xl mx-auto px-6 py-10">
-          {/* Phase 4.3: Challenge comparison banner */}
+          {/* Phase 4.3 + 5.4: Challenge comparison banner with legend impact */}
           {activeChallenge && (
             <div className="mb-8 text-center">
               <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-accent/10 text-accent text-xs tracking-[2px] mb-3">
@@ -1159,6 +1227,12 @@ export default function BotColiseum() {
                    "— They still own you."}
                 </span>
               </div>
+              {myLegend && (
+                <div className="mt-3 text-sm text-accent/90">
+                  Your legend is now {myLegend.wins}–{myLegend.losses} 
+                  {myLegend.currentStreak > 1 && ` • ${myLegend.currentStreak}-fight tear`}
+                </div>
+              )}
             </div>
           )}
 
@@ -1387,6 +1461,91 @@ export default function BotColiseum() {
             <p className="max-w-xl mx-auto text-xl text-text-secondary">
               Every fighter who stepped into the arena. Some earned glory.<br />Most earned their place in the archives.
             </p>
+          </div>
+
+          {/* Phase 5.4: YOUR LEGEND — persistent identity and record */}
+          <div className="mb-10">
+            {!myLegend ? (
+              <div className="border border-accent/40 bg-black/40 rounded-2xl p-6 text-center">
+                <div className="uppercase tracking-[2px] text-accent text-xs mb-2">BUILD YOUR LEGEND</div>
+                <div className="text-2xl font-bold tracking-tight mb-2">This is your arena. Claim a name.</div>
+                <p className="text-text-secondary mb-4 max-w-md mx-auto">
+                  Fighters with claimed legends appear with real records, streaks, and titles. Your name will follow you across every fight and challenge.
+                </p>
+                <div className="flex justify-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="e.g. The Iron Revenant"
+                    className="input w-72"
+                    id="legend-name-input"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const val = (e.target as HTMLInputElement).value.trim();
+                        if (val) {
+                          const newLegend: MyLegend = { name: val, wins: 0, losses: 0, bestScore: 0, legendsSlain: [], currentStreak: 0 };
+                          saveMyLegend(newLegend);
+                        }
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      const input = document.getElementById("legend-name-input") as HTMLInputElement;
+                      const val = input?.value.trim();
+                      if (val) {
+                        const newLegend: MyLegend = { name: val, wins: 0, losses: 0, bestScore: 0, legendsSlain: [], currentStreak: 0 };
+                        saveMyLegend(newLegend);
+                      }
+                    }}
+                    className="btn btn-primary px-6"
+                  >
+                    CLAIM MY NAME
+                  </button>
+                </div>
+                <div className="text-[10px] text-text-muted mt-2 tracking-widest">Your legend lives in this browser only. No accounts. No cloud.</div>
+              </div>
+            ) : (
+              <div className="border-2 border-accent/60 bg-black/60 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                  <div className="uppercase tracking-[2px] text-accent text-xs mb-1">YOUR LEGEND</div>
+                  <div className="text-4xl font-black tracking-[-1.5px]">{myLegend.name}</div>
+                  <div className="mt-2 flex items-center gap-4 text-sm">
+                    <div>
+                      <span className="font-mono text-2xl font-bold tabular-nums">{myLegend.wins}</span>
+                      <span className="text-text-muted">–</span>
+                      <span className="font-mono text-2xl font-bold tabular-nums text-danger">{myLegend.losses}</span>
+                    </div>
+                    <div className="text-text-secondary">
+                      {myLegend.currentStreak > 0 && `🔥 ${myLegend.currentStreak} fight win streak`}
+                      {myLegend.currentStreak < 0 && `On a ${Math.abs(myLegend.currentStreak)}-fight slide`}
+                      {myLegend.currentStreak === 0 && "Fresh blood on the sand"}
+                    </div>
+                  </div>
+                  {myLegend.legendsSlain.length > 0 && (
+                    <div className="text-xs text-success/80 mt-1">
+                      Slain: {myLegend.legendsSlain.slice(0, 3).join(" • ")}{myLegend.legendsSlain.length > 3 ? " + more" : ""}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      const newName = prompt("Rename your legend?", myLegend.name);
+                      if (newName && newName.trim()) {
+                        saveMyLegend({ ...myLegend, name: newName.trim() });
+                      }
+                    }}
+                    className="btn btn-ghost text-xs"
+                  >
+                    RENAME
+                  </button>
+                  <div className="text-right text-xs text-text-muted">
+                    Personal best<br />
+                    <span className="font-mono text-accent text-lg font-bold">{myLegend.bestScore}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Powerful Stats Bar */}

@@ -312,7 +312,7 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 | 5.1 The Wall as the Actual Main Event | 🔄 Partial (~45%) | Infrastructure + visual polish done, but shared state not yet default |
 | 5.2 Theatricality & Immersion in Live Fights | 🔄 Strong progress | Ceremonial walkout + crowd energy meter + visible commentary + verdict drama shipped. Quick Demo now feels like a real arena event. |
 | 5.3 Visual Identity & Arena Atmosphere | 🔄 Solid first wave | Cursed grid + blood/gold cards + impact weight + verdict framing. Site feels like the arena now. |
-| 5.4 Reputation & Lightweight Persistence | ❌ Very early | No real fighter identity or history |
+| 5.4 Reputation & Lightweight Persistence | 🔄 Strong first wave | Claimable legends with W-L, streaks, legends slain, automatic record building on every fight + challenge |
 | 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Partial foundation | Quick Demo + OG images exist, but emotional hook is weak |
 
 We are focusing on the highest-leverage areas identified from internal review, external AI feedback, and real usage patterns:
@@ -685,15 +685,19 @@ This phase is about crossing that line.
 This layer makes every prior Phase 5.1/5.2 feature *feel* more real.
 
 ### Phase 5.4: Reputation & Lightweight Persistence
-**Status:** ❌ Very early
+**Status:** 🔄 Strong first wave shipped — fighters now have real, persistent, addictive legends.
 
-**Current Problem:** Every session feels disposable. There's no real sense of ongoing reputation or fighter identity.
+**Current Problem:** The foundation is excellent. The remaining gap is making "vs You" head-to-head history and cross-fighter rivalries more visible on The Wall itself.
 
-**What Needs to Happen (while staying true to local-first values):**
-- Lightweight persistent identity (simple handle + fighter history that lives in localStorage but can be optionally synced).
-- Fighter cards with history ("3–1 record, notable wins/losses").
-- The ability to have recurring fighters that build reputation over time on The Wall.
-- Optional "claim your fighter" flow so people can own their results across sessions.
+**What Was Shipped:**
+- "Claim your legend" flow on The Wall: simple name claim that persists in localStorage. "This is your arena."
+- Full personal record tracking: W–L, current streak (win tear or slide), personal best score, "Legends Slain" list.
+- Automatic record building: Every broadcast (Quick Demo or real submission) updates your legend. Challenge wins against high-rep fighters add to "Slain", boost streak, update best.
+- "Your Legend" card at the top of The Wall with beautiful record display + rename.
+- Rivalry Resolved banner now shows your updated legend record after every challenge ("Your legend is now 4–1 • 3-fight tear").
+- Deeper integration with existing Fighter of the Moment / defeat tracking.
+
+This turns The Wall from "cool list of past fights" into "the place where legends are actually made and hunted." People will return specifically to defend or improve their record.
 
 This makes challenges and The Wall actually matter beyond a single visit.
 
@@ -735,9 +739,9 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.1 (The Wall): **Very strong progress** — Dramatic redesign, Most Recent Humiliations with share buttons, prestige badges, Fighter of the Moment, reputation + defeat tracking. Still needs default shared state.
 - Phase 5.2 (Theatricality): **Strong progress** — Quick Demo now delivers a full produced arena spectacle (ceremonial walkout, live crowd energy meter + 4 escalating flavors, visible 📣 commentary ticker, big moment hype, dramatic "THE VERDICT IS IN" build-up, energy-reactive closer). The 90-second onboarding path finally feels like a sporting event.
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
-- Phase 5.4: Very early
+- Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5: Partial + improvements
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.3 visual identity push (cursed arena-grid, bloodbath/glory/verdict CSS system, heavier hero + Quick Demo gate + Wall + decision cards + result framing). Site now feels like the coliseum.
+**Last Updated:** May 2026 — Phase 5.4 reputation system (claimable persistent legends with live W-L, streaks, legends slain, automatic record growth, rivalry feedback on results + The Wall). Fighters now have real status and reason to return.
