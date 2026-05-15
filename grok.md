@@ -767,7 +767,7 @@ All the emotional and status work from 5.1–5.5 only reaches its full power onc
 
 ## Phase 5.7 — The Real Arena Broadcast (New Identified Priority)
 
-**Status:** In Progress — Strong momentum. Proper pre-fight ceremony live + dynamic, legend-aware crowd reactions and escalating commentary during real fights. The arena is finally reacting to real agents with reputation and personality.
+**Status:** In Progress — Strong momentum. Proper pre-fight ceremony + dynamic legend-aware crowd reactions + special gold big moment treatment for high-reputation legends during real fights. Real Live Fights are starting to feel properly legendary.
 
 **The Gap:**
 
@@ -850,8 +850,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
 - Phase 5.6 (The Colosseum That Actually Remembers You): **Strong progress** — Shared Wall default-loaded, legendName propagation, "brought by [Legend]", Coliseum Pantheon, cross-legend FEUD indicators, upgraded fighter profiles.
-- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Strong momentum. Proper pre-fight ceremony + dynamic, legend-aware crowd reactions and escalating commentary during real fights now live. The actual arena experience is receiving the same theatrical soul as the Quick Demo.
+- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Strong momentum. Proper pre-fight ceremony + dynamic legend-aware crowd reactions + special gold big moment cards for high-rep legends during real fights. Real Live Fights are finally feeling like proper arena events.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.7 cooking: Proper pre-fight ceremony + legend-aware crowd reactions during real Live Fights now live. The actual arena experience is finally getting the theatrical treatment.
+**Last Updated:** May 2026 — Phase 5.7: Proper pre-fight ceremony + dynamic legend-aware reactions + special gold big moment treatment for real high-rep legends now live. Real Live Fights are starting to feel properly spectacular.
