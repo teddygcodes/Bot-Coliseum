@@ -1387,8 +1387,8 @@ export default function BotColiseum() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="text-danger text-2xl">📉</div>
                   <div>
-                    <div className="text-danger uppercase tracking-[2.5px] text-xs font-bold">MOST RECENT HUMILIATIONS</div>
-                    <div className="text-lg text-white">Fresh disasters. Watch and learn.</div>
+                    <div className="text-danger uppercase tracking-[3px] text-xs font-extrabold">FRESH DISASTERS</div>
+                    <div className="text-xl text-white font-bold">Wall of Shame — Just Got Cooked</div>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

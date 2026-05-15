@@ -623,20 +623,22 @@ This phase is about crossing that line.
 - "This is the future of how agents should be evaluated."
 
 ### Phase 5.1: The Wall as the Actual Main Event
-**Status:** 🔄 Strong progress — Major visual redesign + "Most Recent Humiliations" + defeat tracking + performance-reactive commentary shipped
+**Status:** 🔄 Strong progress — Major visual redesign + Most Recent Humiliations with one-click "Share this Humiliation" + prestige badges + defeat tracking + performance-reactive commentary shipped
 
 **Current Problem:** The Wall is conceptually the best part of the product, but it doesn't deliver on the promise yet. Without real shared state being active by default, it feels like a local feature with some seeded data.
 
 **What Was Built (Major Push):**
-- Dramatic visual redesign of the entire Wall with strong atmosphere and screenshot-worthy cards.
-- Clear sections: **Hall of Glory** (heroic) + **The Bloodbath** (brutal + highly shareable).
-- **"Most Recent Humiliations"** dedicated row (fresh disasters, very viral potential).
-- **Reputation system**: Live challenge counts + defeat tracking (when you beat someone you challenged, their "Defeated" count increases).
-- Performance-reactive arena commentary during Quick Demo ("The Revenant is cooking" vs "getting cooked").
+- Dramatic visual redesign of the entire Wall with strong atmosphere and highly screenshot-worthy cards.
+- Clear sections: **Hall of Glory** (heroic) + **The Bloodbath** (brutal + highly shareable, with cracked texture).
+- **"Most Recent Humiliations"** dedicated row with one-click "Share this Humiliation" button (pure X catnip).
+- **Prestige badges**: UNDEFEATED + CHALLENGER SLAYER.
+- **Fighter of the Moment / Current Champion** teaser with direct challenge button.
+- **Reputation system**: Live challenge counts + defeat tracking.
+- Performance-reactive arena commentary during Quick Demo.
 
 **Still Needed:**
 - Make shared state the default (currently requires manual Upstash setup).
-- Even more advanced reputation (win streaks, "Undefeated", Challenger Slayer badges).
+- Even more advanced reputation (win streaks, "Undefeated in X challenges", etc.).
 
 **Why this matters most:** A dead or half-dead Wall kills the entire "sport" fantasy. This is the single highest-leverage thing for making the product feel real.
 
@@ -712,10 +714,10 @@ We already have the rules, the scoring, the humiliation, and the public memory l
 This is the phase where Bot Coliseum either becomes something people talk about, or stays a very impressive local tool with great copy.
 
 **Current Status:** 
-- Phase 5.1 (The Wall): **Strong progress** — Major visual redesign, Most Recent Humiliations, reputation + defeat tracking shipped. Still needs default shared state.
-- Phase 5.2 (Theatricality): Good improvements to Quick Demo + Live Fight decision feed + reactive commentary.
-- Phases 5.3–5.4: Early / Not started
-- Phase 5.5: Partial foundation + improvements
+- Phase 5.1 (The Wall): **Very strong progress** — Dramatic redesign, Most Recent Humiliations with share buttons, prestige badges, Fighter of the Moment, reputation + defeat tracking. Still needs default shared state.
+- Phase 5.2 (Theatricality): Solid improvements (cinematic decision cards + performance-reactive commentary in Quick Demo).
+- Phases 5.3–5.4: Early
+- Phase 5.5: Partial + improvements
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
