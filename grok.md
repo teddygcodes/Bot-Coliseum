@@ -311,7 +311,7 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 |-----------|--------|-------|
 | 5.1 The Wall as the Actual Main Event | 🔄 Partial (~45%) | Infrastructure + visual polish done, but shared state not yet default |
 | 5.2 Theatricality & Immersion in Live Fights | 🔄 Strong progress | Ceremonial walkout + crowd energy meter + visible commentary + verdict drama shipped. Quick Demo now feels like a real arena event. |
-| 5.3 Visual Identity & Arena Atmosphere | ❌ Early progress only | Still feels like a clean dark app |
+| 5.3 Visual Identity & Arena Atmosphere | 🔄 Solid first wave | Cursed grid + blood/gold cards + impact weight + verdict framing. Site feels like the arena now. |
 | 5.4 Reputation & Lightweight Persistence | ❌ Very early | No real fighter identity or history |
 | 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Partial foundation | Quick Demo + OG images exist, but emotional hook is weak |
 
@@ -664,16 +664,25 @@ This phase is about crossing that line.
 **Goal:** Make the Quick Demo (the main onboarding path) feel like a real 2-3 minute produced arena event that people want to watch and share.
 
 ### Phase 5.3: Visual Identity & Arena Atmosphere
-**Status:** ❌ Early progress only
+**Status:** 🔄 Solid first wave — site now feels heavier, bloodier, and more like a cursed coliseum instead of a polished web app.
 
-**Current Problem:** The design is clean and dark, but it doesn't feel particularly "cursed" or arena-like. It reads as a well-made Next.js app, not a dangerous coliseum.
+**Current Problem:** Still some modern-app polish in places, but the core "stepping into the arena" feeling is now present on first load and during key moments.
 
-**What Needs to Happen:**
-- Stronger art direction and visual language (more distinctive typography, better use of texture, blood/gold/dark palette, arena motifs).
-- More atmospheric details across the site (subtle background elements, better micro-interactions, loading states that feel like entering the arena).
-- The result screen and The Wall especially need more weight and personality.
+**What Was Shipped:**
+- Stronger cursed arena-grid on hero with blood texture overlay + radial vignette.
+- New CSS primitives: .cursed-border, .impact-hover (physical lift + glow), .bloodbath-card (visceral red-black with blood wash), .glory-card (tarnished gold), .verdict-frame (carved stone report framing).
+- Home hero: heavier font-black title, cursed border, impact CTAs.
+- Quick Demo gate: bloodbath treatment, danger badge, heavy shadow, "ZERO SETUP • REAL HUMILIATION".
+- The Wall: Bloodbath and glory cards now use centralized cursed styling for consistency.
+- Live decision cards: .cursed-border + impact + "⭐ BIG MOMENT" glow treatment on lightning/high-confidence hero denials.
+- Result/verdict states: "THE ARENA HAS RENDERED ITS VERDICT" framing, carved language, heavier score header.
 
-This is the difference between "this is a cool project" and "this feels like something."
+**Still Needed:**
+- Even more micro-interactions and "gate opening" loading states.
+- Subtle sound design or heavier motion on energy spikes / big moments (if we add light framer-motion).
+- Full-bleed arena motifs or pillar/column decorative elements on desktop.
+
+This layer makes every prior Phase 5.1/5.2 feature *feel* more real.
 
 ### Phase 5.4: Reputation & Lightweight Persistence
 **Status:** ❌ Very early
@@ -725,9 +734,10 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 **Current Status:** 
 - Phase 5.1 (The Wall): **Very strong progress** — Dramatic redesign, Most Recent Humiliations with share buttons, prestige badges, Fighter of the Moment, reputation + defeat tracking. Still needs default shared state.
 - Phase 5.2 (Theatricality): **Strong progress** — Quick Demo now delivers a full produced arena spectacle (ceremonial walkout, live crowd energy meter + 4 escalating flavors, visible 📣 commentary ticker, big moment hype, dramatic "THE VERDICT IS IN" build-up, energy-reactive closer). The 90-second onboarding path finally feels like a sporting event.
-- Phases 5.3–5.4: Early
+- Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
+- Phase 5.4: Very early
 - Phase 5.5: Partial + improvements
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.2 major elevation (Quick Demo now a produced arena spectacle with walkout, crowd energy, live commentary, verdict drama)
+**Last Updated:** May 2026 — Phase 5.3 visual identity push (cursed arena-grid, bloodbath/glory/verdict CSS system, heavier hero + Quick Demo gate + Wall + decision cards + result framing). Site now feels like the coliseum.

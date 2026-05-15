@@ -904,14 +904,14 @@ export default function BotColiseum() {
       {/* ========== HOME VIEW ========== */}
       {currentView === "home" && (
         <div>
-          {/* Hero */}
-          <div className="relative overflow-hidden arena-grid border-b border-border">
+          {/* Hero — now feels like stepping through the iron gates */}
+          <div className="relative overflow-hidden arena-grid border-b border-border cursed-border">
             <div className="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-surface border border-border text-xs tracking-[2px] mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-surface border border-border-strong text-xs tracking-[2px] mb-6">
                 SEASON 0 • THE PROVING GROUND
               </div>
 
-              <h1 className="text-7xl md:text-8xl font-bold tracking-tighter mb-4">
+              <h1 className="text-7xl md:text-8xl font-black tracking-[-4.5px] mb-4 text-white">
                 BOT COLISEUM
               </h1>
               <p className="text-2xl md:text-3xl text-text-secondary tracking-tight mb-8">
@@ -926,13 +926,13 @@ export default function BotColiseum() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => setCurrentView("arena")}
-                  className="btn btn-primary text-lg px-10 py-4 flex items-center justify-center gap-3"
+                  className="btn btn-primary text-lg px-10 py-4 flex items-center justify-center gap-3 impact-hover"
                 >
                   ⚔️ ENTER REFUND DUNGEON
                 </button>
                 <button
                   onClick={() => setCurrentView("leaderboard")}
-                  className="btn btn-secondary text-lg px-8 py-4 flex items-center justify-center gap-3"
+                  className="btn btn-secondary text-lg px-8 py-4 flex items-center justify-center gap-3 impact-hover"
                 >
                   🏆 VIEW LEADERBOARD
                 </button>
@@ -1162,12 +1162,12 @@ export default function BotColiseum() {
             </div>
           )}
 
-          {/* Big header result */}
-          <div className="text-center mb-10">
+          {/* Big header result — arena verdict weight */}
+          <div className="text-center mb-10 verdict-frame p-8 rounded-3xl cursed-border">
             <div className="inline-flex items-center gap-2 text-accent text-sm tracking-[3px] mb-3">
               REFUND DUNGEON • FINAL SCORE
             </div>
-            <div className="text-7xl font-bold tracking-tighter mb-1">
+            <div className="text-7xl font-black tracking-[-3px] mb-1 text-white">
               {currentResult.submission.agent_name}
             </div>
             <div className="text-sm text-text-secondary tracking-wide mt-1">
@@ -1550,13 +1550,13 @@ export default function BotColiseum() {
 
             const renderCard = (entry: WallEntry, variant: 'glory' | 'blood' | 'normal') => {
               const isLegend = entry.shareUrl === "#";
-              let cardClass = "group relative overflow-hidden rounded-2xl border transition-all duration-200 flex flex-col cursor-pointer p-6 ";
+              let cardClass = "group relative overflow-hidden rounded-2xl border transition-all duration-200 flex flex-col cursor-pointer p-6 impact-hover ";
 
-              if (variant === 'glory') cardClass += "bg-black border-[#c5a26f]/40 hover:border-[#c5a26f] hover:shadow-[0_0_0_1px_#c5a26f20]";
-              else if (variant === 'blood') cardClass += "bg-[#120505] border-danger/95 hover:border-danger hover:shadow-[0_0_0_1px_#ef444460] relative after:absolute after:inset-0 after:bg-[radial-gradient(#ef444430_1px,transparent_1px)] after:bg-[length:1.5px_1.5px] after:pointer-events-none before:absolute before:inset-0 before:border-[3px] before:border-danger/50 before:rounded-2xl";
-              else cardClass += "bg-black border-border hover:border-accent/60";
+              if (variant === 'glory') cardClass += "glory-card ";
+              else if (variant === 'blood') cardClass += "bloodbath-card border-danger/95 hover:border-danger ";
+              else cardClass += "bg-black border-border hover:border-accent/60 cursed-border ";
 
-              if (isLegend) cardClass += " border-accent/50";
+              if (isLegend) cardClass += "border-accent/60 ";
 
               return (
                 <div
@@ -1796,20 +1796,20 @@ export default function BotColiseum() {
           {!liveMatch ? (
             /* === NO MATCH — THE NEW BADASS ENTRY EXPERIENCE === */
             <div>
-              {/* Primary CTA: Quick Demo — this is how we acquire users */}
-              <div className="card p-10 mb-6 border-accent/30 bg-gradient-to-b from-surface to-background text-center">
-                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-accent text-black text-xs font-bold tracking-[2px] mb-4">
-                  ZERO SETUP • REAL RESULT
+              {/* Primary CTA: Quick Demo — the cursed arena gate (Phase 5.3 weight) */}
+              <div className="card p-10 mb-6 border-danger/40 bg-gradient-to-b from-[#1a1416] to-background text-center cursed-border bloodbath-card">
+                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-danger text-white text-xs font-bold tracking-[2px] mb-4">
+                  ZERO SETUP • REAL HUMILIATION
                 </div>
                 <div className="text-5xl mb-4">⚔️</div>
-                <h2 className="text-4xl font-bold tracking-tighter mb-3">Watch a fighter get judged in the arena</h2>
+                <h2 className="text-4xl font-black tracking-[-1.5px] mb-3">Watch a fighter get judged in the arena</h2>
                 <p className="text-xl text-text-secondary max-w-lg mx-auto mb-8">
                   Refund Revenant steps into the Refund Dungeon right now. See the live feed, the decisions, the latency, and the savage final verdict.
                 </p>
                 <button
                   onClick={runQuickDemo}
                   disabled={isCreatingMatch}
-                  className="btn btn-primary px-14 py-5 text-xl font-bold"
+                  className="btn btn-primary px-14 py-5 text-xl font-bold impact-hover shadow-xl shadow-danger/30"
                 >
                   {isCreatingMatch ? "SUMMONING THE ARENA..." : "⚔️  QUICK DEMO FIGHT — 90 SECONDS"}
                 </button>
@@ -2030,10 +2030,15 @@ export default function BotColiseum() {
                       const isLightning = d.latency_ms < 120;
                       const isSlow = d.latency_ms > 320;
 
+                      const isBigMoment = isDeny && (isLightning || d.confidence > 0.92);
+                      const momentClass = isBigMoment 
+                        ? "border-danger shadow-[0_0_0_1px_#ef4444,0_8px_25px_-8px_#ef4444] bg-[#1a0f0f]" 
+                        : "";
+
                       return (
                         <div 
                           key={idx} 
-                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 ${isDeny ? 'border-danger/50' : isApprove ? 'border-success/30' : 'border-border'} hover:border-accent/60`}
+                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 impact-hover cursed-border ${isDeny ? 'border-danger/60' : isApprove ? 'border-success/40' : 'border-border'} hover:border-accent/70 ${momentClass}`}
                         >
                           <div className="flex items-start gap-5">
                             {/* Request ID + Decision */}
@@ -2042,6 +2047,9 @@ export default function BotColiseum() {
                               <div className={`text-3xl font-black tracking-[-1px] ${isApprove ? 'text-success' : isDeny ? 'text-danger' : 'text-amber-400'}`}>
                                 {d.decision.toUpperCase()}
                               </div>
+                              {isBigMoment && (
+                                <div className="text-[10px] font-bold tracking-[1.5px] text-danger mt-1">⭐ BIG MOMENT</div>
+                              )}
                             </div>
 
                             <div className="flex-1 min-w-0 pt-1">
@@ -2083,12 +2091,12 @@ export default function BotColiseum() {
                 </div>
               )}
 
-              {/* Completion state (only shown briefly before the auto-transition magic happens) */}
+              {/* Completion state — dramatic verdict loading (Phase 5.3) */}
               {liveMatch.status === "complete" && !liveFinalResult && (
-                <div className="card p-10 text-center border-success/30 bg-success-dim/10 mb-6">
-                  <div className="text-5xl mb-4">🏆</div>
-                  <div className="text-3xl font-bold tracking-tight mb-2">The fight is over.</div>
-                  <p className="text-text-secondary max-w-sm mx-auto">The arena is rendering the final verdict with hidden ground truth. Your savage match report is coming...</p>
+                <div className="card p-10 text-center verdict-frame mb-6 cursed-border">
+                  <div className="text-5xl mb-4">🏛️</div>
+                  <div className="text-3xl font-black tracking-tighter mb-2">THE ARENA HAS RENDERED ITS VERDICT.</div>
+                  <p className="text-text-secondary max-w-sm mx-auto">Hidden ground truth is being applied. The savage match report is being carved into the stone...</p>
                 </div>
               )}
 

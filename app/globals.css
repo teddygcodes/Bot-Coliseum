@@ -269,18 +269,92 @@ body {
   margin-bottom: 4px;
 }
 
-/* Subtle grid for hero / arena feel */
+/* Cursed arena grid — stronger, more oppressive stone feel for hero + key sections */
 .arena-grid {
   background-image: 
-    linear-gradient(rgba(249, 115, 22, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(249, 115, 22, 0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
+    linear-gradient(rgba(249, 115, 22, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249, 115, 22, 0.06) 1px, transparent 1px),
+    radial-gradient(circle at 50% 40%, rgba(0,0,0,0.35) 0%, transparent 55%);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
+  position: relative;
+}
+
+/* Subtle blood/cracked texture overlay on arena surfaces */
+.arena-grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(135deg, rgba(239, 68, 68, 0.015) 0%, transparent 40%),
+    linear-gradient(-45deg, rgba(249, 115, 22, 0.012) 0%, transparent 50%);
+  pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 /* Monospace for IDs and scores */
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+}
+
+/* Cursed arena personality — heavier, more dangerous, more physical */
+.cursed-border {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 4px 12px -2px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.impact-hover {
+  transition: transform 0.08s cubic-bezier(0.2, 0, 0.1, 1), 
+              box-shadow 0.1s ease, 
+              border-color 0.1s ease;
+}
+
+.impact-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5), 0 4px 8px -2px rgba(0,0,0,0.4);
+  border-color: var(--color-accent);
+}
+
+/* Bloodbath / humiliation cards — more visceral */
+.bloodbath-card {
+  background-color: #1a1416;
+  border-color: #3f2a2c;
+  position: relative;
+}
+
+.bloodbath-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(239,68,68,0.035) 0%, transparent 60%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.bloodbath-card:hover {
+  border-color: #5c3a3f;
+  box-shadow: 0 8px 20px -4px rgba(0,0,0,0.7);
+}
+
+/* Glory cards (high score, undefeated) */
+.glory-card {
+  border-color: #4a3f2a;
+  background: linear-gradient(180deg, #1f222b 0%, #1a1915 100%);
+}
+
+.glory-card:hover {
+  border-color: #b38b3d;
+}
+
+/* Result / verdict framing */
+.verdict-frame {
+  border-left: 4px solid var(--color-danger);
+  background: linear-gradient(90deg, rgba(239,68,68,0.06) 0%, transparent 30%);
+}
+
+.verdict-frame.win {
+  border-left-color: var(--color-success);
+  background: linear-gradient(90deg, rgba(34,197,94,0.06) 0%, transparent 30%);
 }
 
 /* Responsive tweaks */
