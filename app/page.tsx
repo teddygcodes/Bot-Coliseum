@@ -114,6 +114,20 @@ export default function BotColiseum() {
           };
           setLiveDecisions((prev) => [...prev, dec]);
 
+          // Phase 5.7: Legend-aware crowd reactions for real Live Fights
+          if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
+            const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
+            if (fighterEntry?.legendName && Math.random() < 0.22) {
+              const legend = fighterEntry.legendName;
+              const legendComments = [
+                `The crowd is watching ${legend}'s fighter closely...`,
+                `${legend} has the arena's attention right now.`,
+                `Someone just shouted "${legend}!" from the stands.`,
+              ];
+              setLiveLog((l) => [...l, `📣  ${legendComments[Math.floor(Math.random() * legendComments.length)]}`]);
+            }
+          }
+
           // Update live stats
           setLiveStats((prev) => {
             const newProcessed = prev.processed + 1;
