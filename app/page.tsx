@@ -179,6 +179,20 @@ export default function BotColiseum() {
     }
   }, [currentView]);
 
+  // Phase 4.3: Detect challenge intent from share page
+  const [challengeMode, setChallengeMode] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("challenge") === "true") {
+        setChallengeMode(true);
+        // Clean the URL
+        window.history.replaceState({}, "", "/");
+      }
+    }
+  }, []);
+
   // Persist leaderboard
   const saveLeaderboard = (entries: LeaderboardEntry[]) => {
     setLeaderboard(entries);
@@ -248,13 +262,37 @@ export default function BotColiseum() {
     URL.revokeObjectURL(url);
   };
 
-  // Load a baseline agent as demo
+  // Load a baseline agent as demo (goes to submit screen)
   const loadSampleAgent = (name: string) => {
     const found = BASELINE_SUBMISSIONS.find((s) => s.agent_name === name);
     if (found) {
       setJsonInput(JSON.stringify(found, null, 2));
       setValidationErrors([]);
       setCurrentView("submit");
+    }
+  };
+
+  // Phase 4.2 polish: Load a legendary baseline fight directly into the result view
+  const loadLegendResult = (legendName: string) => {
+    const mapping: Record<string, string> = {
+      "Refund Revenant": "Policy Hammer",
+      "Policy Hammer v3": "Policy Hammer",
+      "Escalation Sloth": "Escalation Sloth",
+      "Customer Pleaser 9000": "Customer Pleaser 9000",
+      "RAG Revenant": "Policy Hammer",
+      "Claude-in-the-Loop": "Refund Goblin",
+    };
+
+    const baselineName = mapping[legendName] || "Policy Hammer";
+    const found = BASELINE_SUBMISSIONS.find((s) => s.agent_name === baselineName);
+
+    if (found) {
+      const scored = scoreSubmission(found);
+      setCurrentResult(scored);
+      setCurrentView("result");
+    } else {
+      // Fallback
+      loadSampleAgent(baselineName);
     }
   };
 
@@ -1205,7 +1243,17 @@ export default function BotColiseum() {
             {wallEntries
               .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
               .map((entry) => (
-                <div key={entry.id} className="card p-6 group hover:border-accent/50 transition flex flex-col">
+                <div
+                  key={entry.id}
+                  onClick={() => {
+                    if (entry.shareUrl !== "#") {
+                      window.open(entry.shareUrl, "_blank");
+                    } else {
+                      loadLegendResult(entry.agent_name);
+                    }
+                  }}
+                  className="card p-6 group hover:border-accent/50 transition flex flex-col cursor-pointer"
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <div className="font-bold text-xl tracking-tight group-hover:text-accent transition">{entry.agent_name}</div>
@@ -1230,12 +1278,12 @@ export default function BotColiseum() {
                         <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[10px] font-bold tracking-wider">LIVE FIGHT</span>
                       )}
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           if (entry.shareUrl !== "#") {
                             window.open(entry.shareUrl, "_blank");
                           } else {
-                            // For seeded legends, generate a nice share link from the current result if possible, else just show the name
-                            alert("This legendary fight was broadcast before the current session. Fight your own and take its place on the wall.");
+                            loadLegendResult(entry.agent_name);
                           }
                         }}
                         className="btn btn-ghost px-3 py-1 text-xs border border-border hover:border-accent"
@@ -1249,7 +1297,10 @@ export default function BotColiseum() {
           </div>
 
           <div className="mt-10 text-center">
-            <div className="text-xs text-text-muted mb-3">The Wall lives in your browser for now. When you broadcast a fight, it appears here permanently (until you clear site data).</div>
+            <div className="text-xs text-text-muted mb-3">
+              The Wall is hybrid: local + shared coliseum memory.<br />
+              Connect Upstash Redis on Vercel to make broadcasts visible to everyone.
+            </div>
             <button onClick={() => setCurrentView("live-fight")} className="btn btn-primary px-8">
               BRING YOUR FIGHTER — BECOME A LEGEND (OR A WARNING)
             </button>
@@ -1261,6 +1312,11 @@ export default function BotColiseum() {
       {currentView === "live-fight" && (
         <div className="max-w-5xl mx-auto px-6 py-10">
           <div className="mb-8">
+            {challengeMode && (
+              <div className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-danger/10 border border-danger/30 text-danger text-sm font-medium">
+                ⚔️ YOU ARE IN CHALLENGE MODE — Someone is waiting to be beaten
+              </div>
+            )}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs tracking-[3px] mb-3">
               SEASON 0 • PROVING GROUND
             </div>

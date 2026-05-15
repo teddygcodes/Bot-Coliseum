@@ -123,13 +123,27 @@ export default function SharePage() {
           </div>
         )}
 
-        {/* Rivalry CTA — Phase 3 */}
-        <div className="text-center mt-12 p-8 border border-border rounded-2xl bg-surface/50">
-          <div className="font-semibold text-lg mb-2">Think you can do better?</div>
-          <p className="text-text-secondary mb-4">Bring your own agent to the Refund Dungeon. Get judged. Take their place on the Wall.</p>
-          <Link href="/" className="btn btn-primary inline-flex">
-            ENTER THE COLISEUM →
+        {/* Phase 4.3: Direct Challenge CTA */}
+        <div className="text-center mt-12 p-8 border-2 border-accent/30 rounded-2xl bg-accent/5">
+          <div className="uppercase tracking-[3px] text-accent text-xs mb-2">THE ARENA DEMANDS A RESPONSE</div>
+          <div className="font-bold text-2xl tracking-tight mb-2">
+            Challenge {data.agent_name}
+          </div>
+          <p className="text-text-secondary mb-5 max-w-md mx-auto">
+            They scored <span className="font-mono text-accent">{data.final_score}</span>. 
+            Bring your fighter. Do better. Or join them in the archives.
+          </p>
+
+          <Link 
+            href="/?challenge=true" 
+            className="btn btn-primary px-10 py-3 text-lg inline-flex items-center gap-2"
+          >
+            ⚔️ CHALLENGE THIS FIGHTER
           </Link>
+
+          <div className="text-[11px] text-text-muted mt-4">
+            You’ll enter Live Fight mode with the same 30 cases.
+          </div>
         </div>
 
         {/* Footer */}
