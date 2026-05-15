@@ -1835,28 +1835,52 @@ export default function BotColiseum() {
               </div>
             ) : (
               <div className="border-2 border-accent/60 bg-black/60 rounded-2xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div>
-                  <div className="uppercase tracking-[2px] text-accent text-xs mb-1">YOUR LEGEND</div>
-                  <div className="text-4xl font-black tracking-[-1.5px]">{myLegend.name}</div>
-                  <div className="mt-2 flex items-center gap-4 text-sm">
-                    <div>
-                      <span className="font-mono text-2xl font-bold tabular-nums">{myLegend.wins}</span>
-                      <span className="text-text-muted">–</span>
-                      <span className="font-mono text-2xl font-bold tabular-nums text-danger">{myLegend.losses}</span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="uppercase tracking-[2px] text-accent text-xs">YOUR LEGEND</div>
+                    {/* Phase 5.6: Dynamic Legend Title */}
+                    {(() => {
+                      const { wins, losses, currentStreak, bestScore } = myLegend;
+                      const total = wins + losses;
+                      let title = "Rising Threat";
+                      if (total >= 10 && currentStreak >= 4) title = "Unstoppable Force";
+                      else if (wins >= 8 && losses <= 2) title = "Feared Veteran";
+                      else if (bestScore >= 85) title = "Arena Darling";
+                      else if (currentStreak < -2) title = "On Thin Ice";
+                      return <span className="text-[10px] px-2.5 py-0.5 rounded bg-accent/20 text-accent font-bold tracking-wider">{title}</span>;
+                    })()}
+                  </div>
+
+                  <div className="text-4xl font-black tracking-[-1.5px] text-white mb-2">{myLegend.name}</div>
+
+                  <div className="flex items-center gap-6 text-sm">
+                    <div className="font-mono text-2xl font-bold tabular-nums">
+                      {myLegend.wins}<span className="text-text-muted">–</span>{myLegend.losses}
                     </div>
+
                     <div className="text-text-secondary">
-                      {myLegend.currentStreak > 0 && `🔥 ${myLegend.currentStreak} fight win streak`}
-                      {myLegend.currentStreak < 0 && `On a ${Math.abs(myLegend.currentStreak)}-fight slide`}
-                      {myLegend.currentStreak === 0 && "Fresh blood on the sand"}
+                      {myLegend.currentStreak > 0 && `🔥 ${myLegend.currentStreak}-fight tear`}
+                      {myLegend.currentStreak < 0 && `⚠️ ${Math.abs(myLegend.currentStreak)}-fight slide`}
+                      {myLegend.currentStreak === 0 && "Steady hands"}
                     </div>
                   </div>
+
                   {myLegend.legendsSlain.length > 0 && (
-                    <div className="text-xs text-success/80 mt-1">
-                      Slain: {myLegend.legendsSlain.slice(0, 3).join(" • ")}{myLegend.legendsSlain.length > 3 ? " + more" : ""}
+                    <div className="text-xs text-success/80 mt-2">
+                      Scalps: {myLegend.legendsSlain.slice(0, 4).join(" • ")}
                     </div>
                   )}
+
+                  {/* Phase 5.6: Legend Activity */}
+                  <div className="text-[10px] text-accent/70 mt-2 tracking-widest">
+                    Appeared on The Wall {(() => {
+                      const count = wallEntries.filter(e => e.legendName === myLegend.name).length;
+                      return count > 0 ? `${count} times` : "recently";
+                    })()}
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
+
+                <div className="flex flex-col items-end gap-3">
                   <button
                     onClick={() => {
                       const newName = prompt("Rename your legend?", myLegend.name);
@@ -1868,9 +1892,10 @@ export default function BotColiseum() {
                   >
                     RENAME
                   </button>
-                  <div className="text-right text-xs text-text-muted">
-                    Personal best<br />
-                    <span className="font-mono text-accent text-lg font-bold">{myLegend.bestScore}</span>
+
+                  <div className="text-right">
+                    <div className="text-[10px] text-text-muted">PERSONAL BEST</div>
+                    <div className="font-mono text-2xl font-bold text-accent tabular-nums">{myLegend.bestScore}</div>
                   </div>
                 </div>
               </div>

@@ -783,8 +783,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
-- Phase 5.6 (The Colosseum That Actually Remembers You): **Active** — Shared Wall default-loaded + legendName flows with broadcasts. Live Right Now + regular cards show "brought by [Legend]". New "Most Active Legends Right Now" row. "Your Legend has been seen X times" feedback. Claiming feels like a real status move.
+- Phase 5.6 (The Colosseum That Actually Remembers You): **Active** — "Your Legend" card now a proper fighter profile with dynamic titles ("Unstoppable Force", "Feared Veteran"), activity tracking, and stronger presence. Legends visibly attached to fighters. "Most Active Legends Right Now" row live. The identity layer is becoming real and status-driven.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.6 cooking: "Most Active Legends Right Now" visible, stronger legend attribution on Live cards, improved claiming experience, "Your Legend seen X times" feedback. The coliseum is learning names and keeping score.
+**Last Updated:** May 2026 — Phase 5.6 progressing: "Your Legend" card evolved into a real profile with titles and activity. Legends now feel like public figures on The Wall. Momentum strong on making identity persistent and visible.
