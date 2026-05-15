@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
   },
+  metadataBase: new URL("https://bot-coliseum.com"), // Update when custom domain is live
 };
 
 export const viewport: Viewport = {
