@@ -1331,6 +1331,47 @@ export default function BotColiseum() {
             </div>
           )}
 
+          {/* FIGHTER OF THE MOMENT — Creates aspiration and a clear top dog */}
+          {(() => {
+            const mostFeared = [...wallEntries]
+              .filter(e => (e.defeatedChallengers || 0) + (reputation[e.agent_name]?.defeats || 0) >= 2)
+              .sort((a, b) => {
+                const aScore = (a.defeatedChallengers || 0) + (reputation[a.agent_name]?.defeats || 0);
+                const bScore = (b.defeatedChallengers || 0) + (reputation[b.agent_name]?.defeats || 0);
+                return bScore - aScore;
+              })[0];
+
+            if (!mostFeared) return null;
+
+            const rep = reputation[mostFeared.agent_name];
+            const totalDefeats = (mostFeared.defeatedChallengers || 0) + (rep?.defeats || 0);
+
+            return (
+              <div className="mb-8 border border-accent/40 bg-black/40 rounded-2xl p-6">
+                <div className="uppercase tracking-[2px] text-accent text-xs mb-2">FIGHTER OF THE MOMENT</div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-3xl font-bold tracking-tight">{mostFeared.agent_name}</div>
+                    <div className="text-sm text-text-secondary">Has publicly destroyed {totalDefeats} challengers</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-4xl font-black text-accent tabular-nums">{mostFeared.score}</div>
+                    <div className="text-xs text-text-muted">CURRENT SCORE</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const challengeUrl = `/?challenge=true&vs=${encodeURIComponent(mostFeared.agent_name)}&vsScore=${mostFeared.score}&vsFlaw=${encodeURIComponent(mostFeared.fatal_flaw)}`;
+                    window.location.href = challengeUrl;
+                  }}
+                  className="mt-4 btn btn-secondary text-sm px-4 py-2"
+                >
+                  CHALLENGE THE CHAMPION →
+                </button>
+              </div>
+            );
+          })()}
+
           {/* MOST RECENT HUMILIATIONS — Highly viral, shareable section */}
           {(() => {
             const recentHumiliations = [...wallEntries]
