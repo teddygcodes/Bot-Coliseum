@@ -85,3 +85,30 @@ export interface LeaderboardEntry {
   record: string;
   timestamp: string;
 }
+
+/**
+ * Phase 4.2 — Minimal payload stored in the shared Wall (Redis / KV).
+ * We store the encoded share token so the client can decode rich display data.
+ */
+export type SharedWallBroadcast = {
+  id: string;
+  encoded: string;        // result of encodeMatchData(...)
+  isLive?: boolean;
+  timestamp: string;
+};
+
+/**
+ * Full client-side Wall entry (used in UI).
+ * shareUrl is always reconstructed client-side for the current origin.
+ */
+export type WallEntry = {
+  id: string;
+  agent_name: string;
+  coach: string;
+  score: number;
+  fatal_flaw: string;
+  record: string;
+  shareUrl: string;
+  timestamp: string;
+  isLive?: boolean;
+};

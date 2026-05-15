@@ -9,7 +9,8 @@ import { scoreSubmission } from "@/lib/scoring";
 import BroadcastModal from "./components/BroadcastModal";
 import { decideDemo, simulateLatency } from "@/fighter/demo-agent";
 import type { PublicRefundCase } from "@/fighter/types";
-import { resultToShareData, generateShareUrl } from "@/lib/share";
+import { resultToShareData, generateShareUrl, encodeMatchData } from "@/lib/share";
+import type { WallEntry } from "@/lib/types";
 
 // Types for view state
 type View = "home" | "arena" | "submit" | "result" | "leaderboard" | "live-fight" | "wall";
@@ -19,19 +20,9 @@ export default function BotColiseum() {
   const [currentResult, setCurrentResult] = useState<MatchResult | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
 
-  // === Phase 3: The Wall — public-ish broadcast gallery (localStorage persisted) ===
-  type WallEntry = {
-    id: string;
-    agent_name: string;
-    coach: string;
-    score: number;
-    fatal_flaw: string;
-    record: string;
-    shareUrl: string; // the beautiful /share link
-    timestamp: string;
-    isLive?: boolean;
-  };
+  // === Phase 3/4.2: The Wall — hybrid local + shared coliseum memory ===
   const [wallEntries, setWallEntries] = useState<WallEntry[]>([]);
+  const [isLoadingWall, setIsLoadingWall] = useState(false);
   const [jsonInput, setJsonInput] = useState("");
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [isScoring, setIsScoring] = useState(false);
@@ -169,17 +160,24 @@ export default function BotColiseum() {
     }
   }, []);
 
-  // Phase 3: Load The Wall broadcasts (user's own + seeded legends)
+  // Phase 3/4.2: Load personal Wall from localStorage on startup
   useEffect(() => {
     const savedWall = localStorage.getItem("bot-coliseum-wall");
     if (savedWall) {
       try {
         setWallEntries(JSON.parse(savedWall));
       } catch {
-        // will be seeded below
+        // will be seeded on first Wall visit
       }
     }
   }, []);
+
+  // Phase 4.2: When user opens THE WALL, fetch the shared coliseum memory
+  useEffect(() => {
+    if (currentView === "wall") {
+      loadAndMergeSharedWall();
+    }
+  }, [currentView]);
 
   // Persist leaderboard
   const saveLeaderboard = (entries: LeaderboardEntry[]) => {
@@ -340,15 +338,19 @@ export default function BotColiseum() {
     }
   };
 
-  // === Phase 3: The Wall helpers ===
+  // === Phase 3/4.2: The Wall helpers (hybrid local + shared) ===
   const saveWall = (entries: WallEntry[]) => {
     setWallEntries(entries);
     localStorage.setItem("bot-coliseum-wall", JSON.stringify(entries));
   };
 
-  const broadcastToWall = (result: MatchResult, isLiveFight: boolean = false) => {
+  /**
+   * Phase 4.2 — Broadcasts to BOTH localStorage (your personal history)
+   * and the shared coliseum memory (when Redis is configured).
+   */
+  const broadcastToWall = async (result: MatchResult, isLiveFight: boolean = false) => {
     const shareData = resultToShareData(result, isLiveFight ? "live_fight" : "manual_submission");
-    const shareUrl = generateShareUrl(shareData, "condensed"); // condensed is punchier for the wall
+    const shareUrl = generateShareUrl(shareData, "condensed");
 
     const entry: WallEntry = {
       id: `wall-${Date.now()}`,
@@ -362,12 +364,86 @@ export default function BotColiseum() {
       isLive: isLiveFight,
     };
 
-    // Keep only the latest 24, newest first
+    // 1. Always save locally (your personal Wall)
     const newWall = [entry, ...wallEntries.filter(e => e.agent_name !== entry.agent_name)].slice(0, 24);
     saveWall(newWall);
 
-    // Also copy the link to clipboard as a nice side effect
+    // 2. Also try to broadcast to the shared coliseum (Phase 4.2)
+    try {
+      const encoded = encodeMatchData(shareData, "condensed");
+      await fetch("/api/wall/broadcast", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          encoded,
+          isLive: isLiveFight,
+          timestamp: result.timestamp,
+        }),
+      });
+    } catch {
+      // Silent fail — shared wall is best-effort (Redis may not be configured)
+      console.log("[Wall] Shared broadcast failed (Redis not configured or offline)");
+    }
+
+    // Copy link as side effect
     navigator.clipboard.writeText(shareUrl).catch(() => {});
+  };
+
+  /**
+   * Phase 4.2 — Load shared broadcasts from the coliseum and merge with local ones.
+   * Called when the user opens "THE WALL".
+   */
+  const loadAndMergeSharedWall = async () => {
+    setIsLoadingWall(true);
+    try {
+      const res = await fetch("/api/wall");
+      const json = await res.json();
+      const shared: Array<{ encoded: string; id: string; timestamp: string; isLive?: boolean }> = json.entries || [];
+
+      // Decode shared entries into displayable WallEntry
+      const { decodeMatchData } = await import("@/lib/share");
+
+      const sharedDisplay: WallEntry[] = shared
+        .map((s: { encoded: string; id: string; timestamp: string; isLive?: boolean }) => {
+          try {
+            const decoded = decodeMatchData(s.encoded);
+            const d = decoded?.data;
+            if (!d) return null;
+
+            const origin = typeof window !== "undefined" ? window.location.origin : "https://bot-coliseum.com";
+            return {
+              id: s.id,
+              agent_name: d.agent_name,
+              coach: d.coach,
+              score: d.final_score,
+              fatal_flaw: d.fatal_flaw,
+              record: d.record,
+              shareUrl: `${origin}/share?data=${s.encoded}`,
+              timestamp: s.timestamp,
+              isLive: s.isLive,
+            } as WallEntry;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean) as WallEntry[];
+
+      // Merge: server first, then local (local wins on duplicate agent name for freshness)
+      const local = wallEntries;
+      const merged = [...sharedDisplay, ...local]
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+        .reduce((acc: WallEntry[], curr) => {
+          if (!acc.some(e => e.agent_name === curr.agent_name)) acc.push(curr);
+          return acc;
+        }, [])
+        .slice(0, 30);
+
+      setWallEntries(merged);
+    } catch {
+      console.log("[Wall] Could not load shared wall (using local only)");
+    } finally {
+      setIsLoadingWall(false);
+    }
   };
 
   // Seed legendary fights on first visit to The Wall (if empty)
@@ -1110,7 +1186,13 @@ export default function BotColiseum() {
 
           {/* The actual wall grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {wallEntries.length === 0 && (
+            {isLoadingWall && wallEntries.length === 0 && (
+              <div className="col-span-full card p-10 text-center text-text-muted">
+                Consulting the arena archives...
+              </div>
+            )}
+
+            {!isLoadingWall && wallEntries.length === 0 && (
               <div className="col-span-full card p-10 text-center">
                 <div className="text-5xl mb-4">🗿</div>
                 <div className="text-2xl font-semibold mb-2">The wall is still being carved</div>

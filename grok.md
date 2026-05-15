@@ -459,27 +459,27 @@ Without this, posting a Bot Coliseum link looks like a GitHub repo or Notion pag
 
 ---
 
-### Phase 4.2: Shared Wall — The Coliseum's Permanent Memory (Highest Remaining Priority)
+### Phase 4.2: Shared Wall — The Coliseum's Permanent Memory (Implemented)
 **Goal:** Make "The Wall" actually shared across visitors instead of living only in the person who broadcasted it.
 
-**Current State (Weakness):**
-- The Wall is beautiful and feels public... but only to the person who has the fights in their own localStorage.
-- This breaks the "sport" illusion the moment two different people visit the site.
+**Implementation Status:** Core infrastructure shipped.
 
-**Proposed Approach (Keep it lightweight):**
-- Add a tiny server-side append-only log (Vercel KV, Upstash Redis, or even a simple JSON file via an API route with file locking / edge cache).
-- New API routes:
-  - `POST /api/broadcast` — accepts a compact share payload and appends it
-  - `GET /api/wall` — returns the last N broadcasts (with light caching)
-- The Wall view becomes hybrid: seeded legends + server-fetched recent broadcasts + user's own local broadcasts.
-- Keep the "no accounts" promise — anyone can broadcast, we just store the minimal encoded data + timestamp.
+**What was built:**
+- `lib/wall.ts` — production-grade abstraction with Upstash Redis (`@upstash/redis`) + in-memory graceful fallback for local dev.
+- `GET /api/wall` and `POST /api/wall/broadcast` routes.
+- `WallEntry` + `SharedWallBroadcast` types in `lib/types.ts`.
+- `broadcastToWall()` now writes to **both** localStorage (your personal history) **and** the shared coliseum.
+- The Wall view automatically fetches shared data on open and intelligently merges it with the user's local broadcasts.
 
-**Why this is the real Phase 4 unlock:**
-Once the Wall is shared, suddenly there is *culture*. People can see who is winning, who got destroyed, who brought an insane agent live. Rivalries form naturally. The sport starts to have history that doesn't disappear when you close the tab.
+**How to activate the real shared Wall:**
+1. In Vercel Dashboard → Project → Storage → Marketplace → Upstash Redis (free tier).
+2. Connect it — env vars are auto-injected.
+3. Redeploy. The Wall is now coliseum-wide.
 
-**Scope Guardrail:** Keep the payload tiny (just the encoded share string + coach + timestamp). Do *not* turn this into a full database of every fight ever.
+**Fallback behavior:** When Redis is not configured, the experience is identical to before (localStorage + in-memory on the server). Nothing breaks.
 
-**Estimated Effort:** Medium (mostly new API routes + one small storage choice).
+**Why this is huge:**
+This is the moment the sport stops being solo theater and starts having real collective memory and culture. Two people who have never met can now see each other's fights and feel the weight of the arena.
 
 ---
 
