@@ -1733,7 +1733,7 @@ export default function BotColiseum() {
             );
           })()}
 
-          {/* Phase 5.6: Most Active Legends (client-side aggregation for now) */}
+          {/* Phase 5.6: Most Active Legends — Coliseum Celebrities */}
           {(() => {
             const legendCounts = wallEntries.reduce((acc, e) => {
               if (e.legendName) {
@@ -1744,24 +1744,34 @@ export default function BotColiseum() {
 
             const topLegends = Object.entries(legendCounts)
               .sort((a, b) => b[1] - a[1])
-              .slice(0, 5);
+              .slice(0, 6);
 
             if (topLegends.length === 0) return null;
 
             return (
               <div className="mb-10">
-                <div className="uppercase tracking-[2px] text-accent text-xs mb-3">MOST ACTIVE LEGENDS RIGHT NOW</div>
-                <div className="flex flex-wrap gap-2">
-                  {topLegends.map(([name, count]) => (
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="uppercase tracking-[3px] text-accent text-xs font-black">COLISEUM PANTHEON</div>
+                  <div className="h-px flex-1 bg-accent/30" />
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  {topLegends.map(([name, count], index) => (
                     <div
                       key={name}
-                      className="px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium border border-accent/30"
+                      className={`group flex items-center gap-2 px-5 py-2 rounded-full border transition-all cursor-pointer
+                        ${index === 0 ? 'border-[#c5a26f] bg-[#c5a26f]/10 text-[#c5a26f]' : 'border-accent/40 bg-black/40 text-accent hover:border-accent/70'}`}
+                      onClick={() => {
+                        // Future: filter The Wall to this legend's fighters
+                        alert(`In a future update, this will filter The Wall to fighters brought by ${name}`);
+                      }}
                     >
-                      {name} <span className="text-accent/70">×{count}</span>
+                      <span className="font-bold tracking-tight">{name}</span>
+                      <span className="text-xs opacity-70 font-mono">×{count}</span>
+                      {index === 0 && <span className="text-[10px] px-1.5 py-px bg-[#c5a26f]/20 rounded">MOST FEARED</span>}
                     </div>
                   ))}
                 </div>
-                <div className="text-[10px] text-text-muted mt-2 tracking-widest">These legends have been bringing fighters to the coliseum the most recently.</div>
+                <div className="text-[10px] text-text-muted mt-2 tracking-widest">These names carry weight in the arena right now.</div>
               </div>
             );
           })()}
