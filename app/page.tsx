@@ -141,6 +141,14 @@ export default function BotColiseum() {
           
           // Auto-load the real result into the existing result UI and switch views
           setCurrentResult(data.result);
+
+          // Phase 5.5: Quick Demo results auto-feed The Wall as "live" action
+          // This makes the zero-friction demo actually populate the coliseum memory
+          if (liveMatch?.fighterName === "Refund Revenant") {
+            // Fire and forget - it will add with isLive: true
+            broadcastToWall(data.result, true).catch(() => {});
+          }
+
           // Small delay so the "fight complete" moment lands, then the arena delivers the verdict
           setTimeout(() => {
             setCurrentView("result");
@@ -864,6 +872,16 @@ export default function BotColiseum() {
             "Another clean denial. The crowd approves."
           ];
           specialComment = comments[Math.floor(Math.random() * comments.length)];
+        }
+
+        // Phase 5.5: Occasionally shout out the user's own legend during Quick Demo for personal connection
+        if (myLegend && Math.random() < 0.18) {
+          const legendShouts = [
+            `The crowd is wondering if ${myLegend.name} could have handled that one...`,
+            `${myLegend.name} is watching from the stands. The pressure is on.`,
+            `Someone in the cheap seats just yelled "${myLegend.name} would have denied that!"`,
+          ];
+          specialComment = legendShouts[Math.floor(Math.random() * legendShouts.length)];
         }
       }
 
@@ -1917,6 +1935,9 @@ export default function BotColiseum() {
                         </div>
                         {isLegend && (
                           <span className="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold tracking-wider">LEGEND</span>
+                        )}
+                        {entry.isLive && (
+                          <span className="text-[10px] px-2 py-0.5 rounded bg-danger/20 text-danger font-bold tracking-wider animate-pulse">LIVE FROM THE ARENA</span>
                         )}
 
                         {/* Prestige Badges — Phase 5.1 */}

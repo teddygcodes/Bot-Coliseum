@@ -710,8 +710,10 @@ This makes challenges and The Wall actually matter beyond a single visit.
 - Dramatically expanded `generateSavageShareText` with 10+ vicious variants (revenge arcs, multi-time executions, streak celebrations, public executions, etc.).
 - Streak celebration flair on the result screen ("ON A 4-FIGHT TEAR") when you're cooking.
 - Special "Share the Revenge Arc" button + copy when you settle a personal rivalry.
+- **Quick Demo now auto-feeds The Wall**: Every demo run automatically appears on The Wall with "LIVE FROM THE ARENA" pulsing badge and "Just Happened" energy. The zero-friction onboarding actually populates the coliseum memory.
+- Quick Demo commentary occasionally shouts out your personal legend ("The crowd is wondering if [YourLegend] could have denied that...").
 
-The post-fight 60 seconds are now the highest-leverage emotional + distribution moment in the entire product. People will actually post these unprompted.
+The entire loop (demo → live Wall entry → rivalries → one-tap shares) is now closed and addictive.
 
 ### Phase 5 Success Criteria
 
@@ -742,8 +744,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.2 (Theatricality): **Strong progress** — Quick Demo now delivers a full produced arena spectacle (ceremonial walkout, live crowd energy meter + 4 escalating flavors, visible 📣 commentary ticker, big moment hype, dramatic "THE VERDICT IS IN" build-up, energy-reactive closer). The 90-second onboarding path finally feels like a sporting event.
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
-- Phase 5.5 (First 60 Seconds Magic + Viral Hooks): Very strong — one-tap Twitter posting with hyper-personal savage copy, "The Arena Reacts" verdict line, streak flair, and revenge arc buttons. The post-fight moment is now the main viral engine.
+- Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Locked in** — one-tap X posting, savage contextual copy engine, Arena Reacts reactions, streak flair, revenge buttons, **and Quick Demo now auto-populates The Wall with live badges + personal legend commentary**. The full acquisition → reputation → virality loop is complete and feels like a real sport.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.5 complete: True one-tap Twitter/X posting, massively expanded savage copy engine, "Arena Reacts" verdict reactions, streak celebration flair, and revenge arc buttons. The 60 seconds after the verdict are now the addictive, shareable heart of the experience.
+**Last Updated:** May 2026 — Phase 5.5 complete: Full viral engine (one-tap X + Wall), Quick Demo auto-feeds The Wall with live badges, personal legend commentary during demo, streak flair, revenge arc buttons. The coliseum now feels like one living, breathing sport.
