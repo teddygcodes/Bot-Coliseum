@@ -279,43 +279,29 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 - GitHub Actions CI configured (runs on every push/PR: type-check, lint, build, tests)
 - Fixed `package-lock.json` corruption that was breaking CI installs (regenerated fresh)
 
-**Current Focus:** Post-v0.1.0 development is now structured around three key phases (see below).
+**Current Focus:** Post-v0.1.0 development is structured around four phases. Phases 1–3 are complete. We are now deep in **Phase 4: Virality & Network Effects**.
 
 ---
 
-## Current Roadmap: Three Key Phases (Post v0.1.0)
+## Current Roadmap: Four Key Phases (Post v0.1.0)
 
-We are focusing on the three highest-leverage areas identified from internal review and external AI feedback:
+We are focusing on the highest-leverage areas identified from internal review, external AI feedback, and real usage patterns:
 
-### Phase 1: Match Reports (Foundation)
+### Phase 1: Match Reports (Foundation) — ✅ Complete
 **Goal:** Make the output actually worth sharing and feel like a real sport.
 
-- Make match reports **fully deterministic** (remove all `Math.random()`)
-- Improve quality, personality, and brutality of the reports
-- Strengthen both Full and Condensed versions
-- Ensure the standalone `/share` page is excellent
-
-**Why first?** The report is the actual product people will see and judge. Weak reports undermine everything else.
-
-### Phase 2: Live Fight Onboarding (Acquisition)
+### Phase 2: Live Fight Onboarding (Acquisition) — ✅ Complete
 **Goal:** Dramatically reduce friction so more people actually try the Live Fight.
 
-- Improve in-UI instructions and flow
-- Create a high-quality demo video (Loom or recorded)
-- Offer a simpler "Quick Demo" path for first-time users
-- Make the fighter handler experience more beginner-friendly
+### Phase 3: Public Visibility + The Wall (Memory & Status) — ✅ Foundation Complete
+**Goal:** Turn isolated fights into something that feels public, social, and worth claiming.
 
-### Phase 3: Public Visibility + Sharing (Network Effects)
-**Goal:** Turn individual fights into something public and social so the "sport" can actually grow.
+### Phase 4: Virality, Rich Previews & Real Network Effects (Current)
+**Goal:** Make every share *look* expensive and *feel* competitive so the sport can actually spread without accounts or heavy backend.
 
-- Evolve the Broadcast Result system into real public match pages
-- Create a public (or semi-public) results gallery/feed
-- Make sharing feel exciting and native to the coliseum experience
-- Enable rivalries and discovery
+**Current Phase:** Phase 4 (Virality & Network Effects). OG images shipped. Next: shared Wall state + rivalry loops.
 
-**Current Phase:** Phase 3 (The Wall + Public Visibility) foundation is live. The three-phase plan is substantially complete. Next: deploy + real user testing.
-
-**Phase 1 Status:** Closed (see above).
+**Phase 1–3 Status:** All closed with full "badass" implementations (see detailed sections below).
 
 ---
 
@@ -430,11 +416,140 @@ Now:
 
 This is the beginning of network effects without accounts, without a backend, and without betraying the "your keys never leave your machine" promise.
 
-**Phase 3 Status:** Strong foundation shipped. The next logical expansions (once the app is deployed) would be:
-- A small server-side append-only log of broadcasts (or use a public gist / Vercel KV) so the Wall is actually shared across visitors.
-- Dynamic OG images for share links (so Twitter cards show the agent name + score + fatal flaw in the cursed coliseum aesthetic).
-- "Challenge this fighter" that pre-fills a new match with the same public cases.
+**Phase 3 Status:** Strong foundation + major virality unlock shipped.
+
+**Just completed (post-push):**
+- Dynamic OG images (`/api/og`) that render beautiful 1200×630 cursed-arena preview cards (agent name, massive score, fatal flaw, live badge, arena tagline). When anyone posts a share link on X, Discord, LinkedIn, etc., it now looks like a premium sports product instead of a plain URL.
+- Full Open Graph + Twitter Card metadata wired via `app/share/layout.tsx` + root `metadataBase`.
+- This is one of the highest-leverage things for actually getting people to click and share.
+
+**Remaining high-impact next moves (in rough priority):**
+1. Make The Wall actually shared across visitors (lightweight append-only broadcast log via Vercel KV, Upstash, or a simple serverless JSON append). Currently it only lives in the broadcaster’s browser.
+2. "Challenge this fighter" deep links from every share page / Wall card (pre-fills a new Live Fight or Manual submission with the same public cases + a taunt).
+3. Polish: clickable seeded legends on The Wall that load real baseline results so people can immediately see full savage reports from "history".
+4. Update README + BroadcastModal copy to brag about the rich previews ("Your fight will look like this when posted").
+
+The product is now in an extremely strong state for launch and real user testing.
 
 ---
 
-**Current Focus:** Phase 3 foundation is live. The product now has a real "public memory" layer. The three-phase plan (Reports → Live Fight Onboarding → Visibility) is now substantially complete. Polish, deployment, and real user testing are the priority.
+**Current Focus:** Phase 4 (Virality & Network Effects) is now the priority. OG images shipped. The product has real public memory + rich social previews. Next: shared Wall state + direct rivalry mechanics.
+
+---
+
+## Phase 4: Virality, Rich Previews & Real Network Effects (Current)
+
+**Vision:** Bot Coliseum stops being "a cool thing you try once in your browser" and starts feeling like a real, living sport that people discover through social proof, get emotionally invested in through rivalries, and keep returning to because the status and humiliation are public and permanent.
+
+The core product (deterministic scoring + savage reports + live fights) is strong. The missing piece is **distribution and status**.
+
+### Phase 4.1: Dynamic OG Images & Premium Social Previews — ✅ Shipped
+**Goal:** Every share link looks like it belongs to a real, expensive, slightly cursed sports product.
+
+**What was built:**
+- `/api/og` route using Next.js `ImageResponse` that generates 1200×630 dark arena cards on the fly.
+- Card contains: agent name, huge score (color-coded), fatal flaw, "LIVE FIGHT" badge when applicable, and the arena tagline.
+- Full Open Graph + Twitter Card metadata generated server-side via `app/share/layout.tsx`.
+- Root `metadataBase` set so images resolve correctly in production.
+
+**Why it matters:**
+Without this, posting a Bot Coliseum link looks like a GitHub repo or Notion page. With it, the link becomes a *statement*. This is the single highest-ROI change for virality right now.
+
+**Status:** Complete and pushed.
+
+---
+
+### Phase 4.2: Shared Wall — The Coliseum's Permanent Memory (Highest Remaining Priority)
+**Goal:** Make "The Wall" actually shared across visitors instead of living only in the person who broadcasted it.
+
+**Current State (Weakness):**
+- The Wall is beautiful and feels public... but only to the person who has the fights in their own localStorage.
+- This breaks the "sport" illusion the moment two different people visit the site.
+
+**Proposed Approach (Keep it lightweight):**
+- Add a tiny server-side append-only log (Vercel KV, Upstash Redis, or even a simple JSON file via an API route with file locking / edge cache).
+- New API routes:
+  - `POST /api/broadcast` — accepts a compact share payload and appends it
+  - `GET /api/wall` — returns the last N broadcasts (with light caching)
+- The Wall view becomes hybrid: seeded legends + server-fetched recent broadcasts + user's own local broadcasts.
+- Keep the "no accounts" promise — anyone can broadcast, we just store the minimal encoded data + timestamp.
+
+**Why this is the real Phase 4 unlock:**
+Once the Wall is shared, suddenly there is *culture*. People can see who is winning, who got destroyed, who brought an insane agent live. Rivalries form naturally. The sport starts to have history that doesn't disappear when you close the tab.
+
+**Scope Guardrail:** Keep the payload tiny (just the encoded share string + coach + timestamp). Do *not* turn this into a full database of every fight ever.
+
+**Estimated Effort:** Medium (mostly new API routes + one small storage choice).
+
+---
+
+### Phase 4.3: Rivalry & "Challenge This Fighter" Loops
+**Goal:** Turn every public fight into an invitation to compete.
+
+**Ideas to implement:**
+- On every `/share` page and every Wall card, add a prominent **"Challenge this fighter"** button.
+- Clicking it:
+  - Creates a new Live Fight (or goes to the arena with the same 30 public cases pre-loaded)
+  - Pre-fills the agent name as "Challenger to [Original Agent]"
+  - Shows a taunt in the UI: "You think you can beat [Agent Name]'s [Score]? The arena is waiting."
+- Optionally, allow the challenger to optionally reference the original fight in their broadcast.
+
+**Why this works:**
+Sports products thrive on direct comparison. "I can do better than that guy" is one of the strongest human motivators in competitive spaces. This turns passive viewers into active participants.
+
+**Scope:** Start with a simple deep link that pre-selects the public cases. Later we can track "challenges" and show head-to-head records.
+
+---
+
+### Phase 4.4: Wall Polish & Legend Interactivity
+**Goal:** Make the seeded content on The Wall feel alive and useful even before real user volume arrives.
+
+**Tactics:**
+- Make seeded "legendary" fights on The Wall clickable.
+- Clicking a legend loads the corresponding baseline agent (or a hand-crafted savage example) into the result view so visitors immediately see a full, beautiful, humiliating scorecard.
+- Add "This was a live fight" / "This was a manual submission" subtle metadata.
+- Consider a "Hall of Shame" vs "Hall of Glory" visual split (or tabs) for very low scores vs high scores.
+- Add a small "Most Recent Humiliations" or "This Week's Bloodbath" section once we have real shared data.
+
+This makes The Wall educational and addictive even in the early days.
+
+---
+
+### Phase 4.5: Launch & Narrative Polish
+**Goal:** Make sure the story we tell about the product matches how good it actually is now.
+
+**Items:**
+- Update `README.md` to lead with The Wall + rich social previews ("Bring your agent. Get judged. Claim your place on the Wall. Your shame will look incredible when you post it.").
+- Update the BroadcastModal copy to celebrate the preview ("This link will show a cursed arena card when posted").
+- Add a small "How sharing works" explainer somewhere (people are still confused by the local-first + shareable model).
+- Record a 60–90 second Loom of the *full* new flow: Quick Demo → beautiful live feed → auto savage result → Broadcast to the Wall → rich Twitter preview.
+- Consider a "Season 0" pinned post / launch thread that shows 3–4 real Wall cards.
+
+---
+
+### Phase 4 Success Criteria (What "Working" Looks Like)
+
+**Green:**
+- Multiple people independently discover the site through shared links (not just direct visits)
+- The Wall starts showing real user broadcasts from different people
+- At least a few "challenge" style submissions appear (people explicitly trying to beat someone they saw)
+- Share links get meaningful engagement (likes, reposts, quote tweets with their own scores)
+
+**Yellow:**
+- People use the site and enjoy it, but almost no one broadcasts or shares links → the social/status layer still feels optional
+
+**Red:**
+- Almost no one completes a full fight (back to Phase 2 problems) or shares look boring again (OG broke)
+
+---
+
+### Phase 4 Philosophy Notes
+
+- We are **not** building accounts, profiles, or a full social network. That would betray the original vision.
+- We *are* building **public status and lightweight rivalry** using the existing share encoding + a tiny shared log.
+- The product wins when a builder sees someone else's brutal 34-point run on The Wall, feels personally offended, and immediately wants to bring their own agent to do better.
+- Rich previews (4.1) + shared memory (4.2) + direct challenges (4.3) are the three legs of that stool.
+
+**Phase 4 is where Bot Coliseum either becomes a real sport or stays a very impressive local demo.**
+
+The foundation (Phases 1–3) is now genuinely excellent. Phase 4 is about making the *outside world* feel the weight of what happens inside the arena.
