@@ -9,7 +9,7 @@ import { scoreSubmission } from "@/lib/scoring";
 import BroadcastModal from "./components/BroadcastModal";
 import { decideDemo, simulateLatency } from "@/fighter/demo-agent";
 import type { PublicRefundCase } from "@/fighter/types";
-import { resultToShareData, generateShareUrl, encodeMatchData } from "@/lib/share";
+import { resultToShareData, generateShareUrl, encodeMatchData, generateSavageShareText } from "@/lib/share";
 import type { WallEntry } from "@/lib/types";
 
 // Types for view state
@@ -951,6 +951,49 @@ export default function BotColiseum() {
     </div>
   );
 
+  // Phase 5.5: Savage, contextual arena reaction to the final score
+  const getArenaVerdictReaction = (
+    result: MatchResult,
+    challenge: ActiveChallenge | null,
+    legend: MyLegend | null,
+    h2h: Record<string, { myWins: number; myLosses: number }>
+  ): string => {
+    const score = result.final_score;
+    const isChallenge = !!challenge;
+    const beatLegend = isChallenge && challenge && score > challenge.score;
+    const opponent = challenge?.agentName;
+
+    // Special legendary moments
+    if (legend && beatLegend && opponent) {
+      const record = h2h[opponent];
+      if (record && record.myWins >= 3) {
+        return "THE ARENA IS CHANTING YOUR NAME. YOU OWN THIS ONE NOW.";
+      }
+      return "YOU JUST PUT A LEGEND IN THE GROUND. THE CROWD IS LOSING IT.";
+    }
+
+    if (legend && beatLegend) {
+      return "NEW BLOOD ON THE SAND. THE CHAMPION HAS FALLEN.";
+    }
+
+    if (score >= 88) {
+      return "THE STANDS ARE ON THEIR FEET. THAT WAS A FUCKING STATEMENT.";
+    }
+    if (score >= 78) {
+      return "The arena is buzzing. That was clean.";
+    }
+    if (score >= 65) {
+      return "Respectable. The crowd gives a polite nod.";
+    }
+    if (score >= 50) {
+      return "The arena is divided. Some are laughing. Some are quiet.";
+    }
+    if (score >= 35) {
+      return "The stands went dead silent. Then someone started slow-clapping.";
+    }
+    return "THE CROWD IS ROARING WITH LAUGHTER. YOU GOT COOKED IN FRONT OF EVERYONE.";
+  };
+
   return (
     <div className="min-h-screen bg-background text-text">
       {/* Top Navigation */}
@@ -1317,6 +1360,55 @@ export default function BotColiseum() {
             <div className="inline-flex items-baseline gap-2 bg-surface border border-border rounded-2xl px-10 py-3">
               <span className="text-6xl font-bold tabular-nums tracking-[-2px]">{currentResult.final_score}</span>
               <span className="text-3xl text-text-muted">/ 100</span>
+            </div>
+
+            {/* Phase 5.5: The Moment of Truth — crowd reaction to the score */}
+            <div className="mt-6">
+              <div className="uppercase tracking-[3px] text-xs text-text-muted mb-2">THE ARENA REACTS</div>
+              <div className="text-2xl md:text-3xl font-bold text-accent leading-tight">
+                {getArenaVerdictReaction(currentResult, activeChallenge, myLegend, headToHead)}
+              </div>
+            </div>
+
+            {/* Phase 5.5: Instant Savage Share Hooks — low friction virality */}
+            <div className="mt-8 flex flex-wrap gap-3 justify-center">
+              <button
+                onClick={() => {
+                  const shareData = resultToShareData(currentResult, "manual_submission");
+                  const tweet = generateSavageShareText(shareData, activeChallenge, myLegend, headToHead);
+                  navigator.clipboard.writeText(tweet + "\n\n" + generateShareUrl(shareData, "condensed"));
+                  // Could add a toast here later
+                }}
+                className="btn btn-primary px-6 py-3 text-base flex items-center gap-2"
+              >
+                📉 SHARE THIS HUMILIATION
+              </button>
+
+              {activeChallenge && currentResult.final_score > activeChallenge.score && (
+                <button
+                  onClick={() => {
+                    const shareData = resultToShareData(currentResult, "manual_submission");
+                    const tweet = `Just settled the score with ${activeChallenge.agentName}. ${currentResult.final_score}–${activeChallenge.score}. Head-to-head now ${headToHead[activeChallenge.agentName]?.myWins || 1}–${headToHead[activeChallenge.agentName]?.myLosses || 0}. The arena is mine.\n\n#BotColiseum`;
+                    navigator.clipboard.writeText(tweet + "\n\n" + generateShareUrl(shareData, "condensed"));
+                  }}
+                  className="btn btn-secondary px-6 py-3 text-base flex items-center gap-2 border-accent/50"
+                >
+                  ⚔️ SHARE THE REVENGE ARC
+                </button>
+              )}
+
+              {myLegend && currentResult.final_score >= 80 && (
+                <button
+                  onClick={() => {
+                    const shareData = resultToShareData(currentResult, "manual_submission");
+                    const tweet = `${myLegend.name} just dropped a ${currentResult.final_score} in the Refund Dungeon. ${currentResult.record}. The arena is talking.\n\n#BotColiseum`;
+                    navigator.clipboard.writeText(tweet + "\n\n" + generateShareUrl(shareData, "condensed"));
+                  }}
+                  className="btn btn-secondary px-6 py-3 text-base flex items-center gap-2"
+                >
+                  🔥 SHARE THE STATEMENT
+                </button>
+              )}
             </div>
           </div>
 

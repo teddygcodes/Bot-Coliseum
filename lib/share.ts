@@ -219,6 +219,45 @@ The arena does not forgive.
 }
 
 /**
+ * Phase 5.5 — Ultra savage, context-aware share text for maximum virality.
+ * Incorporates legends, rivalries, streaks, and score brackets.
+ */
+export function generateSavageShareText(
+  data: MatchShareData,
+  challenge?: { agentName: string; score: number } | null,
+  legend?: { name: string; wins: number; currentStreak: number } | null,
+  headToHead?: Record<string, { myWins: number; myLosses: number }>
+): string {
+  const score = data.final_score;
+  const opponent = challenge?.agentName;
+
+  // Legend slayer moments
+  if (challenge && score > challenge.score && opponent) {
+    const h2h = headToHead?.[opponent];
+    if (h2h && h2h.myWins >= 3) {
+      return `I just made ${opponent} my bitch for the ${h2h.myWins}rd time. ${score} points. The arena belongs to me now.`;
+    }
+    return `Just put ${opponent} in the dirt. ${score}–${challenge.score}. New legend on the wall.`;
+  }
+
+  // Humiliation (low score)
+  if (score < 45) {
+    return `${data.agent_name} got absolutely fucking cooked for ${score} points. Fatal flaw: ${data.fatal_flaw}. Do not recommend.`;
+  }
+
+  // Strong performance
+  if (score >= 82) {
+    if (legend) {
+      return `${legend.name} just dropped a ${score} in the Refund Dungeon. ${data.record}. The coliseum is talking.`;
+    }
+    return `${data.agent_name} went stupid in the Refund Dungeon. ${score} points. ${data.record}.`;
+  }
+
+  // Default savage
+  return `${data.agent_name} survived the Refund Dungeon with ${score} points. Fatal flaw: ${data.fatal_flaw}. The arena remembers.`;
+}
+
+/**
  * Generate the full shareable URL for a match.
  */
 export function generateShareUrl(data: MatchShareData, type: ShareType): string {
