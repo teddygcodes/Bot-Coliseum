@@ -293,7 +293,7 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 | **Phase 2: Live Fight Onboarding** | ✅ Complete | Cinematic Live Fight + one-click Quick Demo |
 | **Phase 3: Public Visibility + The Wall** | ✅ Complete | The Wall view, broadcasting, local memory, rich share links |
 | **Phase 4: Virality & Network Effects** | ✅ Complete | OG previews, shared Wall infrastructure, rivalry system, polish |
-| **Phase 5: Soul, Spectacle & Atmosphere** | 🔄 In Progress | Making it *feel* like a real cursed arena (current focus) |
+| **Phase 5: Soul, Spectacle & Atmosphere** | 🔄 In Progress | Making it *feel* like a real cursed arena — now focused on shared memory + persistent legacies |
 
 **Phase 4 & Phase 5 Sub-Phase Breakdown**
 
@@ -313,7 +313,8 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 | 5.2 Theatricality & Immersion in Live Fights | 🔄 Strong progress | Ceremonial walkout + crowd energy meter + visible commentary + verdict drama shipped. Quick Demo now feels like a real arena event. |
 | 5.3 Visual Identity & Arena Atmosphere | 🔄 Solid first wave | Cursed grid + blood/gold cards + impact weight + verdict framing. Site feels like the arena now. |
 | 5.4 Reputation & Lightweight Persistence | 🔄 Strong first wave | Claimable legends with W-L, streaks, legends slain, automatic record building on every fight + challenge |
-| 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Partial foundation | Quick Demo + OG images exist, but emotional hook is weak |
+| 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Very strong | One-tap X posting, savage copy, Arena Reacts, Quick Demo auto-feeds Wall, "LIVE RIGHT NOW" section live |
+| 5.6 The Colosseum That Actually Remembers You | 🔄 Current Focus | Make shared Wall the default + real persistent fighter legacies across sessions |
 
 We are focusing on the highest-leverage areas identified from internal review, external AI feedback, and real usage patterns:
 
@@ -717,6 +718,41 @@ This makes challenges and The Wall actually matter beyond a single visit.
 
 The loop is now extremely tight and exciting: Run demo → Get celebrated for feeding The Wall → See your run in the Live Right Now section → Get challenged by strangers. The coliseum feels alive.
 
+### Phase 5.6: The Colosseum That Actually Remembers You (Current Focus)
+
+**Status:** 🔄 Active development
+- Shared Wall now loads by default on every app start
+- Broadcasts now carry the claimer's `legendName` so legends can accumulate real shared history
+- Wall cards (including Live Right Now) show "brought by [LegendName]"
+- "Your Legend" card now shows how many times your legend has appeared on The Wall
+- Claiming flow improved with better copy and examples
+- Foundation for persistent fighter legacies + cross-user visibility is solidifying
+
+**Core Problem:**  
+Even with all the personality, rivalries, and live energy we’ve built, The Wall is still mostly a local + seeded experience. When a new visitor lands, it doesn’t yet feel like a real, living coliseum where other people’s legends are rising and falling in real time.
+
+**Goal:**  
+Make the reputation system, rivalries, and “LIVE RIGHT NOW” energy actually work across different humans. Turn claimed legends into real, persistent identities that feel like they exist in a shared world.
+
+**What Needs to Happen:**
+
+- **Default Shared Wall** — Make the Vercel KV / Upstash-backed Wall the default for everyone (no manual setup). Every visitor should see real recent fights from other people.
+- **Persistent Fighter Legacies** — When someone claims a legend name, that fighter should have real continuity (win/loss record that survives sessions, notable scalps, number of times brought back, rival history).
+- **Cross-Visitor Rivalries** — Real head-to-heads between different people’s legends. “This fighter has beaten your legend twice before.”
+- **The Wall Never Feels Dead** — Smart blending of real activity + tasteful seeding so it always feels like fights are happening and legends are being hunted.
+- **Stronger “My Legend” Experience** — A clearer sense of ownership and progression for your claimed fighter across visits.
+
+**Why This Matters Most Right Now:**  
+All the emotional and status work from 5.1–5.5 only reaches its full power once the memory is shared. This is the phase where Bot Coliseum stops being “a cool thing one person plays with” and starts being a real, gossiping, status-driven arena that multiple people participate in.
+
+**Success Criteria (Green):**
+- New visitors open The Wall and immediately see recent fights from other humans.
+- Claiming a legend feels meaningful because the record actually persists and can be challenged by strangers.
+- Rivalries form between different people’s fighters over days/weeks.
+- The “LIVE RIGHT NOW” section regularly shows real (non-demo) activity.
+
+---
+
 ### Phase 5 Success Criteria
 
 **Green Lights:**
@@ -747,7 +783,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
+- Phase 5.6 (The Colosseum That Actually Remembers You): **Active** — Shared Wall default-loaded + legendName flows with every broadcast. Live Right Now + regular cards now show "brought by [Legend]". "Your Legend" card shows how many times your name has appeared on The Wall. Claiming feels like a real decision.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.5 locked: Quick Demo now has proper post-game "You just fed The Wall" celebration + direct link, Live Right Now section has relative timestamps ("34 seconds ago"), stronger live energy throughout. The entire demo → reputation → virality loop feels alive and dangerous.
+**Last Updated:** May 2026 — Phase 5.6 in motion: Shared Wall loads by default, legends now visibly attached to fighters on The Wall ("brought by X"), Live Right Now cards show legend attribution + relative time, claiming flow improved. The coliseum is starting to remember names.

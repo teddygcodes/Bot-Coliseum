@@ -101,6 +101,7 @@ export async function sharedToDisplay(
       shareUrl: `${origin}/share?data=${shared.encoded}`,
       timestamp: shared.timestamp,
       isLive: shared.isLive,
+      legendName: shared.legendName,
     };
   }
 
@@ -114,5 +115,6 @@ export async function sharedToDisplay(
     shareUrl: `${origin}/share?data=${shared.encoded}`,
     timestamp: shared.timestamp,
     isLive: shared.isLive,
+    legendName: shared.legendName,
   };
 }

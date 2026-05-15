@@ -95,6 +95,8 @@ export type SharedWallBroadcast = {
   encoded: string;        // result of encodeMatchData(...)
   isLive?: boolean;
   timestamp: string;
+  // Phase 5.6 — Persistent Legend association
+  legendName?: string;
   // Phase 5.1 — Reputation
   challengeCount?: number;
   defeatedChallengers?: number;
@@ -114,6 +116,8 @@ export type WallEntry = {
   shareUrl: string;
   timestamp: string;
   isLive?: boolean;
+  // Phase 5.6 — Which claimed legend brought this fighter
+  legendName?: string;
   // Phase 5.1 — Reputation signals
   challengeCount?: number;
   defeatedChallengers?: number;

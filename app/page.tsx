@@ -226,12 +226,11 @@ export default function BotColiseum() {
     }
   }, []);
 
-  // Phase 4.2: When user opens THE WALL, fetch the shared coliseum memory
+  // Phase 5.6: Load shared Wall by default so the coliseum feels alive for everyone
   useEffect(() => {
-    if (currentView === "wall") {
-      loadAndMergeSharedWall();
-    }
-  }, [currentView]);
+    // Load shared data on app start so Quick Demo + submissions can merge into the real shared Wall
+    loadAndMergeSharedWall();
+  }, []);
 
   // Phase 4.3: Challenge context (who the user is trying to beat)
   type ActiveChallenge = {
@@ -515,6 +514,7 @@ export default function BotColiseum() {
           encoded,
           isLive: isLiveFight,
           timestamp: result.timestamp,
+          legendName: myLegend?.name || undefined,   // Phase 5.6 — attach claimed legend
         }),
       });
     } catch {
@@ -1695,7 +1695,12 @@ export default function BotColiseum() {
                           <div className="font-black text-xl tracking-[-0.5px] text-white group-hover:text-danger transition-colors">
                             {entry.agent_name}
                           </div>
-                          <div className="text-xs text-danger/80 font-bold tracking-widest">JUST GOT COOKED • {getRelativeTime(entry.timestamp)}</div>
+                          {entry.legendName && (
+                            <div className="text-xs text-accent/90 font-medium tracking-wider mt-0.5">
+                              brought by {entry.legendName}
+                            </div>
+                          )}
+                          <div className="text-xs text-danger/80 font-bold tracking-widest mt-1">JUST GOT COOKED • {getRelativeTime(entry.timestamp)}</div>
                         </div>
                         <div className="text-right">
                           <div className="text-3xl font-black tabular-nums text-danger">{entry.score}</div>
@@ -1728,14 +1733,37 @@ export default function BotColiseum() {
             );
           })()}
 
+          {/* Phase 5.6: Legend Activity Summary (client-side for now) */}
+          {myLegend && wallEntries.length > 0 && (
+            (() => {
+              const legendActivity = wallEntries.reduce((acc, e) => {
+                if (e.legendName) {
+                  acc[e.legendName] = (acc[e.legendName] || 0) + 1;
+                }
+                return acc;
+              }, {} as Record<string, number>);
+
+              const myActivity = legendActivity[myLegend.name] || 0;
+
+              if (myActivity === 0) return null;
+
+              return (
+                <div className="mb-6 text-center">
+                  <div className="text-xs uppercase tracking-[2px] text-accent/70">YOUR LEGEND HAS BEEN SEEN</div>
+                  <div className="text-2xl font-bold text-accent">{myActivity} times on The Wall</div>
+                </div>
+              );
+            })()
+          )}
+
           {/* Phase 5.4: YOUR LEGEND — persistent identity and record */}
           <div className="mb-10">
             {!myLegend ? (
               <div className="border border-accent/40 bg-black/40 rounded-2xl p-6 text-center">
                 <div className="uppercase tracking-[2px] text-accent text-xs mb-2">BUILD YOUR LEGEND</div>
-                <div className="text-2xl font-bold tracking-tight mb-2">This is your arena. Claim a name.</div>
+                <div className="text-2xl font-bold tracking-tight mb-2">This is your arena. Claim a name that will be remembered.</div>
                 <p className="text-text-secondary mb-4 max-w-md mx-auto">
-                  Fighters with claimed legends appear with real records, streaks, and titles. Your name will follow you across every fight and challenge.
+                  Claimed legends appear on The Wall with real records, streaks, and titles. Other fighters will see who brought them. Your legend can grow across sessions.
                 </p>
                 <div className="flex justify-center gap-2">
                   <input
@@ -1753,6 +1781,9 @@ export default function BotColiseum() {
                       }
                     }}
                   />
+                  <div className="text-[10px] text-text-muted mt-2 w-full text-center">
+                    Examples: The Bone Collector • Widowmaker • The Last Refund • Saint of Denials
+                  </div>
                   <button
                     onClick={() => {
                       const input = document.getElementById("legend-name-input") as HTMLInputElement;
@@ -2027,6 +2058,11 @@ export default function BotColiseum() {
                         )}
                         {entry.isLive && (
                           <span className="text-[10px] px-2.5 py-0.5 rounded bg-danger text-white font-black tracking-[1.5px] animate-pulse shadow-[0_0_8px_#ef4444]">LIVE • JUST COOKED</span>
+                        )}
+                        {entry.legendName && entry.legendName !== entry.agent_name && (
+                          <span className="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-medium tracking-wider">
+                            by {entry.legendName}
+                          </span>
                         )}
 
                         {/* Prestige Badges — Phase 5.1 */}

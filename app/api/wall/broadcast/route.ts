@@ -10,9 +10,10 @@ import type { SharedWallBroadcast } from "@/lib/types";
  *
  * Body:
  * {
- *   encoded: string,     // from encodeMatchData(...)
+ *   encoded: string,        // from encodeMatchData(...)
  *   isLive?: boolean,
- *   timestamp: string
+ *   timestamp: string,
+ *   legendName?: string     // Phase 5.6 — optional claimed legend that brought this fighter
  * }
  */
 export async function POST(req: NextRequest) {
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
       encoded: body.encoded,
       isLive: !!body.isLive,
       timestamp: body.timestamp,
+      legendName: body.legendName || undefined,
     };
 
     await addToSharedWall(entry);
