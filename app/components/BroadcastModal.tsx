@@ -109,9 +109,13 @@ export default function BroadcastModal({ result, isOpen, onClose }: BroadcastMod
           </div>
         </div>
 
-        <div className="mt-6 text-center text-xs text-text-muted space-y-1">
-          <div>Share links render as beautiful cursed arena cards on X, Discord, and everywhere else.</div>
-          <div className="text-[10px]">The arena does not forgive. The arena remembers.</div>
+        <div className="mt-6 border-t border-border pt-5 text-xs text-text-muted space-y-2">
+          <div className="font-medium text-text-secondary">How sharing works</div>
+          <div>
+            Your result is encoded into the link. When someone opens it, they see a beautiful arena card (not a boring URL). 
+            The full record lives on a standalone page anyone can view.
+          </div>
+          <div className="text-[10px] italic">The arena does not forgive. The arena remembers.</div>
         </div>
       </div>
     </div>
