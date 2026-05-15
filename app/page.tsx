@@ -1348,7 +1348,7 @@ export default function BotColiseum() {
             const totalDefeats = (mostFeared.defeatedChallengers || 0) + (rep?.defeats || 0);
 
             return (
-              <div className="mb-8 border border-accent/40 bg-black/40 rounded-2xl p-6">
+              <div className="mb-8 border-2 border-[#c5a26f]/60 bg-black/50 rounded-2xl p-6 shadow-[0_0_0_1px_#c5a26f20]">
                 <div className="uppercase tracking-[2px] text-accent text-xs mb-2">FIGHTER OF THE MOMENT</div>
                 <div className="flex items-center justify-between">
                   <div>
@@ -1625,8 +1625,8 @@ export default function BotColiseum() {
                     <div className="flex items-center gap-3 mb-5">
                       <div className="text-danger text-4xl">☠︎</div>
                       <div>
-                        <div className="text-danger uppercase tracking-[3.5px] text-sm font-extrabold">THE BLOODBATH</div>
-                        <div className="text-2xl text-white font-semibold">Public executions. Watch and learn.</div>
+                        <div className="text-danger uppercase tracking-[4px] text-sm font-extrabold">THE BLOODBATH</div>
+                        <div className="text-2xl text-white font-bold">Public executions. The crowd demands more.</div>
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
