@@ -767,7 +767,7 @@ All the emotional and status work from 5.1–5.5 only reaches its full power onc
 
 ## Phase 5.7 — The Real Arena Broadcast (New Identified Priority)
 
-**Status:** In Progress — First steps taken. Proper pre-fight ceremony for real Live Fights is now live (fighter entrance, crowd tension, legend acknowledgment when available). The gap is being actively closed.
+**Status:** In Progress — Strong start. Proper pre-fight ceremony for real Live Fights delivered. First legend integration during live fights (crowd occasionally shouts the fighter's legend name). The real arena broadcast is starting to feel personal.
 
 **The Gap:**
 
@@ -850,8 +850,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
 - Phase 5.6 (The Colosseum That Actually Remembers You): **Strong progress** — Shared Wall default-loaded, legendName propagation, "brought by [Legend]", Coliseum Pantheon, cross-legend FEUD indicators, upgraded fighter profiles.
-- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Officially started. First major piece delivered: proper pre-fight ceremony for real Live Fights (entrance, tension, legend acknowledgment). The actual in-arena experience is now receiving the same theatrical treatment as the Quick Demo.
+- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Strong start. Proper pre-fight ceremony + first legend-aware crowd reactions during real fights delivered. The real Live Fight experience is beginning to feel like a proper arena event with soul.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.7 in progress. Proper pre-fight ceremony for real Live Fights now live (entrance + legend acknowledgment). The real arena broadcast is receiving the same soul as the Quick Demo.
+**Last Updated:** May 2026 — Phase 5.7 cooking: Proper pre-fight ceremony + legend-aware crowd reactions during real Live Fights now live. The actual arena experience is finally getting the theatrical treatment.
