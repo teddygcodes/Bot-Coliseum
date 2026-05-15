@@ -405,6 +405,20 @@ export default function BotColiseum() {
    * and the shared coliseum memory (when Redis is configured).
    */
   const broadcastToWall = async (result: MatchResult, isLiveFight: boolean = false) => {
+    // Phase 5.1 — If this was a challenge and we beat them, record the defeat
+    if (activeChallenge && result.final_score > activeChallenge.score) {
+      setReputation(prev => {
+        const current = prev[activeChallenge.agentName] || { challenges: 0, defeats: 0 };
+        return {
+          ...prev,
+          [activeChallenge.agentName]: {
+            ...current,
+            defeats: current.defeats + 1
+          }
+        };
+      });
+    }
+
     // Clear any active challenge once they broadcast (the rivalry has been answered)
     if (activeChallenge) {
       setActiveChallenge(null);
