@@ -2187,8 +2187,14 @@ export default function BotColiseum() {
                     const fe = wallEntries.find(e => e.agent_name === currentResult.submission.agent_name);
                     if (fe?.legendName) {
                       return (
-                        <div className="text-text-secondary">
-                          {fe.legendName}'s fighter just put on a show. The coliseum remembers.
+                        <div>
+                          <div className="text-text-secondary">
+                            {fe.legendName}'s fighter just put on a show. The coliseum remembers.
+                          </div>
+                          {/* Phase 5.7: Legend Impact summary for real fights */}
+                          <div className="text-xs text-[#c5a26f] mt-1 tracking-wider">
+                            This performance will be remembered as part of {fe.legendName}'s legacy.
+                          </div>
                         </div>
                       );
                     }
@@ -2784,28 +2790,45 @@ export default function BotColiseum() {
                   <div className="px-6 py-4 border-b border-border bg-black/60 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-danger rounded-full animate-pulse" />
-                      <div className="font-bold tracking-[1px] text-sm">LIVE FROM THE REFUND DUNGEON</div>
+                      <div className={`font-bold tracking-[1px] text-sm ${(() => {
+                        const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
+                        const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
+                        const fl = fe?.legendName;
+                        return fl && crowdEnergy >= 70 ? 'text-[#c5a26f]' : '';
+                      })()}`}>
+                        LIVE FROM THE REFUND DUNGEON
+                        {(() => {
+                          const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
+                          const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
+                          const fl = fe?.legendName;
+                          return (fl && crowdEnergy >= 70) ? (
+                            <span className="ml-2 text-[10px] text-[#c5a26f] font-black tracking-widest">— LEGEND IN THE CAGE</span>
+                          ) : null;
+                        })()}
+                      </div>
                     </div>
                     <div className="text-xs text-text-muted font-mono">{liveDecisions.length} DECISIONS RENDERED</div>
                   </div>
 
                   {/* Phase 5.7: Dynamic arena atmosphere text for real fights */}
-                  {liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant") && (
-                    <div className="px-6 py-3 bg-black/40 border-b border-border text-center">
-                      <div className={`text-sm tracking-wider ${crowdEnergy >= 75 ? 'text-[#c5a26f] font-bold' : 'text-text-muted'}`}>
-                        {(() => {
-                          const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
-                          const legend = fighterEntry?.legendName;
-                          const base = legend ? `The arena watches ${legend}'s fighter` : "The arena watches closely";
+                  {(() => {
+                    const isRealFight = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
+                    const fighterEntry = isRealFight ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
+                    const fighterLegend = fighterEntry?.legendName;
 
-                          if (crowdEnergy < 40) return `${base} with growing hostility...`;
-                          if (crowdEnergy < 60) return `${base} with measured respect.`;
-                          if (crowdEnergy < 80) return `${base} with rising belief!`;
-                          return `THE COLISEUM ROARS FOR ${legend ? legend.toUpperCase() : "THE FIGHTER"}!`;
-                        })()}
+                    if (!isRealFight || !fighterLegend) return null;
+
+                    return (
+                      <div className="px-6 py-3 bg-black/40 border-b border-border text-center">
+                        <div className={`text-sm tracking-wider ${crowdEnergy >= 75 ? 'text-[#c5a26f] font-bold' : 'text-text-muted'}`}>
+                          {crowdEnergy < 40 && `The crowd is growing hostile toward ${fighterLegend}...`}
+                          {crowdEnergy >= 40 && crowdEnergy < 60 && `The stands are watching ${fighterLegend} carefully.`}
+                          {crowdEnergy >= 60 && crowdEnergy < 80 && `The arena is starting to believe in ${fighterLegend}!`}
+                          {crowdEnergy >= 80 && `THE COLISEUM ROARS FOR ${fighterLegend.toUpperCase()}!`}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })()}
 
                   {/* PHASE 5.2: Arena Commentary — makes the Quick Demo crowd voice visible and electric */}
                   {liveLog.length > 0 && (
@@ -2894,16 +2917,23 @@ export default function BotColiseum() {
                         }
                       }
 
-                      // Phase 5.7: Stronger visual weight for real high-rep legends
+                      // Phase 5.7: Much stronger visual production for real high-rep legends
                       const isHighRepLegend = isRealFight && fighterLegend;
-                      const cardBorder = isHighRepLegend 
-                        ? 'border-[#c5a26f]/70' 
-                        : (isDeny ? 'border-danger/60' : isApprove ? 'border-success/40' : 'border-border');
+                      let cardBorder = isDeny ? 'border-danger/60' : isApprove ? 'border-success/40' : 'border-border';
+                      let cardExtra = "";
+
+                      if (isHighRepLegend) {
+                        cardBorder = 'border-[#c5a26f]/80';
+                        // Extra premium treatment when crowd energy is high or on big moment
+                        if (crowdEnergy >= 70 || isBigMoment) {
+                          cardExtra = "shadow-[0_0_0_4px_#c5a26f30,0_0_25px_#c5a26f] scale-[1.015]";
+                        }
+                      }
 
                       return (
                         <div 
                           key={idx} 
-                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 impact-hover cursed-border ${cardBorder} hover:border-accent/70 ${momentClass}`}
+                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 impact-hover cursed-border ${cardBorder} hover:border-accent/70 ${momentClass} ${cardExtra}`}
                         >
                           <div className="flex items-start gap-5">
                             {/* Request ID + Decision */}
