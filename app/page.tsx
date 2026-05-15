@@ -2791,28 +2791,35 @@ export default function BotColiseum() {
 
               {/* === THE CINEMATIC LIVE ARENA FEED === */}
               {(liveMatch.status === "in-progress" || liveDecisions.length > 0) && (
-                <div className={`card overflow-hidden mb-6 border-accent/10 ${(() => {
+                <div className={`card overflow-hidden mb-6 border-accent/10 transition-all duration-300 ${(() => {
                   const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
                   const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
                   const fl = fe?.legendName;
-                  return (fl && crowdEnergy >= 70) ? 'border-[#c5a26f]/60 shadow-[0_0_0_1px_#c5a26f20]' : '';
+                  if (fl && crowdEnergy >= 85) {
+                    return 'border-[#c5a26f] shadow-[0_0_0_12px_#c5a26f50,0_0_55px_#c5a26f,0_0_110px_#c5a26f35,0_0_180px_#c5a26f15] bg-[#1a1408]';
+                  } else if (fl && crowdEnergy >= 75) {
+                    return 'border-[#c5a26f]/90 shadow-[0_0_0_8px_#c5a26f45,0_0_35px_#c5a26f,0_0_70px_#c5a26f25] bg-[#1a1408]';
+                  } else if (fl && crowdEnergy >= 65) {
+                    return 'border-[#c5a26f]/75 shadow-[0_0_0_5px_#c5a26f35,0_0_22px_#c5a26f] bg-[#1a1408]';
+                  }
+                  return '';
                 })()}`}>
                   <div className="px-6 py-4 border-b border-border bg-black/60 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-danger rounded-full animate-pulse" />
-                      <div className={`font-bold tracking-[1px] text-sm ${(() => {
+                      <div className={`font-bold tracking-[2px] text-sm flex items-center gap-2 transition-all ${(() => {
                         const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
                         const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
                         const fl = fe?.legendName;
-                        return fl && crowdEnergy >= 70 ? 'text-[#c5a26f]' : '';
+                        return fl && crowdEnergy >= 70 ? 'text-[#c5a26f] text-base drop-shadow-[0_0_8px_#c5a26f]' : '';
                       })()}`}>
-                        LIVE FROM THE REFUND DUNGEON
+                        <span>LIVE FROM THE ARENA</span>
                         {(() => {
                           const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
                           const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
                           const fl = fe?.legendName;
                           return (fl && crowdEnergy >= 70) ? (
-                            <span className="ml-2 text-[10px] text-[#c5a26f] font-black tracking-widest">— LEGEND IN THE CAGE</span>
+                            <span className="px-3 py-0.5 text-xs font-black bg-[#c5a26f] text-black rounded tracking-[2px] shadow-[0_0_10px_#c5a26f]">MAIN EVENT — {fl.toUpperCase()}</span>
                           ) : null;
                         })()}
                       </div>
@@ -2934,14 +2941,18 @@ export default function BotColiseum() {
                       let cardBg = "bg-black";
 
                       if (isHighRepLegend) {
-                        cardBorder = 'border-[#c5a26f]/90';
+                        cardBorder = 'border-[#c5a26f]';
                         cardBg = 'bg-[#1a1408]';
                         
-                        // Strong "main event" treatment when crowd energy is high or on big moment
-                        if (crowdEnergy >= 70 || isBigMoment) {
-                          cardExtra = "shadow-[0_0_0_6px_#c5a26f40,0_0_30px_#c5a26f,0_20px_50px_-15px_#c5a26f] scale-[1.02] ring-1 ring-[#c5a26f]/30";
-                        } else {
-                          cardExtra = "shadow-[0_0_0_3px_#c5a26f20,0_0_15px_#c5a26f]";
+                        const energy = crowdEnergy / 100;
+                        const goldShadow = Math.floor(energy * 11) + 5;
+                        const goldBlur = Math.floor(energy * 50) + 20;
+                        const scale = 1 + (energy * 0.045);
+                        
+                        cardExtra = `shadow-[0_0_0_${goldShadow}px_#c5a26f65,0_0_${goldBlur}px_#c5a26f,0_0_${Math.floor(goldBlur * 1.7)}px_#c5a26f45] scale-[${scale.toFixed(3)}] ring-2 ring-[#c5a26f]/55`;
+                        
+                        if (crowdEnergy >= 80 || isBigMoment) {
+                          cardExtra += " ring-4 ring-[#c5a26f]/75";
                         }
                       }
 
