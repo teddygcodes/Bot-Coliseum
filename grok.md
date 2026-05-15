@@ -316,7 +316,7 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 | 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Very strong | One-tap X posting, savage copy, Arena Reacts, Quick Demo auto-feeds Wall, "LIVE RIGHT NOW" section live |
 | 5.6 The Colosseum That Actually Remembers You | 🔄 Strong progress | Shared Wall default-loaded, legendName propagation, "brought by" attribution, Coliseum Pantheon, cross-legend feuds visible |
 | 5.7 The Real Arena Broadcast | 🔄 Strong progress | Proper pre-fight ceremony, dynamic legend-aware reactions, gold big moments, Crowd Energy meter, Legend Vibe + Heat, richer commentary, gold framing, and pulsing glow for high-rep legends during real fights |
-| **5.8 Deep Visual Production & Arena Atmosphere for the Live Fight Experience** | 🔄 In Progress | Dramatically stronger "main event" gold framing, premium hierarchy, and visual weight on the Live Fight feed + decision cards when high-rep legends are fighting. The cursed coliseum aesthetic now intensifies with reputation and crowd energy. |
+| **5.8 Deep Visual Production & Arena Atmosphere for the Live Fight Experience** | 🔄 In Progress | Extremely dramatic gold framing, heavy cursed vignette, premium hierarchy, and intense visual weight on the Live Fight feed when high-rep legends are at peak energy. The cursed coliseum aesthetic now reacts powerfully and dangerously to reputation. |
 
 We are focusing on the highest-leverage areas identified from internal review, external AI feedback, and real usage patterns:
 
@@ -882,8 +882,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
 - Phase 5.6 (The Colosseum That Actually Remembers You): **Strong progress** — Shared Wall default-loaded, legendName propagation, "brought by [Legend]", Coliseum Pantheon, cross-legend FEUD indicators, upgraded fighter profiles.
 - Phase 5.7 (The Real Arena Broadcast): Strong progress — Proper pre-fight ceremony, dynamic legend-aware reactions, gold big moments, Crowd Energy, Legend Vibe + Heat, richer commentary, gold framing, and pulsing glow for high-rep legends during real fights.
-- **Phase 5.8 — Deep Visual Production & Arena Atmosphere for the Live Fight Experience (Current Focus)**: In progress. Dramatically stronger "main event" gold framing, premium hierarchy, pulsing glow, cursed vignette, and visual weight on the entire Live Fight feed and decision cards when a high-rep legend is cooking. The cursed coliseum aesthetic now reacts powerfully to reputation and energy.
+- **Phase 5.8 — Deep Visual Production & Arena Atmosphere for the Live Fight Experience (Current Focus)**: In progress. Extremely dramatic gold framing, heavy cursed vignette, premium hierarchy, pulsing glow, and intense visual weight on the entire Live Fight feed and decision cards when a high-rep legend is at peak energy. The cursed coliseum aesthetic now reacts powerfully and dangerously to reputation.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.8: Dramatically stronger gold framing, premium hierarchy, pulsing glow, cursed vignette, and visual weight on the Live Fight feed for high-rep legends when energy is high. The cursed coliseum aesthetic now reacts powerfully to reputation and energy.
+**Last Updated:** May 2026 — Phase 5.8: Extremely dramatic gold framing, heavy cursed vignette, premium hierarchy, and intense visual weight on the Live Fight feed for high-rep legends at peak energy. The cursed coliseum aesthetic now reacts powerfully and dangerously to reputation.
