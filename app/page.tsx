@@ -647,6 +647,7 @@ export default function BotColiseum() {
       evidence: string[];
     }> = [];
 
+    let caseIndex = 0;
     for (const c of publicCases) {
       // Realistic pacing so it feels like a real agent thinking
       await new Promise((r) => setTimeout(r, 95 + Math.random() * 70));
@@ -681,7 +682,7 @@ export default function BotColiseum() {
       });
 
       // Add occasional dramatic arena commentary during the Quick Demo
-      if (i % 7 === 0 && i > 3) {
+      if (caseIndex % 7 === 0 && caseIndex > 3) {
         const comments = [
           "The crowd is getting restless...",
           "A strong sequence from the Revenant.",
@@ -692,6 +693,7 @@ export default function BotColiseum() {
         const randomComment = comments[Math.floor(Math.random() * comments.length)];
         setLiveLog((l) => [...l, `📣  ${randomComment}`]);
       }
+      caseIndex++;
     }
 
     // 5. Build the full submission and call complete — this triggers real scoring + the "match-result-ready" event
