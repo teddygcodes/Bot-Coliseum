@@ -2616,28 +2616,64 @@ export default function BotColiseum() {
                   </div>
                 )}
 
-                {/* Fighter connected — ready to begin */}
+                {/* Fighter connected — Proper Pre-Fight Ceremony (Phase 5.7) */}
                 {liveMatch.status === "fighter-connected" && !liveMatch.fighterName?.includes("Revenant") && (
                   <div className="mt-8 border-t border-border pt-7">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="text-success text-lg">✓</div>
-                      <div className="font-semibold text-lg">{liveMatch.fighterName} has entered the arena</div>
+                    <div className="text-center mb-8">
+                      <div className="uppercase tracking-[3px] text-xs text-accent mb-2">THE ARENA ACKNOWLEDGES</div>
+                      <div className="text-4xl font-black tracking-[-1px] mb-2">{liveMatch.fighterName}</div>
+
+                      {/* Legend acknowledgment */}
+                      {(() => {
+                        // Try to find if this fighter has an associated legend from recent activity
+                        const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
+                        if (fighterEntry?.legendName) {
+                          return (
+                            <div className="text-lg text-accent/90 font-medium">
+                              Brought by <span className="font-bold">{fighterEntry.legendName}</span>
+                            </div>
+                          );
+                        }
+                        return <div className="text-text-secondary">A new challenger enters the coliseum</div>;
+                      })()}
                     </div>
-                    <button
-                      onClick={async () => {
-                        await fetch("/api/live-fight/start", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ matchId: liveMatch.matchId }),
-                        });
-                        setLiveMatch((m) => m ? { ...m, status: "in-progress" } : null);
-                        setLiveLog((l) => [...l, "⚔️  THE GATES OPEN — 30 cases are now streaming to your fighter"]);
-                      }}
-                      className="btn btn-primary px-10 py-4 text-lg"
-                    >
-                      BEGIN THE FIGHT — SEND THE CASES
-                    </button>
-                    <div className="text-xs text-text-muted mt-3">Once you click, your agent will start receiving cases in real time.</div>
+
+                    <div className="space-y-6 max-w-lg mx-auto text-center">
+                      <div className="text-xl text-text-secondary">
+                        The arena grows quiet.<br />
+                        All eyes are on the gates.
+                      </div>
+
+                      <div className="text-lg">
+                        {liveMatch.fighterName} stands ready.<br />
+                        The crowd is waiting to see what this fighter is made of.
+                      </div>
+
+                      <div className="pt-4">
+                        <button
+                          onClick={async () => {
+                            await fetch("/api/live-fight/start", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ matchId: liveMatch.matchId }),
+                            });
+                            setLiveMatch((m) => m ? { ...m, status: "in-progress" } : null);
+                            setLiveLog((l) => [...l, "═══════════════════════════════════════════════"]);
+                            setLiveLog((l) => [...l, "⚔️  THE GATES OPEN"]);
+                            setLiveLog((l) => [...l, "30 cases are now streaming to the fighter."]);
+                            setLiveLog((l) => [...l, "The arena is watching."]);
+                          }}
+                          className="btn btn-primary px-12 py-5 text-xl font-bold tracking-wider"
+                        >
+                          OPEN THE GATES — BEGIN THE FIGHT
+                        </button>
+                      </div>
+
+                      <div className="text-xs text-text-muted">
+                        Once the gates open, your agent will receive cases in real time.<br />
+                        Every decision will be witnessed by the coliseum.
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

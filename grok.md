@@ -314,7 +314,8 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 | 5.3 Visual Identity & Arena Atmosphere | 🔄 Solid first wave | Cursed grid + blood/gold cards + impact weight + verdict framing. Site feels like the arena now. |
 | 5.4 Reputation & Lightweight Persistence | 🔄 Strong first wave | Claimable legends with W-L, streaks, legends slain, automatic record building on every fight + challenge |
 | 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Very strong | One-tap X posting, savage copy, Arena Reacts, Quick Demo auto-feeds Wall, "LIVE RIGHT NOW" section live |
-| 5.6 The Colosseum That Actually Remembers You | 🔄 Current Focus | Make shared Wall the default + real persistent fighter legacies across sessions |
+| 5.6 The Colosseum That Actually Remembers You | 🔄 Strong progress | Shared Wall default-loaded, legendName propagation, "brought by" attribution, Coliseum Pantheon, cross-legend feuds visible |
+| **5.7 The Real Arena Broadcast** | 🔄 In Progress | The actual Live Fight experience (real agents) is now the main focus — bringing the same theatrical depth, crowd energy, legend integration, and "produced sports event" feeling that the Quick Demo received. |
 
 We are focusing on the highest-leverage areas identified from internal review, external AI feedback, and real usage patterns:
 
@@ -328,6 +329,17 @@ We are focusing on the highest-leverage areas identified from internal review, e
 **Goal:** Turn a very promising prototype into something that actually feels cool, dangerous, and addictive — a real sport people want to participate in and brag about.
 
 **Current Phase:** Phase 5 — The "Make It Cool" phase. Mechanics are largely done. The emotional, atmospheric, and status layers are what will determine whether this project crosses into something special.
+
+**Honest Assessment (as of now):**  
+We have gone extremely deep on making **reputation, legends, and The Wall** feel alive and personal (5.4 + 5.6). The identity and rivalry layer is becoming genuinely special.
+
+However, there is one major area that has not yet received the same level of theatrical soul and production value:
+
+**The actual in-arena Live Fight experience for real agents.**
+
+The Quick Demo has been turned into a full produced sports broadcast with ceremony, crowd energy, dynamic commentary, big moments, and seamless Wall integration. But when a real builder brings their own fighter through the Live Fight flow, the browser experience during the actual fight still feels comparatively functional rather than spectacular.
+
+This is the next area that needs the same "Chef treatment."
 
 **Phase 1–4 Status:** All closed with full implementations (see detailed sections below).
 
@@ -753,6 +765,60 @@ All the emotional and status work from 5.1–5.5 only reaches its full power onc
 
 ---
 
+## Phase 5.7 — The Real Arena Broadcast (New Identified Priority)
+
+**Status:** In Progress — First steps taken. Proper pre-fight ceremony for real Live Fights is now live (fighter entrance, crowd tension, legend acknowledgment when available). The gap is being actively closed.
+
+**The Gap:**
+
+We have gone extremely deep on making **reputation, legends, rivalries, and The Wall** feel personal and alive (5.4 + 5.6). The identity layer is becoming genuinely special.
+
+We have also turned the **Quick Demo** into a full produced sports broadcast with ceremony, escalating crowd energy, dynamic commentary, big moments, dramatic post-fight beats, and seamless integration with the Wall/reputation system.
+
+However, there is one major experience that has not yet received the same level of love:
+
+**The actual in-arena Live Fight experience when a real builder brings their own agent.**
+
+When someone runs the real fighter handler with their real code, the browser experience during the fight (the decision feed, crowd reactions, pacing, legend integration, and overall feeling of "this is a real, high-stakes sporting event happening right now") still feels comparatively functional rather than spectacular.
+
+This is the area that now most clearly needs the same "Chef treatment."
+
+**What Needs the Same Baking:**
+
+- Pre-fight ceremony and tension building for real Live Fights (fighter entrance, crowd building, legend acknowledgment)
+- Dynamic, performance-reactive crowd energy and commentary that properly escalates over the 30 cases for real agents
+- Special "big moment" visuals, callouts, and crowd reactions when a real fighter makes an impressive or clutch play
+- Deep integration of the fighter's claimed legend into the live experience (the "crowd" chanting their name, reacting to their reputation, etc.)
+- Post-fight "the arena is still talking" energy that matches the quality we built for Quick Demo
+- Making the entire Live Fight view feel like a high-production arena broadcast, not just a technical stream
+
+This is the next logical high-leverage area. The Quick Demo and post-fight reputation layer are now very strong. The real "I brought my fighter and it's fighting live right now" moment needs to catch up in theatricality and soul.
+
+---
+
+## Phase 5.7 — The Real Arena Broadcast (In Progress)
+
+**Goal:**  
+Make the actual Live Fight experience (when a real builder connects their own agent) feel like a high-production, emotional, dangerous sporting event — on the same level as what we've built for the Quick Demo and the post-fight reputation layer.
+
+**Current State (Honest Assessment):**
+- The Quick Demo has received massive theatrical upgrades (ceremonial pre-fight, crowd energy meter, dynamic commentary, big moments, post-fight drama, auto Wall feeding).
+- The reputation/legend system (5.4 + 5.6) is becoming genuinely special.
+- However, when someone runs the real `fighter.ts` with their own agent, the in-browser experience during the live fight is still relatively functional. The pre-fight, in-fight energy, legend integration, and overall "this is a real coliseum event" feeling lag behind.
+
+**What We're Going to Build:**
+
+- Proper pre-fight ceremony for real Live Fights (fighter entrance, crowd tension, legend acknowledgment).
+- Dynamic, escalating crowd energy and commentary that reacts to the real agent's performance over the 30 cases.
+- Special big moment visuals and callouts when a real fighter makes a clutch or impressive play.
+- Deep legend integration during the live fight (the "crowd" reacting to the fighter's reputation, chanting their legend name, etc.).
+- Strong post-fight "the arena is still talking" experience for real Live Fights that ties back into The Wall and rivalries.
+- Overall making the Live Fight view feel like a produced arena broadcast rather than a technical interface.
+
+This phase is about closing the gap so that bringing a real fighter feels just as special and emotional as running the Quick Demo.
+
+---
+
 ### Phase 5 Success Criteria
 
 **Green Lights:**
@@ -783,8 +849,9 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
-- Phase 5.6 (The Colosseum That Actually Remembers You): **Active** — Full cross-legend rivalry system live. When you beat or lose to a fighter brought by another legend, the feud is recorded. Wall cards (regular + Live Right Now) now show "⚔️ FEUD You lead 3–1 (5)" style indicators. The shared coliseum now has real, visible grudges between legends. "Coliseum Pantheon" + profile cards reinforce the status layer.
+- Phase 5.6 (The Colosseum That Actually Remembers You): **Strong progress** — Shared Wall default-loaded, legendName propagation, "brought by [Legend]", Coliseum Pantheon, cross-legend FEUD indicators, upgraded fighter profiles.
+- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Officially started. First major piece delivered: proper pre-fight ceremony for real Live Fights (entrance, tension, legend acknowledgment). The actual in-arena experience is now receiving the same theatrical treatment as the Quick Demo.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.6: Full legend vs legend rivalry system shipped. FEUD indicators + head-to-head now appear on The Wall when legends clash. The coliseum has real, cross-user grudges and status. Legends feel alive.
+**Last Updated:** May 2026 — Phase 5.7 in progress. Proper pre-fight ceremony for real Live Fights now live (entrance + legend acknowledgment). The real arena broadcast is receiving the same soul as the Quick Demo.
