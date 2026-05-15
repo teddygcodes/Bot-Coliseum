@@ -2767,6 +2767,24 @@ export default function BotColiseum() {
                     <div className="text-xs text-text-muted font-mono">{liveDecisions.length} DECISIONS RENDERED</div>
                   </div>
 
+                  {/* Phase 5.7: Dynamic arena atmosphere text for real fights */}
+                  {liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant") && (
+                    <div className="px-6 py-3 bg-black/40 border-b border-border text-center">
+                      <div className={`text-sm tracking-wider ${crowdEnergy >= 75 ? 'text-[#c5a26f] font-bold' : 'text-text-muted'}`}>
+                        {(() => {
+                          const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
+                          const legend = fighterEntry?.legendName;
+                          const base = legend ? `The arena watches ${legend}'s fighter` : "The arena watches closely";
+
+                          if (crowdEnergy < 40) return `${base} with growing hostility...`;
+                          if (crowdEnergy < 60) return `${base} with measured respect.`;
+                          if (crowdEnergy < 80) return `${base} with rising belief!`;
+                          return `THE COLISEUM ROARS FOR ${legend ? legend.toUpperCase() : "THE FIGHTER"}!`;
+                        })()}
+                      </div>
+                    </div>
+                  )}
+
                   {/* PHASE 5.2: Arena Commentary — makes the Quick Demo crowd voice visible and electric */}
                   {liveLog.length > 0 && (
                     <div className="px-6 py-2 bg-black/50 border-b border-border text-[12px] font-mono text-text-muted/90 space-y-0.5 max-h-[92px] overflow-auto">
@@ -2854,10 +2872,16 @@ export default function BotColiseum() {
                         }
                       }
 
+                      // Phase 5.7: Stronger visual weight for real high-rep legends
+                      const isHighRepLegend = isRealFight && fighterLegend;
+                      const cardBorder = isHighRepLegend 
+                        ? 'border-[#c5a26f]/70' 
+                        : (isDeny ? 'border-danger/60' : isApprove ? 'border-success/40' : 'border-border');
+
                       return (
                         <div 
                           key={idx} 
-                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 impact-hover cursed-border ${isDeny ? 'border-danger/60' : isApprove ? 'border-success/40' : 'border-border'} hover:border-accent/70 ${momentClass}`}
+                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 impact-hover cursed-border ${cardBorder} hover:border-accent/70 ${momentClass}`}
                         >
                           <div className="flex items-start gap-5">
                             {/* Request ID + Decision */}
