@@ -1733,6 +1733,39 @@ export default function BotColiseum() {
             );
           })()}
 
+          {/* Phase 5.6: Most Active Legends (client-side aggregation for now) */}
+          {(() => {
+            const legendCounts = wallEntries.reduce((acc, e) => {
+              if (e.legendName) {
+                acc[e.legendName] = (acc[e.legendName] || 0) + 1;
+              }
+              return acc;
+            }, {} as Record<string, number>);
+
+            const topLegends = Object.entries(legendCounts)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5);
+
+            if (topLegends.length === 0) return null;
+
+            return (
+              <div className="mb-10">
+                <div className="uppercase tracking-[2px] text-accent text-xs mb-3">MOST ACTIVE LEGENDS RIGHT NOW</div>
+                <div className="flex flex-wrap gap-2">
+                  {topLegends.map(([name, count]) => (
+                    <div
+                      key={name}
+                      className="px-4 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium border border-accent/30"
+                    >
+                      {name} <span className="text-accent/70">×{count}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[10px] text-text-muted mt-2 tracking-widest">These legends have been bringing fighters to the coliseum the most recently.</div>
+              </div>
+            );
+          })()}
+
           {/* Phase 5.6: Legend Activity Summary (client-side for now) */}
           {myLegend && wallEntries.length > 0 && (
             (() => {
