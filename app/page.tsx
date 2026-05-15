@@ -42,6 +42,10 @@ export default function BotColiseum() {
   type HeadToHeadRecord = { myWins: number; myLosses: number };
   const [headToHead, setHeadToHead] = useState<Record<string, HeadToHeadRecord>>({});
 
+  // Phase 5.6 — Legend vs Legend rivalries (feuds between claimed legends across the shared coliseum)
+  type LegendRivalryRecord = { wins: number; losses: number };
+  const [legendRivalries, setLegendRivalries] = useState<Record<string, LegendRivalryRecord>>({});
+
   const [jsonInput, setJsonInput] = useState("");
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [isScoring, setIsScoring] = useState(false);
@@ -220,6 +224,18 @@ export default function BotColiseum() {
     if (savedH2H) {
       try {
         setHeadToHead(JSON.parse(savedH2H));
+      } catch {
+        // ignore corrupted data
+      }
+    }
+  }, []);
+
+  // Phase 5.6: Load legend vs legend rivalry records
+  useEffect(() => {
+    const savedLegendRivalries = localStorage.getItem("bot-coliseum-legend-rivalries");
+    if (savedLegendRivalries) {
+      try {
+        setLegendRivalries(JSON.parse(savedLegendRivalries));
       } catch {
         // ignore corrupted data
       }
@@ -462,6 +478,12 @@ export default function BotColiseum() {
     localStorage.setItem("bot-coliseum-head-to-head", JSON.stringify(h2h));
   };
 
+  // Phase 5.6: Persist legend vs legend rivalries
+  const saveLegendRivalries = (rivalries: Record<string, LegendRivalryRecord>) => {
+    setLegendRivalries(rivalries);
+    localStorage.setItem("bot-coliseum-legend-rivalries", JSON.stringify(rivalries));
+  };
+
   /**
    * Phase 4.2 — Broadcasts to BOTH localStorage (your personal history)
    * and the shared coliseum memory (when Redis is configured).
@@ -576,6 +598,28 @@ export default function BotColiseum() {
         [opponent]: newRecord,
       };
       saveHeadToHead(newHeadToHead);
+    }
+
+    // Phase 5.6: Update legend vs legend rivalry if both sides have claimed legends
+    if (activeChallenge && myLegend) {
+      // Find the opponent fighter's entry to get its legendName (if any)
+      const opponentEntry = wallEntries.find(e => e.agent_name === activeChallenge.agentName);
+      const opponentLegend = opponentEntry?.legendName;
+
+      if (opponentLegend && opponentLegend !== myLegend.name) {
+        const won = result.final_score > activeChallenge.score;
+        const current = legendRivalries[opponentLegend] || { wins: 0, losses: 0 };
+
+        const newRivalry: LegendRivalryRecord = won
+          ? { wins: current.wins + 1, losses: current.losses }
+          : { wins: current.wins, losses: current.losses + 1 };
+
+        const newLegendRivalries = {
+          ...legendRivalries,
+          [opponentLegend]: newRivalry,
+        };
+        saveLegendRivalries(newLegendRivalries);
+      }
     }
 
     // Copy link as side effect
@@ -1700,6 +1744,25 @@ export default function BotColiseum() {
                               brought by {entry.legendName}
                             </div>
                           )}
+                          {/* Phase 5.6: Show feud if this legend has history with the viewer's legend */}
+                          {(() => {
+                            if (!myLegend || !entry.legendName) return null;
+                            const rivalry = legendRivalries[entry.legendName];
+                            if (!rivalry || (rivalry.wins === 0 && rivalry.losses === 0)) return null;
+
+                            const total = rivalry.wins + rivalry.losses;
+                            const leadText = rivalry.wins > rivalry.losses
+                              ? `You lead ${rivalry.wins}–${rivalry.losses}`
+                              : rivalry.losses > rivalry.wins
+                              ? `Down ${rivalry.wins}–${rivalry.losses}`
+                              : `Tied ${rivalry.wins}–${rivalry.losses}`;
+
+                            return (
+                              <div className="text-[10px] mt-1 text-orange-400 font-bold tracking-wider">
+                                ⚔️ FEUD: {leadText} ({total} fights)
+                              </div>
+                            );
+                          })()}
                           <div className="text-xs text-danger/80 font-bold tracking-widest mt-1">JUST GOT COOKED • {getRelativeTime(entry.timestamp)}</div>
                         </div>
                         <div className="text-right">
@@ -2132,6 +2195,26 @@ export default function BotColiseum() {
                             by {entry.legendName}
                           </span>
                         )}
+
+                        {/* Phase 5.6: Feud indicator for legend vs legend rivalries */}
+                        {(() => {
+                          if (!myLegend || !entry.legendName) return null;
+                          const rivalry = legendRivalries[entry.legendName];
+                          if (!rivalry || (rivalry.wins === 0 && rivalry.losses === 0)) return null;
+
+                          const total = rivalry.wins + rivalry.losses;
+                          const leadText = rivalry.wins > rivalry.losses
+                            ? `You lead ${rivalry.wins}–${rivalry.losses}`
+                            : rivalry.losses > rivalry.wins
+                            ? `Down ${rivalry.wins}–${rivalry.losses}`
+                            : `Tied ${rivalry.wins}–${rivalry.losses}`;
+
+                          return (
+                            <span className="text-[10px] px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-bold tracking-wider">
+                              ⚔️ FEUD {leadText} ({total})
+                            </span>
+                          );
+                        })()}
 
                         {/* Prestige Badges — Phase 5.1 */}
                         {(() => {

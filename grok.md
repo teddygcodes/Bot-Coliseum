@@ -783,8 +783,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
-- Phase 5.6 (The Colosseum That Actually Remembers You): **Active** — "Your Legend" card evolved into a real fighter profile with dynamic titles. New "COLISEUM PANTHEON" row celebrating the most active legends like real coliseum celebrities (top one gets "MOST FEARED"). Legends now feel like public figures with visible status.
+- Phase 5.6 (The Colosseum That Actually Remembers You): **Active** — Legend vs Legend rivalries now tracked and displayed. "FEUD" badges appear on cards when a fighter's legend has history with yours ("You lead 3–1", "Down 1–2"). "Coliseum Pantheon" + Live Right Now surface these feuds. Legends are developing real cross-user grudges and status.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.6 progressing: "Coliseum Pantheon" of active legends, upgraded fighter profiles for claimed names, legends visibly attached across The Wall. The coliseum is developing real stars and status.
+**Last Updated:** May 2026 — Phase 5.6: Cross-legend rivalries now visible with "⚔️ FEUD" badges and head-to-head on The Wall. "Coliseum Pantheon" celebrates top legends. Persistent fighter identities + real grudges are taking shape.
