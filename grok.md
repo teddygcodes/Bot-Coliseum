@@ -850,8 +850,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
 - Phase 5.6 (The Colosseum That Actually Remembers You): **Strong progress** — Shared Wall default-loaded, legendName propagation, "brought by [Legend]", Coliseum Pantheon, cross-legend FEUD indicators, upgraded fighter profiles.
-- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Strong momentum. Proper pre-fight ceremony + dynamic legend-aware crowd reactions + special gold big moment cards + stronger post-fight "arena is still talking" language for real legendary fighters. Real Live Fights are becoming proper, emotional arena events.
+- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Strong momentum. Proper pre-fight ceremony + dynamic legend-aware crowd reactions + gold big moment cards + Crowd Energy meter + legend name in header for real fights. Real Live Fights are becoming high-production arena broadcasts with personality.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.7: Full pre-fight ceremony, dynamic legend-aware reactions, gold big moment cards, and stronger post-fight language for real Live Fights now live. The actual arena experience is getting the full theatrical treatment.
+**Last Updated:** May 2026 — Phase 5.7: Pre-fight ceremony + dynamic legend-aware reactions + gold big moments + Crowd Energy meter + legend in header + stronger post-fight language for real Live Fights now live. Real arena broadcasts are becoming proper produced events.
