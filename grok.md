@@ -285,6 +285,36 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 
 ## Current Roadmap: Five Key Phases (Post v0.1.0)
 
+**Master Status Overview**
+
+| Phase | Status | Summary |
+|-------|--------|---------|
+| **Phase 1: Match Reports** | ✅ Complete | Deterministic savage reports + Fatal Flaw system |
+| **Phase 2: Live Fight Onboarding** | ✅ Complete | Cinematic Live Fight + one-click Quick Demo |
+| **Phase 3: Public Visibility + The Wall** | ✅ Complete | The Wall view, broadcasting, local memory, rich share links |
+| **Phase 4: Virality & Network Effects** | ✅ Complete | OG previews, shared Wall infrastructure, rivalry system, polish |
+| **Phase 5: Soul, Spectacle & Atmosphere** | 🔄 In Progress | Making it *feel* like a real cursed arena (current focus) |
+
+**Phase 4 & Phase 5 Sub-Phase Breakdown**
+
+**Phase 4 Sub-Phases**
+| Sub-Phase | Status | Notes |
+|-----------|--------|-------|
+| 4.1 Dynamic OG Images & Rich Previews | ✅ Shipped | `/api/og` + full Open Graph metadata |
+| 4.2 Shared Wall Infrastructure | ✅ Core Complete | `lib/wall.ts` + Upstash Redis + graceful fallback |
+| 4.3 Rivalry & "Challenge This Fighter" | ✅ Complete | Full context + head-to-head comparison on results |
+| 4.4 Wall Polish & Legend Interactivity | ✅ Complete | Stats, Glory/Cooked/Legend badges, interactive legends |
+| 4.5 Launch & Narrative Polish | ✅ Good Progress | README rewrite + BroadcastModal improvements |
+
+**Phase 5 Sub-Phases (Current Focus)**
+| Sub-Phase | Status | Notes |
+|-----------|--------|-------|
+| 5.1 The Wall as the Actual Main Event | 🔄 Partial (~45%) | Infrastructure + visual polish done, but shared state not yet default |
+| 5.2 Theatricality & Immersion in Live Fights | ❌ Mostly not started | Very little visual/audio spectacle |
+| 5.3 Visual Identity & Arena Atmosphere | ❌ Early progress only | Still feels like a clean dark app |
+| 5.4 Reputation & Lightweight Persistence | ❌ Very early | No real fighter identity or history |
+| 5.5 First 60 Seconds Magic + Viral Hooks | 🔄 Partial foundation | Quick Demo + OG images exist, but emotional hook is weak |
+
 We are focusing on the highest-leverage areas identified from internal review, external AI feedback, and real usage patterns:
 
 ### Phase 1: Match Reports (Foundation) — ✅ Complete
