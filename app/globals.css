@@ -1,0 +1,293 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Dark arena theme */
+  --color-background: #0a0b0f;
+  --color-surface: #16181f;
+  --color-surface-raised: #1f222b;
+  --color-border: #272b35;
+  --color-border-strong: #3a3f4a;
+
+  --color-text: #e5e7eb;
+  --color-text-secondary: #a1a7b3;
+  --color-text-muted: #6b7280;
+
+  --color-accent: #f97316;
+  --color-accent-hover: #ea580c;
+  --color-accent-dim: rgba(249, 115, 22, 0.1);
+
+  --color-success: #22c55e;
+  --color-success-dim: rgba(34, 197, 94, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-dim: rgba(239, 68, 68, 0.12);
+  --color-neutral: #64748b;
+  --color-neutral-dim: rgba(100, 116, 139, 0.12);
+
+  --color-score-gold: #fbbf24;
+  --color-score-silver: #94a3b8;
+  --color-score-bronze: #d97706;
+
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #0a0b0f !important;
+  color: #e5e7eb !important;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Strong fallbacks using CSS variables when they are available */
+:root {
+  --color-background: #0a0b0f;
+  --color-surface: #16181f;
+  --color-surface-raised: #1f222b;
+  --color-border: #272b35;
+  --color-border-strong: #3a3f4a;
+  --color-text: #e5e7eb;
+  --color-text-secondary: #a1a7b3;
+  --color-text-muted: #6b7280;
+  --color-accent: #f97316;
+  --color-accent-hover: #ea580c;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+}
+
+/* Sharp card style - match cards, arena panels */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.1s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.card:hover {
+  border-color: var(--color-border-strong);
+}
+
+.card-raised {
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+}
+
+/* Score badges */
+.score-badge {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.result-win {
+  color: var(--color-success);
+  background-color: var(--color-success-dim);
+  border-color: var(--color-success);
+}
+
+.result-loss {
+  color: var(--color-danger);
+  background-color: var(--color-danger-dim);
+  border-color: var(--color-danger);
+}
+
+/* Table styling for breakdown */
+.breakdown-table th,
+.breakdown-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+}
+
+.breakdown-table th {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 11px;
+}
+
+.breakdown-table tr:hover td {
+  background-color: var(--color-surface-raised);
+}
+
+/* Status pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.pill-success {
+  background-color: var(--color-success-dim);
+  color: var(--color-success);
+}
+
+.pill-danger {
+  background-color: var(--color-danger-dim);
+  color: var(--color-danger);
+}
+
+.pill-neutral {
+  background-color: var(--color-neutral-dim);
+  color: var(--color-neutral);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.1s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #0a0b0f;
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.btn-secondary {
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-border);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+.btn-ghost:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+/* Input / textarea */
+.input,
+.textarea {
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: border-color 0.1s ease;
+  font-family: inherit;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-dim);
+}
+
+.textarea {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* Fatal flaw callout */
+.fatal-flaw {
+  background: linear-gradient(135deg, #1f222b 0%, #16181f 100%);
+  border: 1px solid var(--color-danger);
+  border-left-width: 4px;
+}
+
+/* Match report box */
+.match-report {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Leaderboard */
+.leaderboard-row {
+  transition: background-color 0.1s ease;
+}
+
+.leaderboard-row:hover {
+  background-color: var(--color-surface-raised);
+}
+
+/* Arena stat pills */
+.stat-pill {
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* JSON error list */
+.error-list {
+  background-color: var(--color-danger-dim);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+
+.error-list li {
+  font-size: 13px;
+  color: #fca5a5;
+  margin-bottom: 4px;
+}
+
+/* Subtle grid for hero / arena feel */
+.arena-grid {
+  background-image: 
+    linear-gradient(rgba(249, 115, 22, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249, 115, 22, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Monospace for IDs and scores */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .breakdown-table th,
+  .breakdown-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+}
