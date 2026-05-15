@@ -1652,6 +1652,69 @@ export default function BotColiseum() {
             </p>
           </div>
 
+          {/* Phase 5.5: LIVE RIGHT NOW — The coliseum is actually active */}
+          {(() => {
+            const liveNow = [...wallEntries]
+              .filter(e => e.isLive)
+              .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+              .slice(0, 4);
+
+            if (liveNow.length === 0) return null;
+
+            return (
+              <div className="mb-12">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-3 h-3 bg-danger rounded-full animate-pulse" />
+                  <div className="uppercase tracking-[3px] text-danger text-sm font-black">LIVE RIGHT NOW IN THE COLISEUM</div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {liveNow.map((entry) => (
+                    <div
+                      key={entry.id}
+                      onClick={() => {
+                        if (entry.shareUrl !== "#") window.open(entry.shareUrl, "_blank");
+                      }}
+                      className="group relative overflow-hidden rounded-2xl border-2 border-danger/80 bg-[#1a0f0f] p-5 cursor-pointer hover:border-danger transition-all hover:scale-[1.01]"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="font-black text-xl tracking-[-0.5px] text-white group-hover:text-danger transition-colors">
+                            {entry.agent_name}
+                          </div>
+                          <div className="text-xs text-danger/80 font-bold tracking-widest">JUST GOT COOKED</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-3xl font-black tabular-nums text-danger">{entry.score}</div>
+                          <div className="text-[10px] text-text-muted -mt-1">/100</div>
+                        </div>
+                      </div>
+
+                      <div className="text-sm text-text-secondary line-clamp-2 mb-4">
+                        {entry.record}
+                      </div>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const challengeUrl = `/?challenge=true&vs=${encodeURIComponent(entry.agent_name)}&vsScore=${entry.score}&vsFlaw=${encodeURIComponent(entry.fatal_flaw)}`;
+                          window.location.href = challengeUrl;
+                        }}
+                        className="w-full btn btn-primary text-sm py-2 font-bold tracking-wider"
+                      >
+                        CHALLENGE THIS ONE RIGHT NOW →
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center mt-3 text-xs text-danger/70 tracking-widest">
+                  THESE FIGHTS HAPPENED IN THE LAST FEW MINUTES. THE BLOOD IS STILL WARM.
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Phase 5.4: YOUR LEGEND — persistent identity and record */}
           <div className="mb-10">
             {!myLegend ? (
@@ -1937,7 +2000,7 @@ export default function BotColiseum() {
                           <span className="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold tracking-wider">LEGEND</span>
                         )}
                         {entry.isLive && (
-                          <span className="text-[10px] px-2 py-0.5 rounded bg-danger/20 text-danger font-bold tracking-wider animate-pulse">LIVE FROM THE ARENA</span>
+                          <span className="text-[10px] px-2.5 py-0.5 rounded bg-danger text-white font-black tracking-[1.5px] animate-pulse shadow-[0_0_8px_#ef4444]">LIVE • JUST COOKED</span>
                         )}
 
                         {/* Prestige Badges — Phase 5.1 */}
