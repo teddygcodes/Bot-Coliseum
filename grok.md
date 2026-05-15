@@ -277,5 +277,63 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 **Current Status:** Post-launch. 
 - Test suite added (Vitest) — 26 passing tests with good diagnostic coverage
 - GitHub Actions CI configured (runs on every push/PR: type-check, lint, build, tests)
+- Fixed `package-lock.json` corruption that was breaking CI installs (regenerated fresh)
 
-Focus is now on improving shareability (Broadcast Result) and Live Fight onboarding.
+**Current Focus:** Post-v0.1.0 development is now structured around three key phases (see below).
+
+---
+
+## Current Roadmap: Three Key Phases (Post v0.1.0)
+
+We are focusing on the three highest-leverage areas identified from internal review and external AI feedback:
+
+### Phase 1: Match Reports (Foundation)
+**Goal:** Make the output actually worth sharing and feel like a real sport.
+
+- Make match reports **fully deterministic** (remove all `Math.random()`)
+- Improve quality, personality, and brutality of the reports
+- Strengthen both Full and Condensed versions
+- Ensure the standalone `/share` page is excellent
+
+**Why first?** The report is the actual product people will see and judge. Weak reports undermine everything else.
+
+### Phase 2: Live Fight Onboarding (Acquisition)
+**Goal:** Dramatically reduce friction so more people actually try the Live Fight.
+
+- Improve in-UI instructions and flow
+- Create a high-quality demo video (Loom or recorded)
+- Offer a simpler "Quick Demo" path for first-time users
+- Make the fighter handler experience more beginner-friendly
+
+### Phase 3: Public Visibility + Sharing (Network Effects)
+**Goal:** Turn individual fights into something public and social so the "sport" can actually grow.
+
+- Evolve the Broadcast Result system into real public match pages
+- Create a public (or semi-public) results gallery/feed
+- Make sharing feel exciting and native to the coliseum experience
+- Enable rivalries and discovery
+
+**Current Phase:** We are deep in **Phase 1** (Match Reports).
+
+**Progress so far (Phase 1):**
+- Match reports are now fully deterministic
+- Significantly improved opening lines based on final score (e.g. "left a trail of bodies", "got absolutely cooked", "got dragged through the dirt")
+- Made language sharper and more brutal overall (coaching notes now bite harder, performance lines call out the humiliation)
+- Strengthened the Condensed version — now generates a real short savage blurb via `getCondensedReportBlurb` instead of copying the full narrative
+- Improved tweet text generation to use the dynamic condensed blurb
+- Fixed in-place array mutation bug in `generateMatchReport` (strongest/weakest sorts now copy before sorting)
+- Full Markdown export on share page made more impressive (dramatic verdict line + "The arena does not forgive. The arena remembers.")
+- Added tests + manual review for edge cases (perfect 100, very low scores <40 produce appropriate openings and flaws)
+
+**Phase 1 Status:** Complete to spec.
+
+After the ralph-loop death loop left the project with aspirational claims but mechanical prose, this session did a full iterative brutality pass:
+
+- Rewrote `generateMatchReport` for real narrative flow instead of template assembly
+- Distinct voice per score band (god-tier feels cold/superior, disasters feel humiliating)
+- Integrated turning point + fatal flaw differently depending on how badly the fighter got cooked
+- Sharpened every coaching note and performance line
+- Made condensed blurbs match the new meaner voice
+- Added golden regression tests that protect key humiliating/quotable phrases
+
+The reports now actually sound like they come from a cursed arena that enjoys public humiliation. This is the foundation the entire product was waiting for. Phase 1 is closed.

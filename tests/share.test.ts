@@ -5,6 +5,7 @@ import {
   generateFullMarkdown,
   generateCondensedMarkdown,
   generateTweetText,
+  getCondensedReportBlurb,
 } from '@/lib/share'
 import { MatchShareData } from '@/lib/share'
 
@@ -63,17 +64,24 @@ describe('Share System', () => {
   })
 
   describe('Condensed Markdown Report', () => {
-    it('should be significantly shorter than the full report', () => {
+    it('should be significantly shorter than the full report (real condensed blurb, not a copy)', () => {
       const full = generateFullMarkdown(baseData)
       const condensed = generateCondensedMarkdown(baseData)
 
       expect(condensed.length).toBeLessThan(full.length / 2)
+      // The condensed version must NOT just embed the full narrative
+      expect(condensed).not.toContain(baseData.match_report)
     })
 
     it('should still mention the agent name and fatal flaw', () => {
       const md = generateCondensedMarkdown(baseData)
       expect(md).toContain('Refund Oracle v3')
       expect(md).toContain('Policy Robot')
+    })
+
+    it('should use the savage blurb generator for condensed views', () => {
+      const md = generateCondensedMarkdown(baseData)
+      expect(md).toContain('Fatal flaw: Policy Robot')
     })
   })
 
@@ -82,6 +90,15 @@ describe('Share System', () => {
       const tweet = generateTweetText(baseData, 'condensed')
       expect(tweet.length).toBeLessThan(280)
       expect(tweet).toContain('#BotColiseum')
+    })
+  })
+
+  describe('Condensed Report Blurb', () => {
+    it('should generate a short savage blurb without the full narrative', () => {
+      const blurb = getCondensedReportBlurb(baseData)
+      expect(blurb.length).toBeLessThan(180)
+      expect(blurb).toContain('Refund Oracle v3')
+      expect(blurb).toContain('Policy Robot')
     })
   })
 })

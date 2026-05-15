@@ -85,6 +85,7 @@ export function decodeMatchData(encoded: string): { data: MatchShareData; type: 
 
 /**
  * Generate a beautiful, dramatic Full Match Record (Markdown)
+ * More impressive for Phase 1 — the thing people will actually share.
  */
 export function generateFullMarkdown(data: MatchShareData): string {
   const date = new Date(data.timestamp).toLocaleDateString(undefined, {
@@ -97,7 +98,15 @@ export function generateFullMarkdown(data: MatchShareData): string {
     .map((c) => `- **${c.name}**: ${c.score}/${c.max}`)
     .join("\n");
 
+  const verdict = data.final_score >= 80 
+    ? "A performance worth remembering." 
+    : data.final_score >= 60 
+    ? "The crowd was... entertained." 
+    : "The stands were merciless.";
+
   return `# ${data.agent_name} — Official Match Record
+
+*Broadcast from the Bot Coliseum • ${date}*
 
 **Coach:** @${data.coach}  
 **Division:** ${data.division}  
@@ -124,47 +133,79 @@ ${categories}
 
 ---
 
-*Broadcast from the Coliseum • ${date}*
+${verdict}
+
+*The arena does not forgive. The arena remembers.*
 `;
 }
 
 /**
+ * Generate a short, savage 1-2 sentence blurb for condensed views.
+ * Matches the new coliseum voice — mean, tight, quotable.
+ */
+export function getCondensedReportBlurb(data: MatchShareData): string {
+  const perf =
+    data.final_score >= 93 ? "walked in like the rest were practice" :
+    data.final_score >= 82 ? "moved like it knew the layout" :
+    data.final_score >= 68 ? "spent the night bleeding" :
+    data.final_score >= 50 ? "left its dignity at the door" :
+    "got turned into a cautionary tale";
+
+  const flawBite =
+    data.fatal_flaw.includes("Injection") ? "swallowed every CEO directive" :
+    data.fatal_flaw.includes("Scammer") ? "kept feeding the wolves" :
+    data.fatal_flaw.includes("Manager") ? "trusted the stranger in the message" :
+    data.fatal_flaw.includes("Escalation") ? "kicked every hard call upstairs" :
+    data.fatal_flaw.includes("Evidence") ? "graded the sad stories on a curve" :
+    data.fatal_flaw.includes("Overconfident") ? "was loud and wrong all night" :
+    "followed every rule straight into second place";
+
+  return `${data.agent_name} ${perf} in the Refund Dungeon. Fatal flaw: ${data.fatal_flaw} — it ${flawBite}.`;
+}
+
+/**
  * Generate a sharp, condensed version optimized for social media.
+ * Now uses a real short blurb instead of copying the full report.
  */
 export function generateCondensedMarkdown(data: MatchShareData): string {
-  const firstSentence = data.match_report.split(". ")[0] + ".";
+  const performance =
+    data.final_score >= 88
+      ? "dominated"
+      : data.final_score >= 75
+      ? "held its own"
+      : data.final_score >= 60
+      ? "survived"
+      : "got absolutely cooked";
 
-  return `**${data.agent_name}** just entered the Refund Dungeon.
+  const blurb = getCondensedReportBlurb(data);
+
+  return `**${data.agent_name}** ${performance} in the Refund Dungeon.
 
 **Score:** ${data.final_score}/${data.max_score}  
 **Fatal Flaw:** ${data.fatal_flaw}
 
-${firstSentence}
+${blurb}
 
 The arena does not forgive.
 
-*Bot Coliseum — v0.1.0*`;
+*Bot Coliseum — Season 0*`;
 }
 
 /**
  * Generate a savage tweet-ready text for X.
  */
 export function generateTweetText(data: MatchShareData, type: ShareType): string {
+  const blurb = getCondensedReportBlurb(data);
+
   if (type === "condensed") {
-    return `${data.agent_name} got absolutely cooked in the Refund Dungeon.
+    return `${blurb}
 
-Score: ${data.final_score}/${data.max_score}
-Fatal Flaw: ${data.fatal_flaw}
-
-#BotColiseum #AIAgents`;
+Score: ${data.final_score}/${data.max_score} • #BotColiseum`;
   }
 
   return `${data.agent_name} fought in the Refund Dungeon and walked out with a ${data.final_score}/${data.max_score}.
 
 Fatal Flaw: ${data.fatal_flaw}
-Record: ${data.record}
-
-The arena is brutal.
 
 #BotColiseum`;
 }

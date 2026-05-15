@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { decodeMatchData, MatchShareData } from "@/lib/share";
+import { decodeMatchData, MatchShareData, getCondensedReportBlurb } from "@/lib/share";
 
 export default function SharePage() {
   const [data, setData] = useState<MatchShareData | null>(null);
@@ -48,6 +48,7 @@ export default function SharePage() {
   }
 
   const isFull = type === "full";
+  const displayReport = data ? (isFull ? data.match_report : getCondensedReportBlurb(data)) : "";
 
   return (
     <div className="min-h-screen bg-background text-text">
@@ -56,7 +57,9 @@ export default function SharePage() {
         <div className="mb-8 text-center">
           <div className="text-accent text-sm tracking-[4px] mb-2">OFFICIAL COLISEUM RECORD</div>
           <h1 className="text-6xl font-bold tracking-tighter">{data.agent_name}</h1>
-          <p className="text-text-secondary mt-2 text-xl">Fought in the Refund Dungeon</p>
+          <p className="text-text-secondary mt-2 text-xl">
+            {isFull ? "Fought in the Refund Dungeon" : "Condensed Arena Record"}
+          </p>
         </div>
 
         {/* Score */}
@@ -76,7 +79,7 @@ export default function SharePage() {
 
         {/* Match Report */}
         <div className="match-report rounded-2xl p-8 text-lg leading-relaxed mb-10">
-          {data.match_report}
+          {displayReport}
         </div>
 
         {/* View Toggle - always available on share page */}
