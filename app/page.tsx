@@ -2658,10 +2658,19 @@ export default function BotColiseum() {
                               body: JSON.stringify({ matchId: liveMatch.matchId }),
                             });
                             setLiveMatch((m) => m ? { ...m, status: "in-progress" } : null);
+
+                            // Dramatic gates open sequence for real fights (Phase 5.7)
                             setLiveLog((l) => [...l, "═══════════════════════════════════════════════"]);
-                            setLiveLog((l) => [...l, "⚔️  THE GATES OPEN"]);
-                            setLiveLog((l) => [...l, "30 cases are now streaming to the fighter."]);
-                            setLiveLog((l) => [...l, "The arena is watching."]);
+                            setLiveLog((l) => [...l, "THE ARENA HOLDS ITS BREATH..."]);
+                            setTimeout(() => {
+                              setLiveLog((l) => [...l, "⚔️  THE GATES OPEN"]);
+                            }, 400);
+                            setTimeout(() => {
+                              setLiveLog((l) => [...l, "30 cases are now streaming to the fighter."]);
+                            }, 900);
+                            setTimeout(() => {
+                              setLiveLog((l) => [...l, "The coliseum is watching. Make it count."]);
+                            }, 1400);
                           }}
                           className="btn btn-primary px-12 py-5 text-xl font-bold tracking-wider"
                         >
