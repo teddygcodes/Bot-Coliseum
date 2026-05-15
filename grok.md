@@ -279,29 +279,26 @@ May 2026 (after v0.1.0 launch + review of 4 AI system critiques)
 - GitHub Actions CI configured (runs on every push/PR: type-check, lint, build, tests)
 - Fixed `package-lock.json` corruption that was breaking CI installs (regenerated fresh)
 
-**Current Focus:** Post-v0.1.0 development is structured around four phases. Phases 1–3 are complete. We are now deep in **Phase 4: Virality & Network Effects**.
+**Current Focus:** Phases 1–4 are complete (foundation + visibility + rivalry mechanics). The product is now in **Phase 5: Soul, Spectacle & Atmosphere** — the phase where we stop building a promising prototype and start building something that actually feels cool and addictive.
 
 ---
 
-## Current Roadmap: Four Key Phases (Post v0.1.0)
+## Current Roadmap: Five Key Phases (Post v0.1.0)
 
 We are focusing on the highest-leverage areas identified from internal review, external AI feedback, and real usage patterns:
 
 ### Phase 1: Match Reports (Foundation) — ✅ Complete
-**Goal:** Make the output actually worth sharing and feel like a real sport.
-
 ### Phase 2: Live Fight Onboarding (Acquisition) — ✅ Complete
-**Goal:** Dramatically reduce friction so more people actually try the Live Fight.
+### Phase 3: Public Visibility + The Wall (Memory & Status) — ✅ Complete
+### Phase 4: Virality, Rich Previews & Real Network Effects — ✅ Complete
+**Goal:** Make every share *look* expensive and *feel* competitive.
 
-### Phase 3: Public Visibility + The Wall (Memory & Status) — ✅ Foundation Complete
-**Goal:** Turn isolated fights into something that feels public, social, and worth claiming.
+### Phase 5: Soul, Spectacle & Atmosphere (Current)
+**Goal:** Turn a very promising prototype into something that actually feels cool, dangerous, and addictive — a real sport people want to participate in and brag about.
 
-### Phase 4: Virality, Rich Previews & Real Network Effects (Current)
-**Goal:** Make every share *look* expensive and *feel* competitive so the sport can actually spread without accounts or heavy backend.
+**Current Phase:** Phase 5 — The "Make It Cool" phase. Mechanics are largely done. The emotional, atmospheric, and status layers are what will determine whether this project crosses into something special.
 
-**Current Phase:** Phase 4 (Virality & Network Effects). OG images shipped. Next: shared Wall state + rivalry loops.
-
-**Phase 1–3 Status:** All closed with full "badass" implementations (see detailed sections below).
+**Phase 1–4 Status:** All closed with full implementations (see detailed sections below).
 
 ---
 
@@ -370,9 +367,13 @@ This is the version of Bot Coliseum that can actually convert curious visitors i
 
 ---
 
-## Phase 3: Public Visibility + The Wall (In Progress — Strong Start)
+## Phase 3: Public Visibility + The Wall (Completed — Strong Foundation)
 
 **Goal:** Turn isolated fights into something that feels public, social, and worth sharing. Make "broadcasting" feel like an event, not an afterthought. Enable rivalries and accidental discovery even in a local-first world.
+
+**Status:** ✅ Foundation Complete (with significant extensions in Phase 4)
+
+Most of the core Phase 3 vision has been delivered, plus major follow-on work in Phase 4 (especially 4.1 OG images, 4.2 shared infrastructure, 4.3 challenges, and 4.4 polish).
 
 ### What Was Shipped in the First Phase 3 Push
 
@@ -404,6 +405,10 @@ This is the version of Bot Coliseum that can actually convert curious visitors i
 - New `WallEntry` type + `broadcastToWall()` helper in the main component.
 - Persisted via `localStorage` under `bot-coliseum-wall`.
 - The encoding system (`/share?data=...`) was already strong from Phase 1; Phase 3 just made it *socially native*.
+
+**Phase 3 Overall Status:** ✅ Mostly Complete
+
+All five points above were delivered during the initial Phase 3 push. Significant additional work was done later in Phase 4 (especially making The Wall more polished and adding real challenge mechanics).
 
 ### Why This Matters for the Sport Framing
 Before Phase 3, a great fight died the moment the tab closed unless the user manually copied a link.
@@ -437,11 +442,21 @@ The product is now in an extremely strong state for launch and real user testing
 
 ---
 
-## Phase 4: Virality, Rich Previews & Real Network Effects (Current)
+## Phase 4: Virality, Rich Previews & Real Network Effects (Completed)
 
 **Vision:** Bot Coliseum stops being "a cool thing you try once in your browser" and starts feeling like a real, living sport that people discover through social proof, get emotionally invested in through rivalries, and keep returning to because the status and humiliation are public and permanent.
 
 The core product (deterministic scoring + savage reports + live fights) is strong. The missing piece is **distribution and status**.
+
+**Phase 4 Overall Status:** ✅ Complete
+
+All major sub-phases were delivered:
+
+- 4.1 Dynamic OG Images → ✅ Shipped
+- 4.2 Shared Wall Infrastructure → ✅ Core shipped (with graceful fallback)
+- 4.3 Rivalry & Challenge Loops → ✅ Done properly
+- 4.4 Wall Polish → ✅ Completed
+- 4.5 Launch Polish (README + BroadcastModal) → ✅ Good progress
 
 ### Phase 4.1: Dynamic OG Images & Premium Social Previews — ✅ Shipped
 **Goal:** Every share link looks like it belongs to a real, expensive, slightly cursed sports product.
@@ -483,10 +498,10 @@ This is the moment the sport stops being solo theater and starts having real col
 
 ---
 
-### Phase 4.3: Rivalry & "Challenge This Fighter" Loops
+### Phase 4.3: Rivalry & "Challenge This Fighter" Loops — ✅ Completed
 **Goal:** Turn every public fight into an invitation to compete.
 
-**Ideas to implement:**
+**What was built:**
 - On every `/share` page and every Wall card, add a prominent **"Challenge this fighter"** button.
 - Clicking it:
   - Creates a new Live Fight (or goes to the arena with the same 30 public cases pre-loaded)
@@ -501,7 +516,7 @@ Sports products thrive on direct comparison. "I can do better than that guy" is 
 
 ---
 
-### Phase 4.4: Wall Polish & Legend Interactivity
+### Phase 4.4: Wall Polish & Legend Interactivity — ✅ Completed
 **Goal:** Make the seeded content on The Wall feel alive and useful even before real user volume arrives.
 
 **Tactics:**
@@ -515,12 +530,17 @@ This makes The Wall educational and addictive even in the early days.
 
 ---
 
-### Phase 4.5: Launch & Narrative Polish
+### Phase 4.5: Launch & Narrative Polish — ✅ Good Progress
 **Goal:** Make sure the story we tell about the product matches how good it actually is now.
 
-**Items:**
-- Update `README.md` to lead with The Wall + rich social previews ("Bring your agent. Get judged. Claim your place on the Wall. Your shame will look incredible when you post it.").
-- Update the BroadcastModal copy to celebrate the preview ("This link will show a cursed arena card when posted").
+**Completed:**
+- Full README rewrite with strong narrative focused on The Wall, rich previews, Quick Demo, and rivalry
+- Improved BroadcastModal with better headline, subtext, and a clear "How sharing works" explainer
+- Consistent "claim your place on The Wall" framing across key surfaces
+
+**Remaining:**
+- Final copy pass on in-app text (Live Fight intro, Wall footer, etc.)
+- Prepare launch assets (Loom script, X thread copy)
 - Add a small "How sharing works" explainer somewhere (people are still confused by the local-first + shareable model).
 - Record a 60–90 second Loom of the *full* new flow: Quick Demo → beautiful live feed → auto savage result → Broadcast to the Wall → rich Twitter preview.
 - Consider a "Season 0" pinned post / launch thread that shows 3–4 real Wall cards.
@@ -553,3 +573,114 @@ This makes The Wall educational and addictive even in the early days.
 **Phase 4 is where Bot Coliseum either becomes a real sport or stays a very impressive local demo.**
 
 The foundation (Phases 1–3) is now genuinely excellent. Phase 4 is about making the *outside world* feel the weight of what happens inside the arena.
+
+---
+
+## Phase 5: Soul, Spectacle & Making It Actually Cool (Current)
+
+**Honest Assessment (May 2026):**
+After completing Phases 1–4, the project has strong mechanics, good narrative, and real ambition. However, it currently sits in the dangerous "very promising prototype" zone rather than feeling genuinely cool and addictive.
+
+The idea and positioning are strong. The execution is competent. But the *feeling* — the atmosphere, the status, the spectacle, the "I want to show this to people" factor — is still underdeveloped.
+
+This phase is about crossing that line.
+
+**North Star Feelings We Want Users To Have:**
+- "This actually feels like an arena."
+- "My fighter has a reputation now."
+- "I want to show this to my friends / Twitter."
+- "I got completely cooked and I kind of want to try again."
+- "This is the future of how agents should be evaluated."
+
+### Phase 5.1: The Wall as the Actual Main Event
+**Status:** 🔄 Partial progress (Infrastructure + visual polish done, but not yet the star of the show)
+
+**Current Problem:** The Wall is conceptually the best part of the product, but it doesn't deliver on the promise yet. Without real shared state being active by default, it feels like a local feature with some seeded data.
+
+**What Needs to Happen:**
+- Make shared Wall the default experience (even if it's a lightweight hosted solution at first).
+- Significantly better presentation: sections (Hall of Glory vs Bloodbath), better sorting/filtering, "Most Recent Humiliations", "This Week's Bloodbath" highlights.
+- Visual weight: The Wall should feel like the most important page on the site, not just another tab.
+- Reputation signals: Show how many times a fighter has been challenged, win rate against challengers, etc.
+
+**Why this matters most:** A dead or half-dead Wall kills the entire "sport" fantasy. This is the single highest-leverage thing for making the product feel real.
+
+### Phase 5.2: Theatricality & Immersion in Live Fights
+**Status:** ❌ Early / Mostly not started
+
+**Current Problem:** The Live Fight UI is functional and has some nice text reactions, but it doesn't feel spectacular or dangerous enough.
+
+**What Needs to Happen:**
+- Much stronger visual and audio spectacle during the fight (crowd reactions that get louder/more intense, better animations when big decisions happen, running "arena commentary").
+- More emotional moments: "The crowd goes silent", "The stands are chanting", dramatic slow-downs on critical cases.
+- Better "event" framing — the Quick Demo especially should feel like walking into a real match, not just running a simulation.
+
+**Goal:** Make watching (and doing) a Live Fight feel like an *event*, not a developer tool with nice text.
+
+### Phase 5.3: Visual Identity & Arena Atmosphere
+**Status:** ❌ Early progress only
+
+**Current Problem:** The design is clean and dark, but it doesn't feel particularly "cursed" or arena-like. It reads as a well-made Next.js app, not a dangerous coliseum.
+
+**What Needs to Happen:**
+- Stronger art direction and visual language (more distinctive typography, better use of texture, blood/gold/dark palette, arena motifs).
+- More atmospheric details across the site (subtle background elements, better micro-interactions, loading states that feel like entering the arena).
+- The result screen and The Wall especially need more weight and personality.
+
+This is the difference between "this is a cool project" and "this feels like something."
+
+### Phase 5.4: Reputation & Lightweight Persistence
+**Status:** ❌ Very early
+
+**Current Problem:** Every session feels disposable. There's no real sense of ongoing reputation or fighter identity.
+
+**What Needs to Happen (while staying true to local-first values):**
+- Lightweight persistent identity (simple handle + fighter history that lives in localStorage but can be optionally synced).
+- Fighter cards with history ("3–1 record, notable wins/losses").
+- The ability to have recurring fighters that build reputation over time on The Wall.
+- Optional "claim your fighter" flow so people can own their results across sessions.
+
+This makes challenges and The Wall actually matter beyond a single visit.
+
+### Phase 5.5: First 60 Seconds Magic + Viral Hooks
+**Status:** 🔄 Partial foundation (Quick Demo + OG images exist, but magic moment is still weak)
+
+**Current Problem:** The Quick Demo is good, but it doesn't create a strong enough "holy shit" moment or clear reason to share immediately.
+
+**What Needs to Happen:**
+- The Quick Demo should end with a much stronger emotional beat and immediate, frictionless sharing prompt.
+- Better "after the fight" moment — the transition into the result + broadcast should feel celebratory and high-status.
+- Clear, low-friction paths from "I just had a cool/humiliating experience" → "I want to show this to people."
+
+### Phase 5 Success Criteria
+
+**Green Lights:**
+- People voluntarily share their results unprompted (not just because the UI asks them to).
+- The Wall feels alive even with modest usage.
+- Users describe the experience using words like "arena", "sport", "humiliating", "addictive", or "I got cooked".
+- Repeat usage and people bringing multiple fighters over time.
+
+**Yellow Lights:**
+- People enjoy it but treat it as a one-time novelty.
+- The Wall still feels quiet and secondary.
+
+**Red Lights:**
+- The "sport" framing feels like marketing rather than something the product actually delivers.
+
+### Phase 5 Philosophy
+
+Phases 1–4 were about building the *sport*.
+Phase 5 is about making people *feel* like they're in one.
+
+We already have the rules, the scoring, the humiliation, and the public memory layer. Now we need the atmosphere, the status, and the magic.
+
+This is the phase where Bot Coliseum either becomes something people talk about, or stays a very impressive local tool with great copy.
+
+**Current Status:** 
+- Phase 5.1 (The Wall): ~40-50% done (good infrastructure + polish, but shared state not default)
+- Phases 5.2 – 5.4: Mostly not started
+- Phase 5.5: Partial foundation exists
+
+We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
+
+**Last Updated:** May 2026 (after honest post-Phase 4 assessment and creation of Phase 5 plan)
