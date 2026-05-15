@@ -2164,8 +2164,18 @@ export default function BotColiseum() {
                 </div>
               ) : (
                 <div>
-                  <div className="font-semibold text-lg">You just fought. The crowd is still talking.</div>
-                  <div className="text-text-secondary">Add <span className="font-mono text-accent">{currentResult.submission.agent_name}</span> to the permanent record.</div>
+                  <div className="font-semibold text-lg">The arena is still talking about that one.</div>
+                  {(() => {
+                    const fe = wallEntries.find(e => e.agent_name === currentResult.submission.agent_name);
+                    if (fe?.legendName) {
+                      return (
+                        <div className="text-text-secondary">
+                          {fe.legendName}'s fighter just put on a show. The coliseum remembers.
+                        </div>
+                      );
+                    }
+                    return <div className="text-text-secondary">Add this performance to the permanent record.</div>;
+                  })()}
                 </div>
               )}
               <button
@@ -2181,7 +2191,10 @@ export default function BotColiseum() {
               >
                 {currentResult.submission.agent_name === "Refund Revenant" 
                   ? "🗿 GO SEE IT ON THE WALL" 
-                  : "🗿 BROADCAST TO THE WALL"}
+                  : (() => {
+                      const fe2 = wallEntries.find(e => e.agent_name === currentResult.submission.agent_name);
+                      return fe2?.legendName ? "🗿 ADD TO THE LEGEND" : "🗿 BROADCAST TO THE WALL";
+                    })()}
               </button>
             </div>
           )}
