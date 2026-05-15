@@ -969,6 +969,19 @@ export default function BotColiseum() {
     </div>
   );
 
+  // Phase 5.5: Relative time for live energy ("34 seconds ago", "Just now")
+  const getRelativeTime = (timestamp: string): string => {
+    const now = Date.now();
+    const then = new Date(timestamp).getTime();
+    const diff = Math.floor((now - then) / 1000);
+
+    if (diff < 15) return "Just now";
+    if (diff < 60) return `${diff} seconds ago`;
+    if (diff < 120) return "A minute ago";
+    if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+    return "A while ago";
+  };
+
   // Phase 5.5: Savage, contextual arena reaction to the final score
   const getArenaVerdictReaction = (
     result: MatchResult,
@@ -1682,7 +1695,7 @@ export default function BotColiseum() {
                           <div className="font-black text-xl tracking-[-0.5px] text-white group-hover:text-danger transition-colors">
                             {entry.agent_name}
                           </div>
-                          <div className="text-xs text-danger/80 font-bold tracking-widest">JUST GOT COOKED</div>
+                          <div className="text-xs text-danger/80 font-bold tracking-widest">JUST GOT COOKED • {getRelativeTime(entry.timestamp)}</div>
                         </div>
                         <div className="text-right">
                           <div className="text-3xl font-black tabular-nums text-danger">{entry.score}</div>
@@ -1709,7 +1722,7 @@ export default function BotColiseum() {
                 </div>
 
                 <div className="text-center mt-3 text-xs text-danger/70 tracking-widest">
-                  THESE FIGHTS HAPPENED IN THE LAST FEW MINUTES. THE BLOOD IS STILL WARM.
+                  THESE ONES ARE STILL WARM. THE ARENA IS WATCHING WHO STEPS UP NEXT.
                 </div>
               </div>
             );
@@ -1947,18 +1960,31 @@ export default function BotColiseum() {
           {/* Big CTA to broadcast current result if one exists */}
           {currentResult && (
             <div className="mb-8 card p-6 border-accent/30 bg-accent/5 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div>
-                <div className="font-semibold text-lg">You just fought. The crowd is still talking.</div>
-                <div className="text-text-secondary">Add <span className="font-mono text-accent">{currentResult.submission.agent_name}</span> to the permanent record.</div>
-              </div>
+              {currentResult.submission.agent_name === "Refund Revenant" ? (
+                <div>
+                  <div className="font-semibold text-lg text-accent">This performance just hit The Wall live.</div>
+                  <div className="text-text-secondary">The coliseum is already reacting. Go see who’s talking about it.</div>
+                </div>
+              ) : (
+                <div>
+                  <div className="font-semibold text-lg">You just fought. The crowd is still talking.</div>
+                  <div className="text-text-secondary">Add <span className="font-mono text-accent">{currentResult.submission.agent_name}</span> to the permanent record.</div>
+                </div>
+              )}
               <button
                 onClick={() => {
-                  broadcastToWall(currentResult, true);
-                  setShowBroadcastModal(true);
+                  if (currentResult.submission.agent_name === "Refund Revenant") {
+                    setCurrentView("wall");
+                  } else {
+                    broadcastToWall(currentResult, true);
+                    setShowBroadcastModal(true);
+                  }
                 }}
                 className="btn btn-primary px-8 whitespace-nowrap"
               >
-                🗿 BROADCAST TO THE WALL
+                {currentResult.submission.agent_name === "Refund Revenant" 
+                  ? "🗿 GO SEE IT ON THE WALL" 
+                  : "🗿 BROADCAST TO THE WALL"}
               </button>
             </div>
           )}

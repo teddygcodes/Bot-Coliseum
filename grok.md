@@ -711,10 +711,11 @@ This makes challenges and The Wall actually matter beyond a single visit.
 - Streak celebration flair on the result screen ("ON A 4-FIGHT TEAR") when you're cooking.
 - Special "Share the Revenge Arc" button + copy when you settle a personal rivalry.
 - **Quick Demo now auto-feeds The Wall**: Every demo run automatically appears on The Wall with "LIVE FROM THE ARENA" pulsing badge.
-- **"LIVE RIGHT NOW IN THE COLISEUM"** section at the very top of The Wall — the 4 freshest demo runs with aggressive "CHALLENGE THIS ONE RIGHT NOW" CTAs and "THE BLOOD IS STILL WARM" flavor. First-time visitors immediately feel the arena is active and dangerous.
-- Quick Demo commentary occasionally shouts out your personal legend for personal connection.
+- **"LIVE RIGHT NOW IN THE COLISEUM"** section at the very top of The Wall — the 4 freshest demo runs with "LIVE • JUST COOKED • X seconds ago" timestamps, aggressive "CHALLENGE THIS ONE RIGHT NOW" CTAs, and "THE BLOOD IS STILL WARM" flavor.
+- Quick Demo now has a satisfying post-game moment on the result screen ("This performance just hit The Wall live") with a direct "GO SEE IT ON THE WALL" button.
+- Quick Demo commentary occasionally shouts out your personal legend.
 
-The entire loop (demo → live Wall entry → rivalries → one-tap shares) is now closed and addictive. The coliseum feels like one living, breathing, gossiping sport.
+The loop is now extremely tight and exciting: Run demo → Get celebrated for feeding The Wall → See your run in the Live Right Now section → Get challenged by strangers. The coliseum feels alive.
 
 ### Phase 5 Success Criteria
 
@@ -745,8 +746,8 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.2 (Theatricality): **Strong progress** — Quick Demo now delivers a full produced arena spectacle (ceremonial walkout, live crowd energy meter + 4 escalating flavors, visible 📣 commentary ticker, big moment hype, dramatic "THE VERDICT IS IN" build-up, energy-reactive closer). The 90-second onboarding path finally feels like a sporting event.
 - Phase 5.3 (Visual Identity & Arena Atmosphere): **Solid first wave** — cursed grid + blood/gold card system + impact weight + verdict framing. The whole product now feels like a dangerous coliseum instead of a web app.
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
-- Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Locked in** — one-tap X posting, savage copy engine, Arena Reacts reactions, streak flair, revenge buttons, Quick Demo auto-feeds The Wall, **and a prominent "LIVE RIGHT NOW IN THE COLISEUM" section** with fresh blood CTAs. The Wall finally feels like a living, dangerous place.
+- Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
-**Last Updated:** May 2026 — Phase 5.5 complete: "LIVE RIGHT NOW IN THE COLISEUM" section at the top of The Wall, Quick Demo auto-feeds live entries, one-tap X posting with vicious copy, Arena Reacts, streak flair, and personal legend commentary. The coliseum now feels dangerously alive.
+**Last Updated:** May 2026 — Phase 5.5 locked: Quick Demo now has proper post-game "You just fed The Wall" celebration + direct link, Live Right Now section has relative timestamps ("34 seconds ago"), stronger live energy throughout. The entire demo → reputation → virality loop feels alive and dangerous.
