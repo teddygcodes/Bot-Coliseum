@@ -8,6 +8,7 @@
 import { EventEmitter } from "events";
 import { LiveMatch, LiveFightEvent, PublicRefundCase } from "@/fighter/types";
 import { REFUND_DUNGEON_CASES } from "@/data/refundDungeonCases";
+import type { MatchResult } from "@/lib/types";
 
 // Generate a short, human-friendly code like F-7K9P
 function generateShortCode(): string {
@@ -106,6 +107,28 @@ class LiveMatchManager {
     if (event.type === "error") {
       match.status = "aborted";
     }
+  }
+
+  /**
+   * Phase 2: Called after scoring completes. Attaches the full cinematic MatchResult
+   * and broadcasts it so the UI can auto-transition to the savage verdict screen.
+   */
+  finalizeWithResult(matchId: string, result: MatchResult) {
+    const match = this.matches.get(matchId);
+    if (!match) return;
+
+    match.finalResult = result;
+    match.status = "complete";
+    if (!match.completedAt) {
+      match.completedAt = new Date().toISOString();
+    }
+
+    // Broadcast the full result — the UI will catch this and show the beautiful screen
+    this.emitEvent(matchId, {
+      type: "match-result-ready",
+      matchId,
+      result,
+    } as LiveFightEvent);
   }
 
   // The browser subscribes to this for real-time updates

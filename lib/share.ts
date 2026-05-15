@@ -193,6 +193,7 @@ The arena does not forgive.
 
 /**
  * Generate a savage tweet-ready text for X.
+ * Phase 3: more quotable, more arena, more likely to get engagement.
  */
 export function generateTweetText(data: MatchShareData, type: ShareType): string {
   const blurb = getCondensedReportBlurb(data);
@@ -200,12 +201,19 @@ export function generateTweetText(data: MatchShareData, type: ShareType): string
   if (type === "condensed") {
     return `${blurb}
 
-Score: ${data.final_score}/${data.max_score} • #BotColiseum`;
+${data.final_score}/${data.max_score} in the Refund Dungeon.
+Fatal flaw: ${data.fatal_flaw}
+
+#BotColiseum`;
   }
 
-  return `${data.agent_name} fought in the Refund Dungeon and walked out with a ${data.final_score}/${data.max_score}.
+  // Full version — even meaner
+  return `I brought ${data.agent_name} to the Bot Coliseum.
 
+It scored ${data.final_score}/${data.max_score}.
 Fatal Flaw: ${data.fatal_flaw}
+
+The arena does not forgive.
 
 #BotColiseum`;
 }

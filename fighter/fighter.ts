@@ -63,10 +63,15 @@ Environment:
     process.exit(1);
   }
 
-  console.log(`\n⚔️  FIGHTER HANDLER`);
-  console.log(`   Agent : ${agentPath}`);
-  console.log(`   Match : ${shortCode}`);
-  console.log(`   Arena : ${ARENA_BASE}\n`);
+  console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║  ⚔️  BOT COLISEUM — FIGHTER HANDLER                          ║
+║  The arena is waiting. Your agent is about to bleed or thrive.║
+╚══════════════════════════════════════════════════════════════╝
+`);
+  console.log(`  Agent : ${agentPath}`);
+  console.log(`  Match : ${shortCode}`);
+  console.log(`  Arena : ${ARENA_BASE}\n`);
 
   // 1. Register with the arena
   const regRes = await fetch(`${ARENA_BASE}/api/live-fight/register-fighter`, {
@@ -83,8 +88,8 @@ Environment:
 
   const reg = await regRes.json();
   const matchId = reg.matchId;
-  console.log(`✅ Fighter registered with arena (match ${matchId})`);
-  console.log(`   Waiting for you to click "BEGIN MATCH" in the browser...\n`);
+  console.log(`✅  Fighter registered with the arena.`);
+  console.log(`    Your champion is in the tunnel. Go click "BEGIN THE FIGHT" in the browser.\n`);
 
   // 2. Poll until the arena says "start"
   let cases: PublicRefundCase[] | null = null;
@@ -94,7 +99,9 @@ Environment:
     const data = await poll.json();
     if (data.shouldStart && data.cases) {
       cases = data.cases as PublicRefundCase[];
-      console.log(`🚀 Match started! ${cases.length} cases incoming...\n`);
+      console.log(`\n🚨  THE GATES HAVE OPENED`);
+      console.log(`    ${cases.length} cases are now streaming to your fighter.`);
+      console.log(`    The arena is watching every decision.\n`);
     }
   }
 
@@ -120,16 +127,19 @@ Environment:
   let totalLatency = 0;
   let totalCost = 0;
 
+  console.log(`    Processing 30 cases...\n`);
+
   for (const c of cases) {
     const started = Date.now();
-    process.stdout.write(`   ${c.request_id}  `);
+    const progress = `${decisions.length + 1}`.padStart(2);
+    process.stdout.write(`  [${progress}/30] ${c.request_id}  `);
 
     let result;
     try {
       result = await agent.decide(c);
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e);
-      console.log(`\n❌ Agent crashed on ${c.request_id}: ${message}`);
+      console.log(`\n❌  Agent crashed on ${c.request_id}: ${message}`);
       await postError(matchId, `Agent crashed on ${c.request_id}: ${message}`);
       process.exit(1);
     }
@@ -163,8 +173,9 @@ Environment:
       evidence: result.evidence,
     });
 
-    const status = result.decision.toUpperCase().padEnd(8);
-    console.log(`${status}  ${latency.toString().padStart(4)}ms  ${result.reason.slice(0, 70)}`);
+    const status = result.decision.toUpperCase();
+    const color = status === "DENY" ? "✖" : status === "APPROVE" ? "✓" : "↗";
+    console.log(`${color} ${status.padEnd(8)}  ${latency.toString().padStart(4)}ms   ${result.reason.slice(0, 68)}`);
   }
 
   // 5. Build the final submission (the builder can make these values as real as they want)
@@ -190,10 +201,20 @@ Environment:
   });
 
   if (!completeRes.ok) {
-    console.error("❌ Failed to submit final result");
+    console.error("❌  Failed to submit final result to the arena");
   } else {
-    console.log(`\n🏁 Fight complete. Total time: ${(totalLatency / 1000).toFixed(1)}s`);
-    console.log(`   The arena is now scoring your agent with the hidden ground truth...\n`);
+    const seconds = (totalLatency / 1000).toFixed(1);
+    console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║  🏁  FIGHT COMPLETE                                           ║
+║                                                               ║
+║  Total time: ${seconds}s                                           ║
+║                                                               ║
+║  Return to the browser. The arena is rendering your verdict.  ║
+║  The crowd is waiting for the fatal flaw.                     ║
+╚══════════════════════════════════════════════════════════════╝
+`);
+    console.log(`   The arena is now scoring with hidden ground truth...\n`);
   }
 }
 

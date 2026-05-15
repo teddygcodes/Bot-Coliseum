@@ -7,7 +7,8 @@ import { scoreSubmission } from "@/lib/scoring";
  * POST /api/live-fight/complete
  * Called by the fighter handler when the agent's run is finished.
  * We receive the full submission, score it with the hidden ground truth,
- * and broadcast the final result so the UI can transition to the cinematic scorecard.
+ * attach the full cinematic MatchResult, and broadcast it so the browser
+ * automatically transitions into the savage verdict screen. No extra clicks.
  */
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
@@ -37,7 +38,13 @@ export async function POST(req: NextRequest) {
     decisions: submission.decisions,
   });
 
-  // Broadcast the completion event (the UI will listen for this and show the result)
+  // Attach extra live-fight metadata if useful (we keep it on the submission for now)
+  // The scored object is the full MatchResult with fatal_flaw + match_report + everything
+
+  // Store the full beautiful result on the match and broadcast it to the UI
+  liveMatchManager.finalizeWithResult(matchId, scored);
+
+  // Also emit the older match-complete for any legacy listeners (harmless)
   liveMatchManager.emitEvent(matchId, {
     type: "match-complete",
     matchId,
@@ -51,6 +58,6 @@ export async function POST(req: NextRequest) {
     score: scored.final_score,
     fatal_flaw: scored.fatal_flaw,
     record: scored.record,
-    // The full scored result can be fetched by the UI via the snapshot or a separate call
+    // The UI will receive the full result via the "match-result-ready" SSE event
   });
 }

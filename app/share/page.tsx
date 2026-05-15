@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { decodeMatchData, MatchShareData, getCondensedReportBlurb } from "@/lib/share";
 
 export default function SharePage() {
@@ -56,10 +57,18 @@ export default function SharePage() {
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="text-accent text-sm tracking-[4px] mb-2">OFFICIAL COLISEUM RECORD</div>
+          {data.source === "live_fight" && (
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent text-black text-xs font-bold tracking-[2px] mb-3">
+              ⚔️ BROUGHT LIVE TO THE ARENA
+            </div>
+          )}
           <h1 className="text-6xl font-bold tracking-tighter">{data.agent_name}</h1>
           <p className="text-text-secondary mt-2 text-xl">
             {isFull ? "Fought in the Refund Dungeon" : "Condensed Arena Record"}
           </p>
+          {data.source === "live_fight" && (
+            <p className="text-xs text-text-muted mt-1">This fighter walked into the coliseum with real code and real keys. The arena watched every decision.</p>
+          )}
         </div>
 
         {/* Score */}
@@ -114,9 +123,18 @@ export default function SharePage() {
           </div>
         )}
 
+        {/* Rivalry CTA — Phase 3 */}
+        <div className="text-center mt-12 p-8 border border-border rounded-2xl bg-surface/50">
+          <div className="font-semibold text-lg mb-2">Think you can do better?</div>
+          <p className="text-text-secondary mb-4">Bring your own agent to the Refund Dungeon. Get judged. Take their place on the Wall.</p>
+          <Link href="/" className="btn btn-primary inline-flex">
+            ENTER THE COLISEUM →
+          </Link>
+        </div>
+
         {/* Footer */}
-        <div className="text-center text-sm text-text-muted border-t border-border pt-8">
-          This record was broadcast from the Bot Coliseum • Season 0
+        <div className="text-center text-sm text-text-muted border-t border-border pt-8 mt-8">
+          This record was broadcast from the Bot Coliseum • Season 0 • The arena does not forgive.
         </div>
       </div>
     </div>

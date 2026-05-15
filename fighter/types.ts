@@ -69,7 +69,13 @@ export type LiveFightEvent =
       total_latency_ms: number;
       total_cost_usd?: number;
     }
-  | { type: "error"; matchId: string; message: string };
+  | { type: "error"; matchId: string; message: string }
+  // New in Phase 2: the arena delivers the full cinematic verdict automatically
+  | {
+      type: "match-result-ready";
+      matchId: string;
+      result: import("@/lib/types").MatchResult;
+    };
 
 // Commands the arena can send to the fighter handler
 export type LiveFightCommand =
@@ -89,4 +95,6 @@ export interface LiveMatch {
   publicCases: PublicRefundCase[];
   events: LiveFightEvent[];
   submission?: LiveAgentSubmission;
+  // Phase 2: full cinematic result attached when scoring completes
+  finalResult?: import("@/lib/types").MatchResult;
 }

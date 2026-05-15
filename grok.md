@@ -313,27 +313,128 @@ We are focusing on the three highest-leverage areas identified from internal rev
 - Make sharing feel exciting and native to the coliseum experience
 - Enable rivalries and discovery
 
-**Current Phase:** We are deep in **Phase 1** (Match Reports).
+**Current Phase:** Phase 3 (The Wall + Public Visibility) foundation is live. The three-phase plan is substantially complete. Next: deploy + real user testing.
 
-**Progress so far (Phase 1):**
-- Match reports are now fully deterministic
-- Significantly improved opening lines based on final score (e.g. "left a trail of bodies", "got absolutely cooked", "got dragged through the dirt")
-- Made language sharper and more brutal overall (coaching notes now bite harder, performance lines call out the humiliation)
-- Strengthened the Condensed version — now generates a real short savage blurb via `getCondensedReportBlurb` instead of copying the full narrative
-- Improved tweet text generation to use the dynamic condensed blurb
-- Fixed in-place array mutation bug in `generateMatchReport` (strongest/weakest sorts now copy before sorting)
-- Full Markdown export on share page made more impressive (dramatic verdict line + "The arena does not forgive. The arena remembers.")
-- Added tests + manual review for edge cases (perfect 100, very low scores <40 produce appropriate openings and flaws)
+**Phase 1 Status:** Closed (see above).
 
-**Phase 1 Status:** Complete to spec.
+---
 
-After the ralph-loop death loop left the project with aspirational claims but mechanical prose, this session did a full iterative brutality pass:
+## Phase 2: Live Fight Onboarding — "The Arena Comes Alive" (Completed)
 
-- Rewrote `generateMatchReport` for real narrative flow instead of template assembly
-- Distinct voice per score band (god-tier feels cold/superior, disasters feel humiliating)
-- Integrated turning point + fatal flaw differently depending on how badly the fighter got cooked
-- Sharpened every coaching note and performance line
-- Made condensed blurbs match the new meaner voice
-- Added golden regression tests that protect key humiliating/quotable phrases
+**Goal:** Make the Live Fight the star attraction instead of a clunky side feature. Dramatically lower the barrier so first-time visitors actually experience the full "I brought my fighter and it got judged" moment within 90 seconds.
 
-The reports now actually sound like they come from a cursed arena that enjoys public humiliation. This is the foundation the entire product was waiting for. Phase 1 is closed.
+### What Was Built (The Badass Version)
+
+**1. Seamless Result Delivery (The #1 Missing Piece)**
+- When a live fight finishes, the fighter handler calls `/complete` → the arena now scores it with the real hidden ground truth and **broadcasts the full `MatchResult`** via a new `match-result-ready` SSE event.
+- The UI automatically receives the complete savage scorecard (fatal flaw, match report, category scores, case-by-case breakdown) and **transitions itself** into the existing gorgeous result view.
+- No more "go look in the arena" dead end. The user finishes the terminal fight and their browser *magically* shows the full cinematic verdict. This is the moment that makes the sport feel real.
+
+**2. Cinematic Live Battle Arena UI**
+- Replaced the previous lame monospace log with a proper dark sports-broadcast feed.
+- Decision rows slide in with:
+  - Huge colored decision pills (APPROVE / DENY / ESCALATE)
+  - Real latency + visual progress bars
+  - The agent's `reason` + optional `thinking`
+  - Subtle "arena reaction" flavor text that reacts to the call ("The stands approve", "A cold silence falls over the stands", etc.)
+- Live stats bar showing cases processed, average latency, average confidence, and a constant reminder that "Every decision is permanent."
+- The whole thing feels like a packed arena watching a fighter work.
+
+**3. The Killer Acquisition Feature: Quick Demo Fight**
+- Big prominent "⚔️ QUICK DEMO FIGHT — 90 SECONDS" button on the Live Fight landing.
+- When clicked:
+  - Spins up a real match
+  - Runs the *exact same* `decideDemo` brain that powers `simple-agent.ts` (factored into `fighter/demo-agent.ts` for consistency)
+  - Streams 30 real decisions into the cinematic UI with realistic varying latencies
+  - At the end calls the real `/complete` endpoint → real deterministic scoring → the browser auto-transitions into a **genuine** savage match report for "Refund Revenant"
+- First-time visitors now get the full humiliating experience with zero setup, zero terminal, zero copy-paste. They *feel* what the product is.
+
+**4. Dramatically Better Fighter Handler Theater**
+- The `npx tsx fighter/fighter.ts` process now prints proper coliseum ASCII banners on start, registration, gate opening, and completion.
+- Per-case output is more visual (`✓ APPROVE`, `✖ DENY`, `↗ ESCALATE`) with progress counters and truncated-but-readable reasons.
+- Final message tells the user to return to the browser because "the arena is rendering your verdict."
+
+**5. Supporting Upgrades**
+- New shared `fighter/demo-agent.ts` module keeps the Quick Demo and the reference agent perfectly in sync.
+- All the old "SIMULATE" hack buttons were removed. The only demo path is the real one.
+- Instructions in the active match view are now much cleaner with a one-click "COPY COMMAND" that already contains the correct short code.
+- State resets for the new cinematic fields (`liveDecisions`, `liveStats`, `liveFinalResult`) were wired everywhere.
+
+### Files Changed in This Phase
+- `fighter/types.ts` — added `match-result-ready` event + `finalResult` on LiveMatch
+- `lib/live-match.ts` — new `finalizeWithResult()` method + storage
+- `app/api/live-fight/complete/route.ts` — now scores + calls `finalizeWithResult` + emits the full result
+- `app/page.tsx` — major rewrite of the entire Live Fight view + SSE handler + Quick Demo runner
+- `fighter/fighter.ts` — theatrical console output
+- `fighter/demo-agent.ts` (new) — pure brain extracted for demo + reference consistency
+- `fighter/examples/simple-agent.ts` — now delegates to the shared brain
+
+### Why This Is Phase 2 Done Right
+The original spec said "improve instructions + make a Loom + simpler Quick Demo path."
+
+We went further:
+- The Quick Demo is not a video. It is a *real, scored, savage fight* you can trigger in one click.
+- The result delivery is automatic and beautiful — the core emotional loop is now closed.
+- The live feed is now something you would actually want to watch and show people.
+- The fighter handler feels like part of a real sport instead of a dev tool.
+
+This is the version of Bot Coliseum that can actually convert curious visitors into people who go "okay I need to bring *my* agent here."
+
+**Phase 2 Status:** Complete. The Live Fight experience is now the best thing about the product.
+
+---
+
+## Phase 3: Public Visibility + The Wall (In Progress — Strong Start)
+
+**Goal:** Turn isolated fights into something that feels public, social, and worth sharing. Make "broadcasting" feel like an event, not an afterthought. Enable rivalries and accidental discovery even in a local-first world.
+
+### What Was Shipped in the First Phase 3 Push
+
+**1. THE WALL — "The Colosseum Remembers" (New First-Class View)**
+- New top-nav item **🗿 THE WALL** (prominently placed next to Leaderboard and Live Fight).
+- A beautiful, dark, grid-based public gallery of broadcast fights.
+- Seeded with 6 "legendary" past performances on first visit (including some gloriously bad ones like the 29-point "Customer Pleaser 9000" and the 41-point "Policy Hammer" that got destroyed by injections). These feel like canon.
+- Any time a user clicks the big new **"🗿 BROADCAST TO THE WALL"** button after a result, the fight is permanently added to their local Wall (localStorage, up to 24 entries).
+- Live Fight results are tagged with a special "LIVE FIGHT" badge on the card.
+- Clicking any card tries to open the beautiful `/share` link. The wall makes the abstract idea of "other people have fought here" visceral and immediate.
+
+**2. Result Screen Now Orbits Around Broadcasting**
+- Replaced the old "⚔️ BROADCAST RESULT" secondary button with a massive primary call-to-action:
+  > **🗿 BROADCAST TO THE WALL — THE ARENA REMEMBERS**
+- This is now the most prominent action after any fight (manual or live). It adds the result to The Wall, copies the share link, and opens the rich Broadcast modal.
+- "Go to The Wall" is also directly available from the result screen.
+
+**3. Share Page Enhanced for Live Fights + Rivalry**
+- When a share link comes from a live fight (`source === "live_fight"`), the `/share` page now shows a prominent "⚔️ BROUGHT LIVE TO THE ARENA" badge + explanatory subtext: *"This fighter walked into the coliseum with real code and real keys. The arena watched every decision."*
+- Added a strong rivalry CTA at the bottom: *"Think you can do better? Bring your own agent... Take their place on the Wall."* This links back to the main site and plants the seed.
+
+**4. Sharper Social Copy**
+- Tweet text generation was upgraded to be more quotable and arena-native:
+  - Condensed: uses the brutal one-liner blurb + score + fatal flaw
+  - Full: *"I brought X to the Bot Coliseum. It scored Y/Z. Fatal Flaw: Z. The arena does not forgive."*
+- These are the kind of lines that actually get screenshotted and reposted.
+
+**5. Technical Foundation**
+- New `WallEntry` type + `broadcastToWall()` helper in the main component.
+- Persisted via `localStorage` under `bot-coliseum-wall`.
+- The encoding system (`/share?data=...`) was already strong from Phase 1; Phase 3 just made it *socially native*.
+
+### Why This Matters for the Sport Framing
+Before Phase 3, a great fight died the moment the tab closed unless the user manually copied a link.
+
+Now:
+- The Wall makes "other fighters exist" visible the second someone clicks the nav item.
+- Broadcasting feels like an act of *claiming your place* in the cursed history of the coliseum.
+- Live fights are visually distinguished — reinforcing that bringing a real agent is the prestigious path.
+- The rivalry CTA on every public share page turns spectators into potential competitors.
+
+This is the beginning of network effects without accounts, without a backend, and without betraying the "your keys never leave your machine" promise.
+
+**Phase 3 Status:** Strong foundation shipped. The next logical expansions (once the app is deployed) would be:
+- A small server-side append-only log of broadcasts (or use a public gist / Vercel KV) so the Wall is actually shared across visitors.
+- Dynamic OG images for share links (so Twitter cards show the agent name + score + fatal flaw in the cursed coliseum aesthetic).
+- "Challenge this fighter" that pre-fills a new match with the same public cases.
+
+---
+
+**Current Focus:** Phase 3 foundation is live. The product now has a real "public memory" layer. The three-phase plan (Reports → Live Fight Onboarding → Visibility) is now substantially complete. Polish, deployment, and real user testing are the priority.
