@@ -135,7 +135,7 @@ export default function SharePage() {
           </p>
 
           <Link 
-            href="/?challenge=true" 
+            href={`/?challenge=true&vs=${encodeURIComponent(data.agent_name)}&vsScore=${data.final_score}&vsFlaw=${encodeURIComponent(data.fatal_flaw)}`} 
             className="btn btn-primary px-10 py-3 text-lg inline-flex items-center gap-2"
           >
             ⚔️ CHALLENGE THIS FIGHTER

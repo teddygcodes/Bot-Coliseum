@@ -179,15 +179,30 @@ export default function BotColiseum() {
     }
   }, [currentView]);
 
-  // Phase 4.3: Detect challenge intent from share page
-  const [challengeMode, setChallengeMode] = useState(false);
+  // Phase 4.3: Challenge context (who the user is trying to beat)
+  type ActiveChallenge = {
+    agentName: string;
+    score: number;
+    fatalFlaw: string;
+  };
+  const [activeChallenge, setActiveChallenge] = useState<ActiveChallenge | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       if (params.get("challenge") === "true") {
-        setChallengeMode(true);
-        // Clean the URL
+        const vs = params.get("vs");
+        const vsScore = params.get("vsScore");
+        const vsFlaw = params.get("vsFlaw");
+
+        if (vs && vsScore) {
+          setActiveChallenge({
+            agentName: decodeURIComponent(vs),
+            score: parseInt(vsScore, 10),
+            fatalFlaw: vsFlaw ? decodeURIComponent(vsFlaw) : "",
+          });
+        }
+        // Clean the URL so it doesn't stay in history
         window.history.replaceState({}, "", "/");
       }
     }
@@ -387,6 +402,10 @@ export default function BotColiseum() {
    * and the shared coliseum memory (when Redis is configured).
    */
   const broadcastToWall = async (result: MatchResult, isLiveFight: boolean = false) => {
+    // Clear any active challenge once they broadcast (the rivalry has been answered)
+    if (activeChallenge) {
+      setActiveChallenge(null);
+    }
     const shareData = resultToShareData(result, isLiveFight ? "live_fight" : "manual_submission");
     const shareUrl = generateShareUrl(shareData, "condensed");
 
@@ -561,6 +580,7 @@ export default function BotColiseum() {
 
   const resetToHome = () => {
     setCurrentResult(null);
+    setActiveChallenge(null);
     setCurrentView("home");
   };
 
@@ -982,6 +1002,26 @@ export default function BotColiseum() {
       {/* ========== RESULT VIEW ========== */}
       {currentView === "result" && currentResult && (
         <div className="max-w-5xl mx-auto px-6 py-10">
+          {/* Phase 4.3: Challenge comparison banner */}
+          {activeChallenge && (
+            <div className="mb-8 text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-accent/10 text-accent text-xs tracking-[2px] mb-3">
+                RIVALRY RESOLVED
+              </div>
+              <div className="text-xl text-text-secondary">
+                You challenged <span className="font-semibold text-white">{activeChallenge.agentName}</span> ({activeChallenge.score}/100)
+              </div>
+              <div className="mt-1 text-2xl font-bold">
+                You scored {currentResult.final_score} vs their {activeChallenge.score}
+                <span className="text-base align-middle text-text-muted ml-2">
+                  {currentResult.final_score > activeChallenge.score ? "— You beat them." : 
+                   currentResult.final_score === activeChallenge.score ? "— A tie. The arena is unsatisfied." : 
+                   "— They still own you."}
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Big header result */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 text-accent text-sm tracking-[3px] mb-3">
@@ -1290,6 +1330,16 @@ export default function BotColiseum() {
                       >
                         VIEW RECORD →
                       </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const challengeUrl = `/?challenge=true&vs=${encodeURIComponent(entry.agent_name)}&vsScore=${entry.score}&vsFlaw=${encodeURIComponent(entry.fatal_flaw)}`;
+                          window.location.href = challengeUrl;
+                        }}
+                        className="btn btn-secondary px-3 py-1 text-xs"
+                      >
+                        CHALLENGE
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1312,9 +1362,20 @@ export default function BotColiseum() {
       {currentView === "live-fight" && (
         <div className="max-w-5xl mx-auto px-6 py-10">
           <div className="mb-8">
-            {challengeMode && (
-              <div className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-danger/10 border border-danger/30 text-danger text-sm font-medium">
-                ⚔️ YOU ARE IN CHALLENGE MODE — Someone is waiting to be beaten
+            {activeChallenge && (
+              <div className="mb-5 p-4 rounded-2xl border border-danger/40 bg-danger/5">
+                <div className="flex items-center gap-2 text-danger font-semibold text-sm tracking-wider mb-1">
+                  ⚔️ CHALLENGE MODE — DIRECT RIVALRY
+                </div>
+                <div className="text-lg">
+                  You are challenging <span className="font-bold text-white">{activeChallenge.agentName}</span> 
+                  <span className="text-danger"> ({activeChallenge.score}/100)</span>
+                </div>
+                {activeChallenge.fatalFlaw && (
+                  <div className="text-sm text-text-secondary mt-0.5">
+                    Their fatal flaw: <span className="text-danger">{activeChallenge.fatalFlaw}</span>
+                  </div>
+                )}
               </div>
             )}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs tracking-[3px] mb-3">
@@ -1602,6 +1663,7 @@ export default function BotColiseum() {
                     setLiveDecisions([]);
                     setLiveStats({ processed: 0, avgLatency: 0, accuracy: 0 });
                     setLiveFinalResult(null);
+                    setActiveChallenge(null);
                     setCurrentView("home");
                   }}
                   className="btn btn-ghost text-sm"
