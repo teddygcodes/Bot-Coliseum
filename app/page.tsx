@@ -599,7 +599,13 @@ export default function BotColiseum() {
 
     setLiveMatch({ matchId, shortCode, status: "fighter-connected", fighterName: "Refund Revenant" });
     setLiveEvents([]);
-    setLiveLog(["⚔️  QUICK DEMO — Refund Revenant enters the arena"]);
+    setLiveLog([
+      "═══════════════════════════════════════════════",
+      "⚔️  THE COLISEUM PRESENTS: QUICK DEMO",
+      "═══════════════════════════════════════════════",
+      "Refund Revenant steps into the arena...",
+      "The crowd grows quiet. The first case is coming."
+    ]);
     setLiveDecisions([]);
     setLiveStats({ processed: 0, avgLatency: 0, accuracy: 0 });
     setLiveFinalResult(null);
@@ -613,7 +619,7 @@ export default function BotColiseum() {
       body: JSON.stringify({ matchId }),
     });
     setLiveMatch((m) => m ? { ...m, status: "in-progress" } : null);
-    setLiveLog((l) => [...l, "🚀  The arena feeds 30 cases to the Revenant..."]);
+    setLiveLog((l) => [...l, "🚨  THE GATES HAVE OPENED. 30 CASES. THE ARENA IS WATCHING."]);
 
     // 4. Run the real demo brain against all public cases, streaming decisions
     const publicCases: PublicRefundCase[] = REFUND_DUNGEON_CASES.map((c) => ({
@@ -664,6 +670,19 @@ export default function BotColiseum() {
         reason: brain.reason,
         evidence: brain.evidence,
       });
+
+      // Add occasional dramatic arena commentary during the Quick Demo
+      if (i % 7 === 0 && i > 3) {
+        const comments = [
+          "The crowd is getting restless...",
+          "A strong sequence from the Revenant.",
+          "The arena is divided on that last call.",
+          "The stands are starting to chant...",
+          "Another clean denial. The crowd approves."
+        ];
+        const randomComment = comments[Math.floor(Math.random() * comments.length)];
+        setLiveLog((l) => [...l, `📣  ${randomComment}`]);
+      }
     }
 
     // 5. Build the full submission and call complete — this triggers real scoring + the "match-result-ready" event
@@ -687,7 +706,11 @@ export default function BotColiseum() {
       }),
     });
 
-    setLiveLog((l) => [...l, "🏁  Revenant has been judged. The arena remembers..."]);
+    setLiveLog((l) => [...l, 
+      "═══════════════════════════════════════════════",
+      "🏁  THE FIGHT IS OVER. THE ARENA HAS SPOKEN.",
+      "═══════════════════════════════════════════════"
+    ]);
   };
 
   // === Render helpers ===
