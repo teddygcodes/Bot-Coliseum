@@ -2786,7 +2786,12 @@ export default function BotColiseum() {
 
               {/* === THE CINEMATIC LIVE ARENA FEED === */}
               {(liveMatch.status === "in-progress" || liveDecisions.length > 0) && (
-                <div className="card overflow-hidden mb-6 border-accent/10">
+                <div className={`card overflow-hidden mb-6 border-accent/10 ${(() => {
+                  const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
+                  const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
+                  const fl = fe?.legendName;
+                  return (fl && crowdEnergy >= 70) ? 'border-[#c5a26f]/60 shadow-[0_0_0_1px_#c5a26f20]' : '';
+                })()}`}>
                   <div className="px-6 py-4 border-b border-border bg-black/60 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-danger rounded-full animate-pulse" />
