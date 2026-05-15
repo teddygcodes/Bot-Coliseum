@@ -37,6 +37,11 @@ export default function BotColiseum() {
     currentStreak: number; // positive = win streak, negative = losses
   };
   const [myLegend, setMyLegend] = useState<MyLegend | null>(null);
+
+  // Phase 5.4 — Head-to-head rivalries (your personal record against specific fighters)
+  type HeadToHeadRecord = { myWins: number; myLosses: number };
+  const [headToHead, setHeadToHead] = useState<Record<string, HeadToHeadRecord>>({});
+
   const [jsonInput, setJsonInput] = useState("");
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [isScoring, setIsScoring] = useState(false);
@@ -197,6 +202,18 @@ export default function BotColiseum() {
         setMyLegend(JSON.parse(savedLegend));
       } catch {
         // corrupted localStorage entry — ignore
+      }
+    }
+  }, []);
+
+  // Phase 5.4: Load head-to-head rivalry records
+  useEffect(() => {
+    const savedH2H = localStorage.getItem("bot-coliseum-head-to-head");
+    if (savedH2H) {
+      try {
+        setHeadToHead(JSON.parse(savedH2H));
+      } catch {
+        // ignore corrupted data
       }
     }
   }, []);
@@ -432,6 +449,12 @@ export default function BotColiseum() {
     localStorage.setItem("bot-coliseum-my-legend", JSON.stringify(legend));
   };
 
+  // Phase 5.4: Persist head-to-head rivalries
+  const saveHeadToHead = (h2h: Record<string, HeadToHeadRecord>) => {
+    setHeadToHead(h2h);
+    localStorage.setItem("bot-coliseum-head-to-head", JSON.stringify(h2h));
+  };
+
   /**
    * Phase 4.2 — Broadcasts to BOTH localStorage (your personal history)
    * and the shared coliseum memory (when Redis is configured).
@@ -528,6 +551,23 @@ export default function BotColiseum() {
       }
 
       saveMyLegend(updated);
+    }
+
+    // Phase 5.4: Update head-to-head record against this specific opponent
+    if (activeChallenge) {
+      const opponent = activeChallenge.agentName;
+      const currentRecord = headToHead[opponent] || { myWins: 0, myLosses: 0 };
+      const won = result.final_score > activeChallenge.score;
+
+      const newRecord: HeadToHeadRecord = won
+        ? { myWins: currentRecord.myWins + 1, myLosses: currentRecord.myLosses }
+        : { myWins: currentRecord.myWins, myLosses: currentRecord.myLosses + 1 };
+
+      const newHeadToHead = {
+        ...headToHead,
+        [opponent]: newRecord,
+      };
+      saveHeadToHead(newHeadToHead);
     }
 
     // Copy link as side effect
@@ -1227,8 +1267,31 @@ export default function BotColiseum() {
                    "— They still own you."}
                 </span>
               </div>
+
+              {/* Phase 5.4: Dramatic head-to-head progression */}
+              {(() => {
+                const h2h = headToHead[activeChallenge.agentName];
+                if (!h2h) return null;
+
+                const total = h2h.myWins + h2h.myLosses;
+                let flavor = "";
+                if (currentResult.final_score > activeChallenge.score) {
+                  if (h2h.myWins > h2h.myLosses) flavor = "You're pulling away.";
+                  else if (h2h.myWins === h2h.myLosses) flavor = "You just took the lead.";
+                  else flavor = "You evened the score.";
+                } else {
+                  flavor = "They still have your number.";
+                }
+
+                return (
+                  <div className="mt-3 text-sm text-accent/90 font-medium">
+                    Head-to-head now {h2h.myWins}–{h2h.myLosses} ({total} fights) • {flavor}
+                  </div>
+                );
+              })()}
+
               {myLegend && (
-                <div className="mt-3 text-sm text-accent/90">
+                <div className="mt-2 text-sm text-accent/90">
                   Your legend is now {myLegend.wins}–{myLegend.losses} 
                   {myLegend.currentStreak > 1 && ` • ${myLegend.currentStreak}-fight tear`}
                 </div>
@@ -1598,6 +1661,17 @@ export default function BotColiseum() {
                   <div>
                     <div className="text-3xl font-bold tracking-tight">{mostFeared.agent_name}</div>
                     <div className="text-sm text-text-secondary">Has publicly destroyed {totalDefeats} challengers</div>
+                    {(() => {
+                      const h2h = headToHead[mostFeared.agent_name];
+                      if (h2h && (h2h.myWins > 0 || h2h.myLosses > 0)) {
+                        return (
+                          <div className="text-xs text-accent mt-1 font-medium">
+                            Your record vs them: {h2h.myWins}–{h2h.myLosses}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
                   <div className="text-right">
                     <div className="text-4xl font-black text-accent tabular-nums">{mostFeared.score}</div>
@@ -1772,6 +1846,26 @@ export default function BotColiseum() {
                           </div>
                         );
                       })()}
+
+                      {/* Phase 5.4: Personal head-to-head vs this fighter */}
+                      {(() => {
+                        const h2h = headToHead[entry.agent_name];
+                        if (!h2h || (h2h.myWins === 0 && h2h.myLosses === 0)) return null;
+
+                        const total = h2h.myWins + h2h.myLosses;
+                        const leadText = h2h.myWins > h2h.myLosses 
+                          ? `You lead ${h2h.myWins}–${h2h.myLosses}` 
+                          : h2h.myLosses > h2h.myWins 
+                            ? `Down ${h2h.myWins}–${h2h.myLosses}` 
+                            : `Tied ${h2h.myWins}–${h2h.myLosses}`;
+
+                        return (
+                          <div className="text-[11px] mt-1 text-accent/90 font-medium">
+                            vs You: {leadText} ({total} fights)
+                          </div>
+                        );
+                      })()}
+
                       <div className="text-sm text-text-muted">@{entry.coach}</div>
                     </div>
 
@@ -1837,7 +1931,13 @@ export default function BotColiseum() {
                         }}
                         className="px-3 py-1 rounded bg-accent/10 text-accent hover:bg-accent hover:text-black text-[11px] font-medium transition"
                       >
-                        CHALLENGE
+                        {(() => {
+                          const h2h = headToHead[entry.agent_name];
+                          if (h2h && (h2h.myWins > 0 || h2h.myLosses > 0)) {
+                            return h2h.myWins > h2h.myLosses ? "REMATCH" : "SETTLE THE SCORE";
+                          }
+                          return "CHALLENGE";
+                        })()}
                       </button>
                     </div>
                   </div>
