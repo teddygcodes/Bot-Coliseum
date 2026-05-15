@@ -2598,8 +2598,13 @@ export default function BotColiseum() {
           ) : (
             /* === ACTIVE MATCH — THE CINEMATIC ARENA EXPERIENCE === */
             <div>
-              {/* Dramatic Match Header */}
-              <div className="card p-8 mb-5 border-accent/20">
+              {/* Dramatic Match Header — Phase 5.8 premium treatment for high-rep legends */}
+              <div className={`card p-8 mb-5 border-accent/20 ${(() => {
+                const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
+                const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
+                const fl = fe?.legendName;
+                return (fl && crowdEnergy >= 70) ? 'border-[#c5a26f]/70 shadow-[0_0_0_2px_#c5a26f20] bg-[#1a1408]' : '';
+              })()}`}>
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                   <div>
                     <div className="uppercase tracking-[4px] text-[10px] text-text-muted mb-1">MATCH CODE • REFUND DUNGEON</div>
@@ -2922,23 +2927,28 @@ export default function BotColiseum() {
                         }
                       }
 
-                      // Phase 5.7: Much stronger visual production for real high-rep legends
+                      // Phase 5.8: Deep visual production for real high-rep legends (main event treatment)
                       const isHighRepLegend = isRealFight && fighterLegend;
                       let cardBorder = isDeny ? 'border-danger/60' : isApprove ? 'border-success/40' : 'border-border';
                       let cardExtra = "";
+                      let cardBg = "bg-black";
 
                       if (isHighRepLegend) {
-                        cardBorder = 'border-[#c5a26f]/80';
-                        // Extra premium treatment when crowd energy is high or on big moment
+                        cardBorder = 'border-[#c5a26f]/90';
+                        cardBg = 'bg-[#1a1408]';
+                        
+                        // Strong "main event" treatment when crowd energy is high or on big moment
                         if (crowdEnergy >= 70 || isBigMoment) {
-                          cardExtra = "shadow-[0_0_0_4px_#c5a26f30,0_0_25px_#c5a26f] scale-[1.015] animate-pulse";
+                          cardExtra = "shadow-[0_0_0_6px_#c5a26f40,0_0_30px_#c5a26f,0_20px_50px_-15px_#c5a26f] scale-[1.02] ring-1 ring-[#c5a26f]/30";
+                        } else {
+                          cardExtra = "shadow-[0_0_0_3px_#c5a26f20,0_0_15px_#c5a26f]";
                         }
                       }
 
                       return (
                         <div 
                           key={idx} 
-                          className={`group relative bg-black border rounded-2xl p-6 transition-all duration-200 impact-hover cursed-border ${cardBorder} hover:border-accent/70 ${momentClass} ${cardExtra}`}
+                          className={`group relative ${cardBg} border rounded-2xl p-6 transition-all duration-200 impact-hover cursed-border ${cardBorder} hover:border-accent/70 ${momentClass} ${cardExtra}`}
                         >
                           <div className="flex items-start gap-5">
                             {/* Request ID + Decision */}
