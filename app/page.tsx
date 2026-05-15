@@ -1405,7 +1405,7 @@ export default function BotColiseum() {
               let cardClass = "group relative overflow-hidden rounded-2xl border transition-all duration-200 flex flex-col cursor-pointer p-6 ";
 
               if (variant === 'glory') cardClass += "bg-black border-[#c5a26f]/40 hover:border-[#c5a26f] hover:shadow-[0_0_0_1px_#c5a26f20]";
-              else if (variant === 'blood') cardClass += "bg-black border-danger/40 hover:border-danger hover:shadow-[0_0_0_1px_#ef444420]";
+              else if (variant === 'blood') cardClass += "bg-[#1a0a0a] border-danger/70 hover:border-danger hover:shadow-[0_0_0_1px_#ef444430] relative after:absolute after:inset-0 after:bg-[radial-gradient(#ef444410_0.5px,transparent_1px)] after:bg-[length:3px_3px] after:pointer-events-none";
               else cardClass += "bg-black border-border hover:border-accent/60";
 
               if (isLegend) cardClass += " border-accent/50";
@@ -1429,6 +1429,21 @@ export default function BotColiseum() {
                         {isLegend && (
                           <span className="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold tracking-wider">LEGEND</span>
                         )}
+
+                        {/* Prestige Badges — Phase 5.1 */}
+                        {(() => {
+                          const rep = reputation[entry.agent_name];
+                          const totalChallenges = (entry.challengeCount || 0) + (rep?.challenges || 0);
+                          const totalDefeats = (entry.defeatedChallengers || 0) + (rep?.defeats || 0);
+
+                          if (totalChallenges >= 5 && totalDefeats === 0) {
+                            return <span className="text-[10px] px-2 py-0.5 rounded bg-success/20 text-success font-bold tracking-wider">UNDEFEATED</span>;
+                          }
+                          if (totalDefeats >= 3) {
+                            return <span className="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold tracking-wider">CHALLENGER SLAYER</span>;
+                          }
+                          return null;
+                        })()}
                       </div>
 
                       {/* Reputation signals — Phase 5.1 (live + persisted) */}
