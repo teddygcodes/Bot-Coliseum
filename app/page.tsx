@@ -2795,12 +2795,14 @@ export default function BotColiseum() {
                   const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
                   const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
                   const fl = fe?.legendName;
-                  if (fl && crowdEnergy >= 85) {
-                    return 'border-[#c5a26f] shadow-[0_0_0_12px_#c5a26f50,0_0_55px_#c5a26f,0_0_110px_#c5a26f35,0_0_180px_#c5a26f15] bg-[#1a1408]';
-                  } else if (fl && crowdEnergy >= 75) {
-                    return 'border-[#c5a26f]/90 shadow-[0_0_0_8px_#c5a26f45,0_0_35px_#c5a26f,0_0_70px_#c5a26f25] bg-[#1a1408]';
-                  } else if (fl && crowdEnergy >= 65) {
-                    return 'border-[#c5a26f]/75 shadow-[0_0_0_5px_#c5a26f35,0_0_22px_#c5a26f] bg-[#1a1408]';
+                  if (fl && crowdEnergy >= 90) {
+                    return 'border-[#c5a26f] shadow-[0_0_0_15px_#c5a26f60,0_0_65px_#c5a26f,0_0_130px_#c5a26f45,0_0_220px_#c5a26f20,inset_0_0_80px_#00000099] bg-[#1a1206]';
+                  } else if (fl && crowdEnergy >= 80) {
+                    return 'border-[#c5a26f] shadow-[0_0_0_12px_#c5a26f50,0_0_55px_#c5a26f,0_0_110px_#c5a26f35,0_0_180px_#c5a26f15,inset_0_0_50px_#00000066] bg-[#1a1408]';
+                  } else if (fl && crowdEnergy >= 70) {
+                    return 'border-[#c5a26f]/90 shadow-[0_0_0_8px_#c5a26f45,0_0_35px_#c5a26f,0_0_70px_#c5a26f25,inset_0_0_30px_#00000044] bg-[#1a1408]';
+                  } else if (fl && crowdEnergy >= 60) {
+                    return 'border-[#c5a26f]/75 shadow-[0_0_0_5px_#c5a26f35,0_0_22px_#c5a26f,inset_0_0_18px_#00000033] bg-[#1a1408]';
                   }
                   return '';
                 })()}`}>
