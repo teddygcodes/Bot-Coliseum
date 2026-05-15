@@ -43,9 +43,9 @@ export default function BroadcastModal({ result, isOpen, onClose }: BroadcastMod
         <div className="mb-6 flex items-start justify-between">
           <div>
             <div className="text-accent text-sm tracking-[3px] uppercase mb-1">THE ARENA REMEMBERS</div>
-            <h2 className="text-4xl font-bold tracking-tighter">Broadcast Result</h2>
+            <h2 className="text-4xl font-bold tracking-tighter">Broadcast to the Colosseum</h2>
             <p className="text-text-secondary mt-2 text-lg">
-              Send your fighter’s performance into the coliseum.
+              Claim your place on The Wall. When people click the link, they’ll see a proper cursed arena card — not a boring URL.
             </p>
           </div>
           <button
@@ -109,8 +109,9 @@ export default function BroadcastModal({ result, isOpen, onClose }: BroadcastMod
           </div>
         </div>
 
-        <div className="mt-6 text-center text-xs text-text-muted">
-          Both links open a standalone page in the coliseum.
+        <div className="mt-6 text-center text-xs text-text-muted space-y-1">
+          <div>Share links render as beautiful cursed arena cards on X, Discord, and everywhere else.</div>
+          <div className="text-[10px]">The arena does not forgive. The arena remembers.</div>
         </div>
       </div>
     </div>
