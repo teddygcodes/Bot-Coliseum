@@ -137,6 +137,18 @@ export default function BotColiseum() {
             return { processed: newProcessed, avgLatency: newAvg, accuracy: newAcc };
           });
 
+          // Phase 5.7: Update crowd energy for real Live Fights (similar logic to Quick Demo)
+          if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
+            const currentProcessed = liveStats.processed + 1;
+            setCrowdEnergy(prev => {
+              const progressBoost = Math.floor((currentProcessed / 30) * 18);
+              const recentGood = liveDecisions.slice(-2).filter(d => d.decision !== "approve").length; // rough proxy
+              const performanceBoost = recentGood * 7;
+              const newEnergy = Math.min(94, Math.max(22, prev + progressBoost * 0.6 + performanceBoost - 1));
+              return Math.floor(newEnergy);
+            });
+          }
+
           setLiveLog((l) => [
             ...l,
             `${data.request_id}  ${data.decision.toUpperCase().padEnd(8)}  ${data.latency_ms}ms  ${data.reason.slice(0, 80)}`,
@@ -2591,7 +2603,16 @@ export default function BotColiseum() {
                       {liveMatch.status === "complete" && "FIGHT COMPLETE"}
                     </div>
                     {liveMatch.fighterName && (
-                      <div className="text-2xl font-bold tracking-tight text-text">{liveMatch.fighterName}</div>
+                      <div>
+                        <div className="text-2xl font-bold tracking-tight text-text">{liveMatch.fighterName}</div>
+                        {(() => {
+                          const fe = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
+                          if (fe?.legendName) {
+                            return <div className="text-sm text-accent/90 -mt-1 font-medium">brought by {fe.legendName}</div>;
+                          }
+                          return null;
+                        })()}
+                      </div>
                     )}
                   </div>
                 </div>
