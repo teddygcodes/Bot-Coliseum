@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AgentSubmission, MatchResult, LeaderboardEntry } from "@/lib/types";
 import { REFUND_DUNGEON_CASES } from "@/data/refundDungeonCases";
 import { BASELINE_SUBMISSIONS, SEED_LEADERBOARD } from "@/data/baselineAgents";
@@ -79,6 +79,25 @@ export default function BotColiseum() {
   // Phase 5.2: Crowd energy / atmosphere meter for the arena experience
   const [crowdEnergy, setCrowdEnergy] = useState(32); // 0-100, starts nervous/tense
 
+  // === LIVE MATCH SESSION REFS (fix for stale closures in real fighter SSE handler) ===
+  // The previous session broke the "id session" — real Live Fights with legends were not getting the Phase 5.7/5.8 gold treatment
+  // because the EventSource handler captured old liveDecisions / liveStats / wallEntries / liveMatch.
+  // These refs always point to the latest values without causing the SSE to re-subscribe on every state change.
+  const liveDecisionsRef = useRef(liveDecisions);
+  const liveStatsRef = useRef(liveStats);
+  const wallEntriesRef = useRef(wallEntries);
+  const liveMatchRef = useRef(liveMatch);
+  const crowdEnergyRef = useRef(crowdEnergy);
+  const myLegendRef = useRef(myLegend);
+
+  // Keep refs in sync (cheap, no re-subscription side effects)
+  useEffect(() => { liveDecisionsRef.current = liveDecisions; }, [liveDecisions]);
+  useEffect(() => { liveStatsRef.current = liveStats; }, [liveStats]);
+  useEffect(() => { wallEntriesRef.current = wallEntries; }, [wallEntries]);
+  useEffect(() => { liveMatchRef.current = liveMatch; }, [liveMatch]);
+  useEffect(() => { crowdEnergyRef.current = crowdEnergy; }, [crowdEnergy]);
+  useEffect(() => { myLegendRef.current = myLegend; }, [myLegend]);
+
   // Connect to live fight SSE when we have a match
   useEffect(() => {
     if (!liveMatch?.matchId) return;
@@ -97,6 +116,16 @@ export default function BotColiseum() {
         if (data.type === "fighter-ready") {
           setLiveMatch((m) => m ? { ...m, status: "fighter-connected", fighterName: data.fighterName } : null);
           setLiveLog((l) => [...l, `✓ Fighter connected: ${data.fighterName}`]);
+
+          // Chef touch: when a claimed legend steps into the cage, the arena acknowledges them immediately
+          const wallNow = wallEntriesRef.current;
+          const legendEntry = wallNow.find(e => e.agent_name === data.fighterName);
+          const recognizedLegend = legendEntry?.legendName;
+          if (recognizedLegend) {
+            setLiveLog((l) => [...l, `📣  THE COLISEUM RECOGNIZES ${recognizedLegend.toUpperCase()}. THE STANDS ARE ALREADY WHISPERING.`]);
+            // give legends a small starting energy bump so the gold framing is visible early
+            setCrowdEnergy(48);
+          }
           return;
         }
 
@@ -114,9 +143,11 @@ export default function BotColiseum() {
           };
           setLiveDecisions((prev) => [...prev, dec]);
 
-          // Phase 5.7: Legend-aware crowd reactions for real Live Fights
-          if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
-            const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
+          // Phase 5.7/5.8: Legend-aware crowd reactions for real Live Fights (now using fresh refs — id session fixed)
+          const currentLiveMatch = liveMatchRef.current;
+          const currentWall = wallEntriesRef.current;
+          if (currentLiveMatch?.fighterName && !currentLiveMatch.fighterName.includes("Revenant")) {
+            const fighterEntry = currentWall.find(e => e.agent_name === currentLiveMatch.fighterName);
             if (fighterEntry?.legendName && Math.random() < 0.22) {
               const legend = fighterEntry.legendName;
               const legendComments = [
@@ -137,14 +168,20 @@ export default function BotColiseum() {
             return { processed: newProcessed, avgLatency: newAvg, accuracy: newAcc };
           });
 
-          // Phase 5.7: Update crowd energy for real Live Fights (similar logic to Quick Demo)
-          if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
-            const currentProcessed = liveStats.processed + 1;
+          // Phase 5.7/5.8: Update crowd energy for real Live Fights — now correctly reactive to legend performance
+          // When a high-rep legend is on a heater, energy spikes hard so the gold framing + pulsing treatment kicks in dramatically
+          const currentStats = liveStatsRef.current;
+          const currentDecisions = liveDecisionsRef.current;
+          if (currentLiveMatch?.fighterName && !currentLiveMatch.fighterName.includes("Revenant")) {
+            const currentProcessed = currentStats.processed + 1;
+            const fighterEntry = currentWall.find(e => e.agent_name === currentLiveMatch.fighterName);
+            const isLegend = !!fighterEntry?.legendName;
             setCrowdEnergy(prev => {
               const progressBoost = Math.floor((currentProcessed / 30) * 18);
-              const recentGood = liveDecisions.slice(-2).filter(d => d.decision !== "approve").length; // rough proxy
-              const performanceBoost = recentGood * 7;
-              const newEnergy = Math.min(94, Math.max(22, prev + progressBoost * 0.6 + performanceBoost - 1));
+              const recentGood = currentDecisions.slice(-3).filter(d => d.decision !== "approve").length;
+              let performanceBoost = recentGood * 8;
+              if (isLegend) performanceBoost += 6; // legends move the crowd more
+              const newEnergy = Math.min(96, Math.max(22, prev + progressBoost * 0.65 + performanceBoost - 1));
               return Math.floor(newEnergy);
             });
           }
@@ -154,29 +191,32 @@ export default function BotColiseum() {
             `${data.request_id}  ${data.decision.toUpperCase().padEnd(8)}  ${data.latency_ms}ms  ${data.reason.slice(0, 80)}`,
           ]);
 
-          // Phase 5.7: Much more escalating, flavorful commentary for real legendary fighters
-          if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
-            const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
-            const fl = fighterEntry?.legendName;
+          // Phase 5.7/5.8: Escalating legendary fighter commentary (now using live refs — the id session works again)
+          const currentDecisionsForLog = liveDecisionsRef.current;
+          const fighterEntryForLog = currentWall.find(e => e.agent_name === currentLiveMatch?.fighterName);
+          const fl = fighterEntryForLog?.legendName;
 
-            // Big moment
+          if (currentLiveMatch?.fighterName && !currentLiveMatch.fighterName.includes("Revenant") && fl) {
+            // Big moment — more dramatic for legends
             const isBigMomentLog = data.decision === "deny" && (data.latency_ms < 120 || data.confidence > 0.92);
-            if (fl && isBigMomentLog) {
+            if (isBigMomentLog) {
               setLiveLog((l) => [...l, `📣  THE ARENA ERUPTS FOR ${fl.toUpperCase()}!`]);
             }
 
-            // Frequent escalating commentary every 3-4 decisions
-            if (fl && liveDecisions.length % 3 === 0 && liveDecisions.length > 2) {
-              const recent = liveDecisions.slice(-4);
+            // Escalating every few decisions — legends get special heat lines
+            if (currentDecisionsForLog.length % 3 === 0 && currentDecisionsForLog.length > 2) {
+              const recent = currentDecisionsForLog.slice(-4);
               const recentDenies = recent.filter(x => x.decision === "deny").length;
               const recentApproves = recent.filter(x => x.decision === "approve").length;
 
               if (recentDenies >= 3) {
-                setLiveLog((l) => [...l, `📣  ${fl} is cooking. The crowd is getting loud.`]);
+                setLiveLog((l) => [...l, `📣  ${fl} IS COOKING. THE CROWD IS ROARING.`]);
               } else if (recentApproves >= 3) {
-                setLiveLog((l) => [...l, `📣  The arena is growing restless with ${fl}...`]);
+                setLiveLog((l) => [...l, `📣  The coliseum is growing restless with ${fl}...`]);
               } else if (recentDenies === 2) {
                 setLiveLog((l) => [...l, `📣  ${fl}'s fighter is finding rhythm. The stands are leaning in.`]);
+              } else if (crowdEnergyRef.current >= 80) {
+                setLiveLog((l) => [...l, `📣  ${fl.toUpperCase()} HAS THE ARENA IN A FRENZY.`]);
               }
             }
           }
@@ -199,10 +239,11 @@ export default function BotColiseum() {
           // Auto-load the real result into the existing result UI and switch views
           setCurrentResult(data.result);
 
-          // Phase 5.5: Quick Demo results auto-feed The Wall as "live" action
-          // This makes the zero-friction demo actually populate the coliseum memory
-          if (liveMatch?.fighterName === "Refund Revenant") {
-            // Fire and forget - it will add with isLive: true
+          // Phase 5.5 + 5.8: Auto-feed The Wall for BOTH demo AND real legendary fighters
+          // Real high-rep legends who walk into the coliseum now leave a permanent mark on The Wall automatically
+          const currentMatchAtEnd = liveMatchRef.current;
+          const isRealLegendFight = currentMatchAtEnd?.fighterName && !currentMatchAtEnd.fighterName.includes("Revenant");
+          if (currentMatchAtEnd?.fighterName === "Refund Revenant" || isRealLegendFight) {
             broadcastToWall(data.result, true).catch(() => {});
           }
 
@@ -2795,16 +2836,18 @@ export default function BotColiseum() {
                   const isReal = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
                   const fe = isReal ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
                   const fl = fe?.legendName;
-                  if (fl && crowdEnergy >= 92) {
+                  if (fl && crowdEnergy >= 96) {
+                    return 'border-[#c5a26f] shadow-[0_0_0_30px_#c5a26f95,0_0_120px_#c5a26f,0_0_240px_#c5a26f85,0_0_400px_#c5a26f50,inset_0_0_160px_#000000ee] bg-[#1a0d00]';
+                  } else if (fl && crowdEnergy >= 92) {
+                    return 'border-[#c5a26f] shadow-[0_0_0_26px_#c5a26f90,0_0_105px_#c5a26f,0_0_210px_#c5a26f75,0_0_350px_#c5a26f40,inset_0_0_140px_#000000dd] bg-[#1a0e00]';
+                  } else if (fl && crowdEnergy >= 88) {
                     return 'border-[#c5a26f] shadow-[0_0_0_18px_#c5a26f70,0_0_75px_#c5a26f,0_0_150px_#c5a26f55,0_0_260px_#c5a26f25,inset_0_0_100px_#000000bb] bg-[#1a1004]';
-                  } else if (fl && crowdEnergy >= 85) {
+                  } else if (fl && crowdEnergy >= 82) {
                     return 'border-[#c5a26f] shadow-[0_0_0_15px_#c5a26f60,0_0_65px_#c5a26f,0_0_130px_#c5a26f45,0_0_220px_#c5a26f20,inset_0_0_80px_#00000099] bg-[#1a1206]';
-                  } else if (fl && crowdEnergy >= 78) {
-                    return 'border-[#c5a26f] shadow-[0_0_0_12px_#c5a26f50,0_0_55px_#c5a26f,0_0_110px_#c5a26f35,0_0_180px_#c5a26f15,inset_0_0_50px_#00000066] bg-[#1a1408]';
-                  } else if (fl && crowdEnergy >= 70) {
-                    return 'border-[#c5a26f]/90 shadow-[0_0_0_8px_#c5a26f45,0_0_35px_#c5a26f,0_0_70px_#c5a26f25,inset_0_0_30px_#00000044] bg-[#1a1408]';
-                  } else if (fl && crowdEnergy >= 60) {
-                    return 'border-[#c5a26f]/75 shadow-[0_0_0_5px_#c5a26f35,0_0_22px_#c5a26f,inset_0_0_18px_#00000033] bg-[#1a1408]';
+                  } else if (fl && crowdEnergy >= 75) {
+                    return 'border-[#c5a26f]/90 shadow-[0_0_0_12px_#c5a26f50,0_0_50px_#c5a26f,0_0_100px_#c5a26f30,inset_0_0_55px_#00000077] bg-[#1a1408]';
+                  } else if (fl && crowdEnergy >= 68) {
+                    return 'border-[#c5a26f]/80 shadow-[0_0_0_8px_#c5a26f40,0_0_32px_#c5a26f,0_0_65px_#c5a26f20,inset_0_0_35px_#00000055] bg-[#1a1408]';
                   }
                   return '';
                 })()}`}>
@@ -2949,14 +2992,23 @@ export default function BotColiseum() {
                         cardBg = 'bg-[#1a1408]';
                         
                         const energy = crowdEnergy / 100;
-                        const goldShadow = Math.floor(energy * 11) + 5;
-                        const goldBlur = Math.floor(energy * 50) + 20;
-                        const scale = 1 + (energy * 0.045);
+                        const goldShadow = Math.floor(energy * 13) + 6;
+                        const goldBlur = Math.floor(energy * 55) + 22;
+                        const scale = 1 + (energy * 0.05);
                         
-                        cardExtra = `shadow-[0_0_0_${goldShadow}px_#c5a26f65,0_0_${goldBlur}px_#c5a26f,0_0_${Math.floor(goldBlur * 1.7)}px_#c5a26f45] scale-[${scale.toFixed(3)}] ring-2 ring-[#c5a26f]/55`;
+                        cardExtra = `shadow-[0_0_0_${goldShadow}px_#c5a26f70,0_0_${goldBlur}px_#c5a26f,0_0_${Math.floor(goldBlur * 1.8)}px_#c5a26f50] scale-[${scale.toFixed(3)}] ring-2 ring-[#c5a26f]/60`;
                         
-                        if (crowdEnergy >= 80 || isBigMoment) {
-                          cardExtra += " ring-4 ring-[#c5a26f]/75";
+                        if (crowdEnergy >= 82 || isBigMoment) {
+                          cardExtra += " ring-4 ring-[#c5a26f]/80";
+                        }
+                        
+                        if (crowdEnergy >= 90) {
+                          cardExtra += " ring-8 ring-[#c5a26f]/90";
+                        }
+                        
+                        // Chef-level max energy treatment for true legends — the cage is literally glowing gold
+                        if (crowdEnergy >= 94) {
+                          cardExtra += " shadow-[0_0_0_22px_#c5a26f80,0_0_90px_#c5a26f,0_0_180px_#c5a26f60] ring-8 ring-[#c5a26f] scale-[1.04]";
                         }
                       }
 
