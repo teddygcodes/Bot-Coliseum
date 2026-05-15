@@ -213,6 +213,14 @@ npm run test:ui       # Visual test UI
 npm run test:coverage # With coverage report
 ```
 
+### Pre-commit Hooks
+The project uses **Husky + lint-staged**.
+
+- Before every `git commit`, ESLint will automatically run on all staged TypeScript/JavaScript files.
+- This is configured in `package.json` under `lint-staged` and `.husky/pre-commit`.
+
+To bypass the hook in rare cases: `git commit --no-verify`
+
 **CI:** GitHub Actions automatically runs the full test suite, type checking, linting, and build on every push and pull request (see `.github/workflows/ci.yml`).
 
 **Current Test Coverage (as of May 2026):**

@@ -79,25 +79,23 @@ export default function SharePage() {
           {data.match_report}
         </div>
 
-        {/* Condensed vs Full Toggle (only shown on full view for now) */}
-        {isFull && (
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex rounded-full border border-border p-1 bg-surface">
-              <button
-                onClick={() => setType("full")}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition ${type === "full" ? "bg-accent text-black" : "hover:bg-surface-raised"}`}
-              >
-                Full Record
-              </button>
-              <button
-                onClick={() => setType("condensed")}
-                className={`px-6 py-2 rounded-full text-sm font-medium transition ${type === "condensed" ? "bg-accent text-black" : "hover:bg-surface-raised"}`}
-              >
-                Condensed
-              </button>
-            </div>
+        {/* View Toggle - always available on share page */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex rounded-full border border-border p-1 bg-surface">
+            <button
+              onClick={() => setType("full")}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition ${type === "full" ? "bg-accent text-black" : "hover:bg-surface-raised"}`}
+            >
+              Full Record
+            </button>
+            <button
+              onClick={() => setType("condensed")}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition ${type === "condensed" ? "bg-accent text-black" : "hover:bg-surface-raised"}`}
+            >
+              Condensed
+            </button>
           </div>
-        )}
+        </div>
 
         {/* Category Scores */}
         {isFull && (
@@ -121,4 +119,3 @@ export default function SharePage() {
     </div>
   );
 }
-```

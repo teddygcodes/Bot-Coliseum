@@ -117,7 +117,7 @@ export async function decide(c: PublicRefundCase): Promise<{
 }
 
 // Example of what a real LLM-backed version would look like (commented so it doesn't require deps)
-async function callClaude(_c: PublicRefundCase, _start: number) {
-  // Implement with @anthropic-ai/sdk if you want the real thing
-  throw new Error("Real LLM path not wired in this demo. Set ANTHROPIC_API_KEY and implement.");
-}
+// async function callClaude(_c: PublicRefundCase, _start: number) {
+//   // Implement with @anthropic-ai/sdk if you want the real thing
+//   throw new Error("Real LLM path not wired in this demo. Set ANTHROPIC_API_KEY and implement.");
+// }

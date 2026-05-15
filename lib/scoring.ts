@@ -1,11 +1,8 @@
 import {
   AgentSubmission,
-  Decision,
   MatchResult,
   CategoryScore,
   CaseResult,
-  RefundCase,
-  TrapType,
 } from "@/lib/types";
 import { REFUND_DUNGEON_CASES } from "@/data/refundDungeonCases";
 
@@ -276,7 +273,8 @@ function computeRecord(
   scamCorrect: number,
   totalScams: number,
   injCorrect: number,
-  totalInj: number
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _totalInj: number
 ): string {
   if (score >= 92) return "Dominant performance";
   if (score >= 85) return "Win by clean execution";

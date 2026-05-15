@@ -8,7 +8,6 @@ import {
   generateCondensedMarkdown,
   generateTweetText,
   generateShareUrl,
-  ShareType,
 } from "@/lib/share";
 
 interface BroadcastModalProps {
@@ -117,4 +116,3 @@ export default function BroadcastModal({ result, isOpen, onClose }: BroadcastMod
     </div>
   );
 }
-```

@@ -6,7 +6,7 @@
  */
 
 import { EventEmitter } from "events";
-import { LiveMatch, LiveFightEvent, PublicRefundCase, MatchStatus } from "@/fighter/types";
+import { LiveMatch, LiveFightEvent, PublicRefundCase } from "@/fighter/types";
 import { REFUND_DUNGEON_CASES } from "@/data/refundDungeonCases";
 
 // Generate a short, human-friendly code like F-7K9P

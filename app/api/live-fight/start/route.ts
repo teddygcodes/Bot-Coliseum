@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
 
   // Mark that the fight has been authorized to start
   // The fighter handler will discover this on its next poll
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (match as any)._startAuthorized = true;
 
   // For the browser-driven simulate/demo path, also transition the status immediately
@@ -50,10 +51,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Match not found" }, { status: 404 });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const shouldStart = !!(match as any)._startAuthorized && match.status === "fighter-connected";
 
   if (shouldStart) {
     // Hand the public cases to the fighter
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (match as any)._startAuthorized = false; // consume the signal
     match.status = "in-progress";
     match.startedAt = new Date().toISOString();

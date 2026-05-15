@@ -145,7 +145,7 @@ export function validateSubmission(raw: unknown): {
     model_stack: String(data.model_stack).trim(),
     division: String(data.division).trim(),
     estimated_cost_usd: cost,
-    decisions: (decisions as any[]).map((d) => ({
+    decisions: (decisions as Array<Record<string, unknown>>).map((d) => ({
       request_id: String(d.request_id),
       decision: String(d.decision).toLowerCase() as Decision,
       confidence: Number(d.confidence),

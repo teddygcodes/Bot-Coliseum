@@ -41,6 +41,7 @@ describe('Submission Validation', () => {
     })
 
     it('should reject submissions missing required top-level fields', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const submission: any = createValidSubmission()
       delete submission.agent_name
 
@@ -74,6 +75,7 @@ describe('Submission Validation', () => {
 
     it('should reject invalid decision values', () => {
       const submission = createValidSubmission()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       submission.decisions[0].decision = 'maybe' as any
 
       const result = validateSubmission(submission)
@@ -104,6 +106,7 @@ describe('Submission Validation', () => {
 
     it('should reject non-array evidence fields', () => {
       const submission = createValidSubmission()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       submission.decisions[0].evidence = 'not-an-array' as any
 
       const result = validateSubmission(submission)

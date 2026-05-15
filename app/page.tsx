@@ -27,7 +27,7 @@ export default function BotColiseum() {
     status: string;
     fighterName?: string;
   } | null>(null);
-  const [liveEvents, setLiveEvents] = useState<any[]>([]);
+  const [liveEvents, setLiveEvents] = useState<unknown[]>([]);
   const [isCreatingMatch, setIsCreatingMatch] = useState(false);
   const [liveLog, setLiveLog] = useState<string[]>([]);
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
@@ -67,7 +67,9 @@ export default function BotColiseum() {
           setLiveLog((l) => [...l, "🏁 MATCH COMPLETE — scoring with hidden ground truth..."]);
           return;
         }
-      } catch {}
+      } catch {
+        // Ignore parse errors from SSE data
+      }
     };
 
     es.onerror = () => {
@@ -140,6 +142,7 @@ export default function BotColiseum() {
         confidence: 0.87,
         reason: "Example reason for this case. Replace with your agent's actual reasoning.",
         evidence: c.relevant_policy_sections.slice(0, 1),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       })) as any,
     };
     // Fill remaining with placeholders so user sees the shape
@@ -462,7 +465,7 @@ export default function BotColiseum() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {REFUND_DUNGEON_CASES.map((c, idx) => (
+                  {REFUND_DUNGEON_CASES.map((c) => (
                     <tr key={c.request_id} className="hover:bg-surface-raised/60">
                       <td className="px-4 py-3 font-mono text-accent font-semibold">{c.request_id}</td>
                       <td className="px-4 py-3 text-text-secondary leading-snug pr-6">{c.customer_message}</td>
@@ -913,7 +916,8 @@ export default function BotColiseum() {
                     {liveLog.map((line, i) => (
                       <div key={i} className="text-text-secondary">{line}</div>
                     ))}
-                    {liveEvents.filter((e) => e.type === "decision-made").map((e, i) => (
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    {liveEvents.filter((e: any) => e?.type === "decision-made").map((e: any, i: number) => (
                       <div key={i} className="flex gap-3 items-start">
                         <span className="text-accent font-bold w-12 shrink-0">{e.request_id}</span>
                         <span className={e.decision === "approve" ? "text-success" : e.decision === "deny" ? "text-danger" : "text-text"}>{e.decision.toUpperCase()}</span>

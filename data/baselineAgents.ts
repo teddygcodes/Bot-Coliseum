@@ -1,4 +1,4 @@
-import { AgentSubmission, MatchResult, LeaderboardEntry } from "@/lib/types";
+import { AgentSubmission, LeaderboardEntry } from "@/lib/types";
 
 // Seeded baseline agents for the local leaderboard.
 // These are pre-computed so the leaderboard feels alive on first load.

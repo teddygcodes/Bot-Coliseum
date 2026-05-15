@@ -102,16 +102,16 @@ Environment:
   const absoluteAgentPath = agentPath.startsWith(".") ? `${process.cwd()}/${agentPath.replace(/^\.\//, "")}` : agentPath;
   let agent: AgentModule;
   try {
-    // @ts-expect-error - dynamic import of user code
     const mod = await import(absoluteAgentPath);
     if (typeof mod.decide !== "function") {
       throw new Error(`Module ${agentPath} does not export an async function "decide(case)"`);
     }
     agent = { decide: mod.decide };
     console.log(`🧠 Loaded agent from ${agentPath}\n`);
-  } catch (e: any) {
-    console.error("❌ Failed to load agent module:", e.message);
-    await postError(matchId, e.message);
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("❌ Failed to load agent module:", message);
+    await postError(matchId, message);
     process.exit(1);
   }
 
@@ -127,9 +127,10 @@ Environment:
     let result;
     try {
       result = await agent.decide(c);
-    } catch (e: any) {
-      console.log(`\n❌ Agent crashed on ${c.request_id}: ${e.message}`);
-      await postError(matchId, `Agent crashed on ${c.request_id}: ${e.message}`);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      console.log(`\n❌ Agent crashed on ${c.request_id}: ${message}`);
+      await postError(matchId, `Agent crashed on ${c.request_id}: ${message}`);
       process.exit(1);
     }
 
