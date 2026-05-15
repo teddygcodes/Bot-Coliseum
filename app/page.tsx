@@ -141,6 +141,20 @@ export default function BotColiseum() {
             ...l,
             `${data.request_id}  ${data.decision.toUpperCase().padEnd(8)}  ${data.latency_ms}ms  ${data.reason.slice(0, 80)}`,
           ]);
+
+          // Phase 5.7: Escalating live commentary for real fights with legends
+          if (liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant")) {
+            const fighterEntry = wallEntries.find(e => e.agent_name === liveMatch.fighterName);
+            const fl = fighterEntry?.legendName;
+            if (fl && liveDecisions.length % 5 === 0 && liveDecisions.length > 0) {
+              const recentDenies = liveDecisions.slice(-5).filter(x => x.decision === "deny").length;
+              if (recentDenies >= 3) {
+                setLiveLog((l) => [...l, `📣  ${fl}'s fighter is heating up. The crowd is leaning in.`]);
+              } else if (recentDenies <= 1) {
+                setLiveLog((l) => [...l, `📣  The stands are murmuring about ${fl}...`]);
+              }
+            }
+          }
           return;
         }
 
@@ -2734,15 +2748,28 @@ export default function BotColiseum() {
                       const isApprove = d.decision === "approve";
                       const isDeny = d.decision === "deny";
 
-                      // Much stronger, more dramatic arena reactions
+                      // Much stronger, more dramatic arena reactions (Phase 5.7)
                       let reaction = "";
                       let reactionColor = "text-text-muted";
 
+                      // Check if this is a real fight with a claimed legend
+                      const isRealFight = liveMatch?.fighterName && !liveMatch.fighterName.includes("Revenant");
+                      const fighterEntry = isRealFight ? wallEntries.find(e => e.agent_name === liveMatch.fighterName) : null;
+                      const fighterLegend = fighterEntry?.legendName;
+
                       if (isDeny) {
-                        reaction = "The crowd roars in approval. Clean denial.";
+                        if (fighterLegend) {
+                          reaction = `The crowd roars for ${fighterLegend}'s fighter. Clean denial.`;
+                        } else {
+                          reaction = "The crowd roars in approval. Clean denial.";
+                        }
                         reactionColor = "text-success";
                       } else if (isApprove) {
-                        reaction = "A murmur ripples through the stands...";
+                        if (fighterLegend) {
+                          reaction = `A nervous murmur for ${fighterLegend}...`;
+                        } else {
+                          reaction = "A murmur ripples through the stands...";
+                        }
                         reactionColor = "text-amber-400";
                       } else {
                         reaction = "The arena holds its breath. Tense.";
@@ -2757,6 +2784,25 @@ export default function BotColiseum() {
                       const momentClass = isBigMoment 
                         ? "border-danger shadow-[0_0_0_1px_#ef4444,0_8px_25px_-8px_#ef4444] bg-[#1a0f0f]" 
                         : "";
+
+                      // Phase 5.7: Escalating crowd energy based on recent performance (real fights)
+                      if (isRealFight && liveDecisions.length >= 3) {
+                        const recent = liveDecisions.slice(-3);
+                        const recentDenies = recent.filter(x => x.decision === "deny").length;
+                        const recentApproves = recent.filter(x => x.decision === "approve").length;
+
+                        if (recentDenies >= 2 && isDeny) {
+                          reaction = fighterLegend 
+                            ? `The crowd is starting to believe in ${fighterLegend}!` 
+                            : "The crowd is starting to believe!";
+                          reactionColor = "text-success";
+                        } else if (recentApproves >= 2 && isApprove) {
+                          reaction = fighterLegend 
+                            ? `The stands are getting restless with ${fighterLegend}...` 
+                            : "The stands are getting restless...";
+                          reactionColor = "text-amber-400";
+                        }
+                      }
 
                       return (
                         <div 

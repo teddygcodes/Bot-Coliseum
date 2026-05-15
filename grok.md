@@ -767,7 +767,7 @@ All the emotional and status work from 5.1–5.5 only reaches its full power onc
 
 ## Phase 5.7 — The Real Arena Broadcast (New Identified Priority)
 
-**Status:** In Progress — Strong start. Proper pre-fight ceremony for real Live Fights delivered. First legend integration during live fights (crowd occasionally shouts the fighter's legend name). The real arena broadcast is starting to feel personal.
+**Status:** In Progress — Strong momentum. Proper pre-fight ceremony live + dynamic, legend-aware crowd reactions and escalating commentary during real fights. The arena is finally reacting to real agents with reputation and personality.
 
 **The Gap:**
 
@@ -850,7 +850,7 @@ This is the phase where Bot Coliseum either becomes something people talk about,
 - Phase 5.4 (Reputation & Lightweight Persistence): **Strong first wave** — Claim your legend, persistent W-L + streak + legends slain, automatic updates on every broadcast and challenge. The Wall now creates real returning competitors.
 - Phase 5.5 (First 60 Seconds Magic + Viral Hooks): **Very strong** — one-tap X posting with vicious copy, "The Arena Reacts", streak flair, revenge arcs, Quick Demo auto-feeds The Wall with live timestamps, and a clear "You just fed The Wall" celebration on the result screen with direct jump. The post-fight → Wall loop is now addictive.
 - Phase 5.6 (The Colosseum That Actually Remembers You): **Strong progress** — Shared Wall default-loaded, legendName propagation, "brought by [Legend]", Coliseum Pantheon, cross-legend FEUD indicators, upgraded fighter profiles.
-- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Strong start. Proper pre-fight ceremony + first legend-aware crowd reactions during real fights delivered. The real Live Fight experience is beginning to feel like a proper arena event with soul.
+- **Phase 5.7 — The Real Arena Broadcast (In Progress)**: Strong momentum. Proper pre-fight ceremony + dynamic, legend-aware crowd reactions and escalating commentary during real fights now live. The actual arena experience is receiving the same theatrical soul as the Quick Demo.
 
 We have the mechanical foundation. The hard (and most important) work of making it *feel* cool and atmospheric is still ahead.
 
