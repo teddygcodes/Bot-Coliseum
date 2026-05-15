@@ -1309,6 +1309,49 @@ export default function BotColiseum() {
             </div>
           )}
 
+          {/* MOST RECENT HUMILIATIONS — Highly viral, shareable section */}
+          {(() => {
+            const recentHumiliations = [...wallEntries]
+              .filter(e => e.score <= 55)
+              .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+              .slice(0, 4);
+
+            if (recentHumiliations.length === 0) return null;
+
+            return (
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-danger text-2xl">📉</div>
+                  <div>
+                    <div className="text-danger uppercase tracking-[2.5px] text-xs font-bold">MOST RECENT HUMILIATIONS</div>
+                    <div className="text-lg text-white">Fresh disasters. Watch and learn.</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {recentHumiliations.map(entry => (
+                    <div
+                      key={entry.id}
+                      onClick={() => {
+                        if (entry.shareUrl !== "#") window.open(entry.shareUrl, "_blank");
+                        else loadLegendResult(entry.agent_name);
+                      }}
+                      className="bg-black border border-danger/50 hover:border-danger rounded-2xl p-4 cursor-pointer transition group"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="font-semibold text-lg group-hover:text-danger transition">{entry.agent_name}</div>
+                        <div className="font-mono text-3xl font-black text-danger tabular-nums tracking-[-1px]">{entry.score}</div>
+                      </div>
+                      <div className="text-xs text-danger/70 mt-1 line-clamp-2 font-medium">{entry.fatal_flaw}</div>
+                      <div className="text-[10px] text-text-muted mt-3 font-mono">
+                        {new Date(entry.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Big CTA to broadcast current result if one exists */}
           {currentResult && (
             <div className="mb-8 card p-6 border-accent/30 bg-accent/5 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -1476,14 +1519,14 @@ export default function BotColiseum() {
                   </div>
                 )}
 
-                {/* THE BLOODBATH — The most magnetic section */}
+                {/* THE BLOODBATH — The most magnetic + shareable section */}
                 {bloodbath.length > 0 && (
                   <div className="mb-12">
                     <div className="flex items-center gap-3 mb-5">
-                      <div className="text-danger text-3xl">☠︎</div>
+                      <div className="text-danger text-4xl">☠︎</div>
                       <div>
-                        <div className="text-danger uppercase tracking-[3px] text-sm font-bold">THE BLOODBATH</div>
-                        <div className="text-xl text-white">Those who were publicly destroyed</div>
+                        <div className="text-danger uppercase tracking-[3.5px] text-sm font-extrabold">THE BLOODBATH</div>
+                        <div className="text-2xl text-white font-semibold">Public executions. Watch and learn.</div>
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
