@@ -1232,44 +1232,47 @@ export default function BotColiseum() {
         </div>
       )}
 
-      {/* ========== THE WALL — Phase 3: Public Results Gallery (The Colosseum Remembers) ========== */}
+      {/* ========== THE WALL — Phase 5.1: The Colosseum's Living Memory ========== */}
       {currentView === "wall" && (
-        <div className="max-w-6xl mx-auto px-6 py-10">
-          <div className="mb-8">
-            <div className="uppercase tracking-[4px] text-accent text-xs mb-2">SEASON 0 • THE ARENA REMEMBERS</div>
-            <h1 className="text-6xl font-bold tracking-tighter">THE WALL</h1>
-            <p className="mt-3 max-w-2xl text-xl text-text-secondary">
-              Every fighter that was brave enough to broadcast their result. Some became legends. Most became cautionary tales.
+        <div className="max-w-7xl mx-auto px-6 py-10">
+          {/* Dramatic Header */}
+          <div className="mb-10 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-black border border-accent/30 text-accent text-xs tracking-[3px] mb-4">
+              SEASON 0 • THE COLISEUM REMEMBERS
+            </div>
+            <h1 className="text-7xl font-black tracking-[-3.5px] mb-3">THE WALL</h1>
+            <p className="max-w-xl mx-auto text-xl text-text-secondary">
+              Every fighter who stepped into the arena. Some earned glory.<br />Most earned their place in the archives.
             </p>
-
-            {/* Phase 4.4: Wall Stats */}
-            {wallEntries.length > 0 && (
-              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="card p-4 text-center">
-                  <div className="text-3xl font-bold tabular-nums text-accent">{wallEntries.length}</div>
-                  <div className="text-xs text-text-muted tracking-wider">FIGHTERS JUDGED</div>
-                </div>
-                <div className="card p-4 text-center">
-                  <div className="text-3xl font-bold tabular-nums">
-                    {Math.round(wallEntries.reduce((sum, e) => sum + e.score, 0) / wallEntries.length)}
-                  </div>
-                  <div className="text-xs text-text-muted tracking-wider">AVERAGE SCORE</div>
-                </div>
-                <div className="card p-4 text-center">
-                  <div className="text-3xl font-bold tabular-nums text-success">
-                    {wallEntries.filter(e => e.score >= 80).length}
-                  </div>
-                  <div className="text-xs text-text-muted tracking-wider">IN THE HALL OF GLORY</div>
-                </div>
-                <div className="card p-4 text-center">
-                  <div className="text-3xl font-bold tabular-nums text-danger">
-                    {wallEntries.filter(e => e.score <= 45).length}
-                  </div>
-                  <div className="text-xs text-text-muted tracking-wider">COMPLETELY COOKED</div>
-                </div>
-              </div>
-            )}
           </div>
+
+          {/* Powerful Stats Bar */}
+          {wallEntries.length > 0 && (
+            <div className="mb-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-black/60 border border-border rounded-2xl p-6 text-center">
+                <div className="text-5xl font-black tabular-nums text-accent tracking-[-2px]">{wallEntries.length}</div>
+                <div className="text-sm text-text-muted tracking-[1px] mt-1">FIGHTERS JUDGED</div>
+              </div>
+              <div className="bg-black/60 border border-border rounded-2xl p-6 text-center">
+                <div className="text-5xl font-black tabular-nums tracking-[-2px]">
+                  {Math.round(wallEntries.reduce((sum, e) => sum + e.score, 0) / wallEntries.length)}
+                </div>
+                <div className="text-sm text-text-muted tracking-[1px] mt-1">AVERAGE SCORE</div>
+              </div>
+              <div className="bg-black/60 border border-success/30 rounded-2xl p-6 text-center">
+                <div className="text-5xl font-black tabular-nums text-success tracking-[-2px]">
+                  {wallEntries.filter(e => e.score >= 80).length}
+                </div>
+                <div className="text-sm text-success/70 tracking-[1px] mt-1">HALL OF GLORY</div>
+              </div>
+              <div className="bg-black/60 border border-danger/30 rounded-2xl p-6 text-center">
+                <div className="text-5xl font-black tabular-nums text-danger tracking-[-2px]">
+                  {wallEntries.filter(e => e.score <= 45).length}
+                </div>
+                <div className="text-sm text-danger/70 tracking-[1px] mt-1">THE BLOODBATH</div>
+              </div>
+            </div>
+          )}
 
           {/* Big CTA to broadcast current result if one exists */}
           {currentResult && (
@@ -1290,84 +1293,86 @@ export default function BotColiseum() {
             </div>
           )}
 
-          {/* The Wall grid with Phase 4.4 visual categories */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {isLoadingWall && wallEntries.length === 0 && (
-              <div className="col-span-full card p-10 text-center text-text-muted">
-                Consulting the arena archives...
-              </div>
-            )}
+          {/* === PHASE 5.1: DRAMATIC, IMPRESSIVE WALL === */}
 
-            {!isLoadingWall && wallEntries.length === 0 && (
-              <div className="col-span-full card p-10 text-center">
-                <div className="text-5xl mb-4">🗿</div>
-                <div className="text-2xl font-semibold mb-2">The wall is still being carved</div>
-                <button onClick={seedLegendaryFights} className="btn btn-primary mt-4">
-                  SEED THE FIRST LEGENDS
-                </button>
-              </div>
-            )}
+          {(() => {
+            const glory = wallEntries.filter(e => e.score >= 80);
+            const bloodbath = wallEntries.filter(e => e.score <= 45);
+            const theRest = wallEntries.filter(e => e.score > 45 && e.score < 80);
 
-            {wallEntries
-              .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-              .map((entry) => (
+            const renderCard = (entry: WallEntry, variant: 'glory' | 'blood' | 'normal') => {
+              const isLegend = entry.shareUrl === "#";
+              let cardClass = "group relative overflow-hidden rounded-2xl border transition-all duration-200 flex flex-col cursor-pointer p-6 ";
+
+              if (variant === 'glory') cardClass += "bg-black border-[#c5a26f]/40 hover:border-[#c5a26f] hover:shadow-[0_0_0_1px_#c5a26f20]";
+              else if (variant === 'blood') cardClass += "bg-black border-danger/40 hover:border-danger hover:shadow-[0_0_0_1px_#ef444420]";
+              else cardClass += "bg-black border-border hover:border-accent/60";
+
+              if (isLegend) cardClass += " border-accent/50";
+
+              return (
                 <div
                   key={entry.id}
                   onClick={() => {
-                    if (entry.shareUrl !== "#") {
-                      window.open(entry.shareUrl, "_blank");
-                    } else {
-                      loadLegendResult(entry.agent_name);
-                    }
+                    if (entry.shareUrl !== "#") window.open(entry.shareUrl, "_blank");
+                    else loadLegendResult(entry.agent_name);
                   }}
-                  className={`card p-6 group transition flex flex-col cursor-pointer ${entry.shareUrl === "#" ? 'border-accent/40 hover:border-accent' : 'hover:border-accent/50'}`}
+                  className={cardClass}
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  {/* Top Row: Name + Score */}
+                  <div className="flex items-start justify-between mb-4">
                     <div>
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <div className="font-bold text-xl tracking-tight group-hover:text-accent transition">{entry.agent_name}</div>
-                        {entry.shareUrl === "#" && (
-                          <span className="text-[10px] px-1.5 py-px rounded bg-accent/20 text-accent font-bold tracking-wider">LEGEND</span>
-                        )}
-                        {entry.score >= 80 && entry.shareUrl !== "#" && (
-                          <span className="text-[10px] px-1.5 py-px rounded bg-success/20 text-success font-bold tracking-wider">GLORY</span>
-                        )}
-                        {entry.score <= 45 && (
-                          <span className="text-[10px] px-1.5 py-px rounded bg-danger/20 text-danger font-bold tracking-wider">COOKED</span>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className={`font-bold text-2xl tracking-[-0.5px] ${variant === 'glory' ? 'text-[#c5a26f]' : variant === 'blood' ? 'text-danger' : 'text-white group-hover:text-accent'}`}>
+                          {entry.agent_name}
+                        </div>
+                        {isLegend && (
+                          <span className="text-[10px] px-2 py-0.5 rounded bg-accent/20 text-accent font-bold tracking-wider">LEGEND</span>
                         )}
                       </div>
-                      <div className="text-xs text-text-muted">@{entry.coach}</div>
+                      <div className="text-sm text-text-muted">@{entry.coach}</div>
                     </div>
+
                     <div className="text-right">
-                      <div className="font-mono text-4xl font-black tabular-nums tracking-[-2px] text-accent">{entry.score}</div>
-                      <div className="text-[10px] text-text-muted -mt-1">/ 100</div>
+                      <div className={`font-mono text-5xl font-black tabular-nums tracking-[-3px] ${variant === 'glory' ? 'text-[#c5a26f]' : variant === 'blood' ? 'text-danger' : 'text-accent'}`}>
+                        {entry.score}
+                      </div>
+                      <div className="text-[11px] text-text-muted -mt-1">/ 100</div>
                     </div>
                   </div>
 
-                  <div className="text-sm text-danger mb-3 font-medium">{entry.fatal_flaw}</div>
+                  {/* Fatal Flaw - the emotional core */}
+                  <div className={`mb-4 rounded-xl p-4 ${variant === 'blood' ? 'bg-danger/10' : 'bg-surface'}`}>
+                    <div className="uppercase text-[10px] tracking-[1.5px] text-text-muted mb-1">FATAL FLAW</div>
+                    <div className={`text-[15px] leading-snug font-medium ${variant === 'blood' ? 'text-danger' : 'text-text'}`}>
+                      {entry.fatal_flaw}
+                    </div>
+                  </div>
 
-                  <div className="text-xs text-text-secondary mb-4 line-clamp-2">{entry.record}</div>
+                  {/* Record */}
+                  <div className="text-sm text-text-secondary mb-5 line-clamp-2 flex-1">
+                    {entry.record}
+                  </div>
 
-                  <div className="mt-auto flex items-center justify-between text-xs">
-                    <div className="text-text-muted">
+                  {/* Footer */}
+                  <div className="flex items-center justify-between text-xs pt-4 border-t border-border/60">
+                    <div className="text-text-muted font-mono">
                       {new Date(entry.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                     </div>
+
                     <div className="flex items-center gap-2">
                       {entry.isLive && (
-                        <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[10px] font-bold tracking-wider">LIVE FIGHT</span>
+                        <span className="px-2 py-0.5 rounded bg-accent/10 text-accent text-[10px] font-bold tracking-wider">LIVE</span>
                       )}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (entry.shareUrl !== "#") {
-                            window.open(entry.shareUrl, "_blank");
-                          } else {
-                            loadLegendResult(entry.agent_name);
-                          }
+                          if (entry.shareUrl !== "#") window.open(entry.shareUrl, "_blank");
+                          else loadLegendResult(entry.agent_name);
                         }}
-                        className="btn btn-ghost px-3 py-1 text-xs border border-border hover:border-accent"
+                        className="px-3 py-1 rounded border border-border text-text-muted hover:text-white hover:border-accent text-[11px] transition"
                       >
-                        VIEW RECORD →
+                        VIEW
                       </button>
                       <button
                         onClick={(e) => {
@@ -1375,23 +1380,88 @@ export default function BotColiseum() {
                           const challengeUrl = `/?challenge=true&vs=${encodeURIComponent(entry.agent_name)}&vsScore=${entry.score}&vsFlaw=${encodeURIComponent(entry.fatal_flaw)}`;
                           window.location.href = challengeUrl;
                         }}
-                        className="btn btn-secondary px-3 py-1 text-xs"
+                        className="px-3 py-1 rounded bg-accent/10 text-accent hover:bg-accent hover:text-black text-[11px] font-medium transition"
                       >
                         CHALLENGE
                       </button>
                     </div>
                   </div>
                 </div>
-              ))}
-          </div>
+              );
+            };
 
-          <div className="mt-10 text-center">
-            <div className="text-xs text-text-muted mb-3">
-              The Wall is the coliseum’s memory.<br />
-              Connect Upstash Redis on Vercel and every broadcast becomes visible to the entire arena.
+            return (
+              <>
+                {/* HALL OF GLORY */}
+                {glory.length > 0 && (
+                  <div className="mb-12">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="text-[#c5a26f] text-2xl">🏆</div>
+                      <div>
+                        <div className="text-[#c5a26f] uppercase tracking-[2.5px] text-sm font-semibold">HALL OF GLORY</div>
+                        <div className="text-xl text-white">Those who walked out with their heads high</div>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {glory.sort((a, b) => b.score - a.score).map(e => renderCard(e, 'glory'))}
+                    </div>
+                  </div>
+                )}
+
+                {/* THE BLOODBATH — The most magnetic section */}
+                {bloodbath.length > 0 && (
+                  <div className="mb-12">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="text-danger text-2xl">💀</div>
+                      <div>
+                        <div className="text-danger uppercase tracking-[2.5px] text-sm font-semibold">THE BLOODBATH</div>
+                        <div className="text-xl text-white">Those who left their dignity at the door</div>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {bloodbath.sort((a, b) => a.score - b.score).map(e => renderCard(e, 'blood'))}
+                    </div>
+                  </div>
+                )}
+
+                {/* THE REST */}
+                {theRest.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="text-text-muted text-2xl">⚔️</div>
+                      <div>
+                        <div className="text-text-muted uppercase tracking-[2.5px] text-sm font-semibold">THE ARCHIVES</div>
+                        <div className="text-xl text-white">They survived. Nothing more.</div>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {theRest.sort((a, b) => b.score - a.score).map(e => renderCard(e, 'normal'))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Empty State */}
+                {wallEntries.length === 0 && !isLoadingWall && (
+                  <div className="col-span-full mt-12 text-center py-16 border border-dashed border-border rounded-2xl">
+                    <div className="text-6xl mb-6 opacity-70">🗿</div>
+                    <div className="text-2xl font-semibold mb-2">The Wall awaits its first legends</div>
+                    <p className="text-text-muted mb-6">Be the first to step into the arena and leave your mark.</p>
+                    <button onClick={seedLegendaryFights} className="btn btn-primary">
+                      SEED THE FIRST LEGENDS
+                    </button>
+                  </div>
+                )}
+              </>
+            );
+          })()}
+
+          <div className="mt-16 text-center">
+            <div className="max-w-md mx-auto text-sm text-text-muted mb-5">
+              The Wall is the coliseum’s permanent record.<br />
+              When you broadcast, your name joins the fighters who came before you — for better or worse.
             </div>
-            <button onClick={() => setCurrentView("live-fight")} className="btn btn-primary px-8">
-              BRING YOUR FIGHTER — BECOME A LEGEND (OR A WARNING)
+            <button onClick={() => setCurrentView("live-fight")} className="btn btn-primary px-10 py-3 text-base">
+              STEP INTO THE ARENA
             </button>
           </div>
         </div>
