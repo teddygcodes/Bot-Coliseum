@@ -1009,7 +1009,18 @@ export default function BotColiseum() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-3 text-sm">
+            {/* Phase 5.4/5.5: Persistent legend identity in nav */}
+            {myLegend && (
+              <button
+                onClick={() => setCurrentView("wall")}
+                className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-bold tracking-wider hover:bg-accent hover:text-black transition"
+              >
+                {myLegend.name} • {myLegend.wins}–{myLegend.losses}
+                {myLegend.currentStreak >= 2 && " 🔥"}
+              </button>
+            )}
+
             <button
               onClick={() => { setCurrentView("home"); setCurrentResult(null); }}
               className={`px-4 py-1.5 rounded-full transition ${currentView === "home" ? "bg-surface-raised font-semibold" : "hover:bg-surface"}`}
