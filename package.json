@@ -6,7 +6,17 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "eslint"
+    ]
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4",
@@ -17,11 +27,17 @@
     "tailwindcss": "^4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^4.1.6",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.0.0",
-    "typescript": "^5"
+    "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
+    "lint-staged": "^17.0.4",
+    "typescript": "^5",
+    "vitest": "^4.1.6"
   }
 }

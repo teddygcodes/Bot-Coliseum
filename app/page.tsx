@@ -6,6 +6,7 @@ import { REFUND_DUNGEON_CASES } from "@/data/refundDungeonCases";
 import { BASELINE_SUBMISSIONS, SEED_LEADERBOARD } from "@/data/baselineAgents";
 import { validateSubmission, ValidationError } from "@/lib/validateSubmission";
 import { scoreSubmission } from "@/lib/scoring";
+import BroadcastModal from "./components/BroadcastModal";
 
 // Types for view state
 type View = "home" | "arena" | "submit" | "result" | "leaderboard" | "live-fight";
@@ -29,6 +30,7 @@ export default function BotColiseum() {
   const [liveEvents, setLiveEvents] = useState<any[]>([]);
   const [isCreatingMatch, setIsCreatingMatch] = useState(false);
   const [liveLog, setLiveLog] = useState<string[]>([]);
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
 
   // Connect to live fight SSE when we have a match
   useEffect(() => {
@@ -668,7 +670,13 @@ export default function BotColiseum() {
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3 justify-center">
-            <button onClick={saveResultToLeaderboard} className="btn btn-primary px-8">
+            <button 
+              onClick={() => setShowBroadcastModal(true)} 
+              className="btn btn-primary px-8"
+            >
+              ⚔️ BROADCAST RESULT
+            </button>
+            <button onClick={saveResultToLeaderboard} className="btn btn-secondary px-8">
               🏆 SAVE TO LOCAL LEADERBOARD
             </button>
             <button onClick={() => setCurrentView("leaderboard")} className="btn btn-secondary">
@@ -962,6 +970,15 @@ export default function BotColiseum() {
             This is the real thing. The fighter handler on your machine is executing your agent with your keys against the public cases. The coliseum only receives the decisions.
           </div>
         </div>
+      )}
+
+      {/* Broadcast Modal */}
+      {currentResult && (
+        <BroadcastModal
+          result={currentResult}
+          isOpen={showBroadcastModal}
+          onClose={() => setShowBroadcastModal(false)}
+        />
       )}
 
       {/* Footer */}
